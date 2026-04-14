@@ -43,4 +43,4 @@ Por fim, nós identificamos 5 Agregados:
   serviços.
 - Serviço: focado especificamente no controle de tempo de execução de cada serviço.
 - Insumo: que cuida de toda a parte de almoxarifado, indo do inventário ao gerenciamento de pedidos de compra em 
-  sistemas tereceiros.
+  sistemas terceiros.

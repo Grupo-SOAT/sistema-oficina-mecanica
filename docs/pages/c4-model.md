@@ -24,14 +24,14 @@ Todos os diagramas anexados aqui foram criados no [Miro](https://miro.com/app/bo
 
 ![Nível 1 - Contexto](./diagrams/c4-model/c1-context.png)
 
-> Mostra o sistema como uma caixa preta, estabelecendo os papais dos agentes mais importantes e a visão geral do uso 
+> Mostra o sistema como uma caixa preta, estabelecendo os papeis dos agentes mais importantes e a visão geral do uso 
   que o sistema terá.
 
 Legenda:
 
 | Elemento         | Cor/Forma                 | Significado                                |
 |------------------|---------------------------|--------------------------------------------|
-| Agegente         | Boneco (azul)             | Ator humano que interage com o sistema     |
+| Agente           | Boneco (azul)             | Ator humano que interage com o sistema     |
 | Sistema          | Retângulo                 | O sistema sendo desenvolvido               |
 | Sistema externo  | Retângulo (cinza)         | Sistema fora do controle do time           |
 | Seta             | Linha tracejada com texto | Direção da interação principal + protocolo |
