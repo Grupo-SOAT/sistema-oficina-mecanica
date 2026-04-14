@@ -48,7 +48,7 @@ Legenda:
 
 | Elemento         | Cor/Forma                      | Significado                                       |
 |------------------|--------------------------------|---------------------------------------------------|
-| Agegente         | Boneco (azul)                  | Ator humano que interage com o sistema            |
+| Agente         | Boneco (azul)                  | Ator humano que interage com o sistema            |
 | Container        | Retângulo interno (azul)       | Unidade implantável - aplicação ou infraestrutura |
 | Banco de Dados   | Cilindro (azul)                | Armazenamento Persistente                         |
 | Sistema externo  | Retângulo externo (cinza)      | Sistema fora do controle do time                  |

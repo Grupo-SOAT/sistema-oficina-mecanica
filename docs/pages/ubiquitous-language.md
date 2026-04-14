@@ -7,11 +7,11 @@
 - Atendente Humano
   - Pessoa responsável por cadastrar clientes e veículos, enviar orçamentos para o cliente e atualizar o Status da OS para aprovado ou reprovado de acordo com a resposta do cliente.
 - Atendente Virtual
-  - Chatbot tem as mesmas responsabilidades do atendente humano, porem tem a responsabilidade adicional de auxiliar o cliente para ser atendido por auto atendimento.
+  - Chatbot tem as mesmas responsabilidades do atendente humano, porém tem a responsabilidade adicional de auxiliar o cliente para ser atendido por auto atendimento.
 - Mecânico
   - Pessoa responsável por fazer a triagem e execução de serviços no veículo do cliente.
 - Cliente
-  - Pesssoa que veio até a oficina com o objetivo de utilizar serviços da oficina mêcanica. Deve necessariamente ter pelo menos um veículo cadastrado.
+  - Pessoa que veio até a oficina com o objetivo de utilizar serviços da oficina mecânica. Deve necessariamente ter pelo menos um veículo cadastrado.
 - Almoxarife
   - Pessoa responsável por cuidar do controle de estoque do almoxarifado (como saidas, entradas e encomendas de insumos).
 
@@ -28,7 +28,7 @@
 - Triagem
   - Inspeção geral feita pelo mecânico no início do fluxo para poder ser gerado um orçamento com base nos serviços/insumos que o mecânico julgar necessários para o veículo.
 - Orçamento
-  - Valor gerado a partir dos serviços/insumos que serão realizados/feitos no veículo que o cliente devera pagar caso deseje prosseguir com os serviços decobertos na triagem.
+  - Valor gerado a partir dos serviços/insumos que serão realizados/feitos no veículo que o cliente devera pagar caso deseje prosseguir com os serviços descobertos na triagem.
 - Almoxarifado
   - Local onde ficam armazenados os insumos.
 - Reparo Adicional
@@ -49,7 +49,7 @@
 - Aguardando Aprovação
   - Status que indica que a triagem foi feita e os serviços/insumos que o Mecânico julgou serem necessários para o veículo foram adicionados na OS e que orçamento foi gerado e enviado ao cliente e está esperando uma ser aprovada ou rejeitada.
 - Parcialmente Rejeitada
-  - Status que indica que um ou mais serviços/insumos da OS foram rejeitados pelo cliente, porem não todos os serviços da OS.
+  - Status que indica que um ou mais serviços/insumos da OS foram rejeitados pelo cliente, porém não todos os serviços da OS.
 - Aprovada
   - Status que indica que todos os serviços/insumos da OS foram aprovados pelo cliente e a OS pode seguir o fluxo.
 - Cancelada
@@ -68,7 +68,7 @@
 - Aprovada
   - Status que indica que o orçamento foi aprovado pelo cliente e a OS pode prosseguir com seu fluxo.
 - Parcialmente Rejeitada
-  - Status que indica que um ou mais serviços/insumos da OS foram rejeitados pelo cliente no Orçamento, porem não todos os serviços/insumos da OS. Nesses casos a OS volta para ser feita novamente a triagem.
+  - Status que indica que um ou mais serviços/insumos da OS foram rejeitados pelo cliente no Orçamento, porém não todos os serviços/insumos da OS. Nesses casos a OS volta para ser feita novamente a triagem.
 - Rejeitada
   - Status que indica que todos os serviços/insumos da OS foram rejeitados pelo cliente.
 
@@ -81,7 +81,7 @@
 - Finalizado
   - Status que indica que o a execução do serviço foi finalizada.
 - Rejeitado
-  - Status que indica que o serviço foi rejeitado pelo cliente, porem existem outros serviços da OS que o cliente quer que sejam executados.
+  - Status que indica que o serviço foi rejeitado pelo cliente, porém existem outros serviços da OS que o cliente quer que sejam executados.
 - Cancelado
   - Status que indica o serviço não sera executado porque o orçamento foi rejeitado pelo cliente.
 
@@ -114,6 +114,6 @@
 - Encomendado
   - Esse status indica que o insumo foi encomendado para um fornecedor de insumos.
 - Reservado
-  - Esse status indica que o insumo esta reservado para uma OS no sistema de Almoxarifado, porem ele ainda não foi utilizado na execução do serviço, ele apenas não sera listado como Disponível no momento de selecionar o insumo no registro da OS.
+  - Esse status indica que o insumo esta reservado para uma OS no sistema de Almoxarifado, porém ele ainda não foi utilizado na execução do serviço, ele apenas não sera listado como Disponível no momento de selecionar o insumo no registro da OS.
 - Separado
   - Esse status indica que o insumo foi retirado do almoxarifado para ser utilizado na execução do serviço.
