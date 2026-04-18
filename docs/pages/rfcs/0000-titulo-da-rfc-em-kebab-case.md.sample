@@ -1,0 +1,52 @@
+# Título da RFC
+
+- **Número da RFC**: 0000
+- **Data**: 13 de abril de 2026
+- **Autores**: Seu Nome Aqui
+- **Status**: Proposta | Aceita | Rejeitada | Obsoleta
+
+## Resumo
+
+Descreva brevemente o objetivo e o impacto da RFC.
+
+## Contexto
+
+Explique o problema ou a oportunidade que motivou esta RFC. Inclua informações relevantes para o entendimento do contexto.
+
+## Proposta
+
+Detalhe a solução ou mudança proposta. Inclua diagramas, exemplos ou pseudocódigo, se necessário.
+
+## Justificativa
+
+Explique por que esta proposta é a melhor solução para o problema.
+
+## Impactos
+
+### Impacto na Arquitetura
+
+Descreva como esta proposta afeta a arquitetura do sistema.
+
+### Impacto nos Processos
+
+Descreva como esta proposta afeta os processos existentes.
+
+### Impacto nos Recursos
+
+Descreva os recursos adicionais necessários para implementar esta proposta.
+
+## Alternativas Consideradas
+
+Liste e explique as alternativas que foram consideradas e por que foram rejeitadas.
+
+## Implementação
+
+Descreva os passos necessários para implementar esta proposta. Inclua um plano de ação, se aplicável.
+
+## Referências
+
+Inclua links ou referências a documentos, RFCs anteriores, ou outros materiais relevantes.
+
+## Links úteis:
+
+- [Example](example.com)
