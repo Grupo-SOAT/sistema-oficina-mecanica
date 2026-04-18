@@ -2,7 +2,7 @@
 
 - **Número da RFC**: 0001  
 - **Data**: 13 de abril de 2026  
-- **Autores**: Andre Lui
+- **Autor**: Andre Lui
 - **Status**: **Aceita**
 
 ---
