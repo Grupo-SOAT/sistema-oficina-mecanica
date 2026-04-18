@@ -1,4 +1,4 @@
-# Título da RFC
+# RFC001 - Escolha do banco de dados PostgreSQL
 
 - **Número da RFC**: 0001  
 - **Data**: 13 de abril de 2026  
