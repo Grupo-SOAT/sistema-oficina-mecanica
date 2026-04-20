@@ -1,0 +1,66 @@
+Eu, como;Quando;Desejo;Para que
+😎 Admin;deslogado;me autenticar usando usuário e senha;possa utilizar o sistema
+😎 Admin;logado;alterar minha própria senha;
+😎 Admin;logado;sair da minha conta;
+😎 Admin;logado;criar novos usuários usando um nome de usuário único, um cargo e uma senha aleatória;eles sejam capazes de logar no sistema
+😎 Admin;logado;gerar uma nova senha aleatória para outros usuários;eles sejam capazes de redefiní-la ao efeturarem o próximo login
+😎 Admin;logado;cadastrar novos serviços para a oficina;eles fiquem disponíveis para os Mecânicos selecionarem durante o preenchimento da OS
+😎 Admin;logado;editar um serviço;as mudanças surtam efeito nas próximas OSs
+😎 Admin;logado;excluir um serviço;eles não apareçam mais em novas OSs
+😎 Admin;logado;exportar um relatório do tempo médio de execução de cada serviço;consiga mensurar quanto tempo meus Mecânicos levam para terminar cada tipo de serviço
+😎 Admin;logado;cadastrar novos insumos para a oficina;eles fiquem disponíveis para os Mecânicos selecionarem durante o preenchimento da OS e o Almoxarife possa gerenciar seu estoque
+😎 Admin;logado;editar um insumo;as mudanças surtam efeito nas próximas OSs
+😎 Admin;logado;excluir um insumo;eles não apareçam mais em novas OSs
+😎 Admin;logado;cadastrar novos fornecedores;eles fiquem disponíveis para o Almoxarife criar novos pedidos de compra
+😎 Admin;logado;editar um fornecedor;as mudanças surtam efeito nas próximas compras
+😎 Admin;logado;excluir um fornecedor;eles não apareçam mais em novos pedidos de compra
+😎 Admin;logado;revogar a reserva de um insumo;ele volte a constar como disponível no sistema
+😎 Admin;logado;cadastrar novos veículos;
+😎 Admin;logado;editar um veículo;
+😎 Admin;logado;excluir um veículo;
+😎 Admin;logado;cadastrar novos clientes;
+😎 Admin;logado;editar um cliente;
+😎 Admin;logado;excluir um cliente;
+😎 Admin;logado;visualizar todas as OSs abertas e seu status atual;consiga acompanhar o andamento geral da oficina
+😎 Admin;logado;visualizar o histórico completo de OSs de um cliente ou veículo;consiga rastrear serviços prestados anteriormente
+😎 Admin;logado;cancelar uma OS;ela não siga para execução em casos de desistência ou erro de abertura
+🔧 Mecânico;deslogado;me autenticar usando usuário e senha;possa utilizar o sistema
+🔧 Mecânico;logado;alterar minha própria senha;
+🔧 Mecânico;logado;sair da minha conta;
+🔧 Mecânico;logado;visualizar as OSs recebidas;saiba quais veículos precisam de triagem
+🔧 Mecânico;logado;visualizar as OSs parcialmente rejeitadas;saiba quais veículos precisam de novo diagnóstico após rejeição parcial do cliente
+🔧 Mecânico;logado;iniciar a triagem de um veículo em uma OS;"o status da OS seja atualizado para ""Em diagnóstico"" e não apareça mais na fila de pendentes"
+🔧 Mecânico;logado;adicionar serviços durante a triagem;registrar os serviços necessários identificados durante o diagnóstico
+🔧 Mecânico;logado;adicionar insumos durante a triagem;o orçamento reflita com precisão os custos de peças e materiais necessários
+🔧 Mecânico;logado;finalizar a triagem de um veículo;encaminhar a OS para aprovação do cliente
+🔧 Mecânico;logado;visualizar as OSs Em Andamento e seus serviços pendentes;saiba quais tarefas executo
+🔧 Mecânico;logado;iniciar a execução de um serviço em uma OS;"o sistema registre o momento de início, o mecânico responsável e atualize o status do serviço"
+🔧 Mecânico;logado;registrar a conclusão de um serviço com o tempo gasto;o sistema calcule o tempo médio de execução por tipo de serviço
+🔧 Mecânico;logado;identificar serviços e insumos adicionais durante a execução;uma nova OS filha seja gerada para aprovação do cliente antes de executá-los
+🔧 Mecânico;logado;visualizar quando todos os serviços de uma OS foram concluídos;saber que a OS está pronta para entrega
+🔧 Mecânico;logado;visualizar o histórico de serviços que executei;acompanhar minha produtividade
+🙋 Atendente;deslogado;me autenticar usando usuário e senha;possa utilizar o sistema
+🙋 Atendente;logado;alterar minha própria senha;
+🙋 Atendente;logado;sair da minha conta;
+🙋 Atendente;logado;cadastrar um novo cliente durante a abertura de uma OS;não precise sair do fluxo de atendimento para cadastrá-lo separadamente
+🙋 Atendente;logado;cadastrar um novo veículo durante a abertura de uma OS;não precise sair do fluxo de atendimento para cadastrá-lo separadamente
+🙋 Atendente;logado;abrir uma nova OS vinculando cliente, veículo e serviços solicitados;o processo de atendimento seja registrado formalmente
+🙋 Atendente;logado;enviar o orçamento gerado ao cliente para aprovação;ele possa autorizar ou recusar os serviços antes da execução
+🙋 Atendente;logado;registrar a aprovação ou recusa do orçamento pelo cliente;o sistema avance ou interrompa o fluxo da OS adequadamente
+🙋 Atendente;logado;registrar a rejeição parcial do orçamento pelo cliente;remover os serviços rejeitados e gerar um novo orçamento para reaprovação
+🙋 Atendente;logado;registrar a entrega do veículo ao cliente;"o status da OS seja atualizado para ""Entregue"" e o ciclo seja encerrado"
+🙋 Atendente;logado;consultar o status atual de qualquer OS;possa informar o cliente sobre o andamento do serviço quando ele entrar em contato
+🙋 Atendente;logado;visualizar o histórico de OSs de um cliente;compreender o padrão de manutenção dele
+📦 Almoxarife;deslogado;me autenticar usando usuário e senha;possa utilizar o sistema
+📦 Almoxarife;logado;alterar minha própria senha;
+📦 Almoxarife;logado;sair da minha conta;
+📦 Almoxarife;logado;visualizar o estoque atual de todos os insumos com separação entre disponível e reservado;tenha controle preciso sobre a disponibilidade e as reservas de peças e materiais
+📦 Almoxarife;logado;registrar a entrada de insumos no estoque;o sistema reflita as quantidades corretas na seção de disponível após o recebimento de uma compra
+📦 Almoxarife;logado;criar um pedido de compra para um fornecedor;reabasteça o estoque de insumos abaixo do nível mínimo
+📦 Almoxarife;logado;visualizar os pedidos de compra em aberto;acompanhe o status das reposições solicitadas
+📦 Almoxarife;logado;confirmar o recebimento de um pedido de compra;o estoque seja atualizado na seção de disponível e o pedido encerrado
+📦 Almoxarife;logado;confirmar o consumo real de insumos reservados de uma OS;registrar que os insumos foram de fato utilizados
+👤 Cliente;com uma OS em andamento;consultar o status atual da minha OS;acompanhe o progresso do serviço sem precisar ligar para a oficina
+👤 Cliente;com um orçamento pendente;aprovar o orçamento enviado pela oficina;autorize a execução dos serviços e/ou reparos adicionais identificados
+👤 Cliente;com um orçamento pendente;recusar o orçamento enviado pela oficina;a oficina seja informada da minha decisão e o serviço não prossiga
+👤 Cliente;com um orçamento pendente;recusar o alguns serviços do orçamento enviado pela oficina;a oficina seja informada da minha decisão e o orçamento seja reenviado sem esses serviços

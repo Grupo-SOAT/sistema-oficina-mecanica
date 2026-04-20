@@ -1,0 +1,5 @@
+title: Dados de paginação
+required: [ pageSize, cursor ]
+properties:
+  pageSize: { type: integer }
+  cursor: { type: string }
