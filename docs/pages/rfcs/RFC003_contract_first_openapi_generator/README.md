@@ -1,6 +1,6 @@
 # Contract First com OpenAPI Generator
 
-- **Número da RFC**: 0001
+- **Número da RFC**: 003
 - **Data**: 20 de abril de 2026
 - **Autores**: Erick Vinícius
 - **Status**: Proposta
