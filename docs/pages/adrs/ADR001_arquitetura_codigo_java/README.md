@@ -1,7 +1,7 @@
-# ADR001 - Arquitetura de Código Java e DDD - Fase 1
+# ADR001 - Arquitetura Código Java e DDD - Fase 1
 
 - **Número da ADR**: 0001  
-- **Data**: 19 de abril de 2026  
+- **Data**: 20 de abril de 2026  
 - **Autor**: Andre Lui  
 - **Status**: **Aceita**
 
@@ -9,45 +9,39 @@
 
 ## Contexto
 
-O sistema da oficina mecânica está sendo desenvolvido utilizando Java com Spring Boot, seguindo princípios de Domain-Driven Design (DDD).
+O sistema da oficina mecânica está sendo desenvolvido como um backend em Java utilizando Spring Boot, com foco em Domain-Driven Design (DDD).
 
-O projeto encontra-se na **Fase 1 (MVP)**, com as seguintes características:
+Desde o início do projeto (MVP), identificou-se a necessidade de uma arquitetura que:
 
-- Arquitetura monolítica
-- Equipe de desenvolvimento em fase inicial
-- Necessidade de entrega rápida
-- Baixa complexidade operacional inicial
-- Evolução futura planejada para arquitetura distribuída
+- Separe claramente regras de negócio de detalhes técnicos
+- Garanta baixo acoplamento com frameworks (Spring) e banco de dados
+- Permita evolução futura para arquiteturas distribuídas
+- Facilite testes unitários e manutenção do código
+- Mantenha organização alinhada aos agregados do domínio
 
-Os principais agregados identificados no domínio são:
+Os principais contextos do domínio são:
 
-- Ordem de Serviço (OS)
-- Veículo
 - Cliente
+- Veículo
+- Ordem de Serviço
+- Orçamento
 - Insumo
 - Serviço
-- Orçamento
 
-Dado esse contexto, surgiu a necessidade de definir uma arquitetura de código que:
-
-- Seja simples de entender e aplicar
-- Mantenha alinhamento com DDD
-- Permita evolução futura sem alto custo de refatoração
-- Facilite onboarding de novos desenvolvedores
+Dado esse cenário, optou-se por uma arquitetura que privilegia o isolamento do domínio como elemento central da aplicação.
 
 ---
 
 ## Decisão
 
-Adotar uma arquitetura baseada em:
+Adotar a **Arquitetura Hexagonal (Ports and Adapters)** como padrão principal para organização do código do projeto.
 
-### **Separação por contexto (feature-based) + padrão MVC interno por agregado**
+A arquitetura será baseada nos seguintes princípios:
 
-Ou seja:
-
-- Cada agregado terá sua própria estrutura de pastas
-- Dentro de cada agregado, será aplicado o padrão MVC (adaptado ao backend)
-- Organização baseada em **features/domínio**, e não apenas em camadas técnicas globais
+- Domínio isolado e independente (Java puro)
+- Comunicação com o mundo externo via portas (interfaces)
+- Implementação dessas portas por adaptadores
+- Separação clara entre regras de negócio, infraestrutura e interfaces externas
 
 ---
 
@@ -56,153 +50,167 @@ Ou seja:
 ```plaintext
 src/main/java/com/oficina
 
-├── cliente
-│   ├── controller
-│   │   └── ClienteController.java
-│   ├── service
-│   │   └── ClienteService.java
-│   ├── repository
-│   │   └── ClienteRepository.java
-│   ├── dto
-│   │   ├── ClienteRequestDTO.java
-│   │   └── ClienteResponseDTO.java
-│   ├── entity
-│   │   └── Cliente.java
-│   └── mapper
-│       └── ClienteMapper.java
+├── domain
+│   ├── cliente
+│   │   ├── model
+│   │   │   └── Cliente.java
+│   │   └── usecase
+│   │       ├── ClienteUseCase.java
+│   │       └── ClienteUseCaseImpl.java
+│   │
+│   ├── veiculo
+│   ├── ordemservico
+│   ├── orcamento
+│   ├── insumo
+│   └── servico
 │
-├── veiculo
-│   ├── controller
-│   ├── service
-│   ├── repository
-│   ├── dto
-│   ├── entity
-│   └── mapper
+├── port
+│   ├── cliente
+│   │   ├── ClienteInputPort.java
+│   │   └── ClienteOutputPort.java
+│   │
+│   ├── veiculo
+│   ├── ordemservico
+│   ├── orcamento
+│   ├── insumo
+│   └── servico
 │
-├── ordemservico
-│   ├── controller
-│   ├── service
-│   ├── repository
-│   ├── dto
-│   ├── entity
-│   └── mapper
+├── adapter
+│   ├── input
+│   │   ├── cliente
+│   │   │   ├── controller
+│   │   │   │   └── ClienteController.java
+│   │   │   └── mapper
+│   │   │       └── ClienteMapper.java
+│   │   │
+│   │   ├── veiculo
+│   │   ├── ordemservico
+│   │   ├── orcamento
+│   │   ├── insumo
+│   │   └── servico
+│   │
+│   └── output
+│       ├── cliente
+│       │   ├── ClienteAdapter.java
+│       │   └── persistence
+│       │       ├── entity
+│       │       │   └── ClienteEntity.java
+│       │       └── repository
+│       │           └── ClienteRepository.java
+│       │
+│       ├── veiculo
+│       ├── ordemservico
+│       ├── orcamento
+│       ├── insumo
+│       └── servico
 │
-├── orcamento
-│   ├── controller
-│   ├── service
-│   ├── repository
-│   ├── dto
-│   ├── entity
-│   └── mapper
-│
-├── insumo
-│   ├── controller
-│   ├── service
-│   ├── repository
-│   ├── dto
-│   ├── entity
-│   └── mapper
-│
-├── servico
-│   ├── controller
-│   ├── service
-│   ├── repository
-│   ├── dto
-│   ├── entity
-│   └── mapper
-│
-└── shared
-    ├── exception
-    ├── config
-    └── util
+├── config
+│   └── BeanConfiguration.java
+│   └── SecurityConfig.java
+│   └── ...
 ```
+
 ---
 
-### Características da abordagem
+### Fluxo da aplicação
 
-- Organização por **agregado (feature-first)**
-- Aplicação de MVC dentro de cada contexto
-- Baixo acoplamento entre agregados
-- Alto grau de coesão interna
+Fluxo padrão de execução:
+
+1. Controller (adapter/input) recebe requisição externa
+2. Controller chama uma porta de entrada (Input Port)
+3. Use Case (domain) executa a regra de negócio
+4. Use Case utiliza uma porta de saída (Output Port)
+5. Adapter (adapter/output) implementa a porta e acessa infraestrutura
+6. Resultado retorna ao controller e ao cliente
+
+![Diagrama de Solução - Fluxo Java](../ADR001_arquitetura_codigo_java/images/arquitetura-java-hexagonal.png)
 
 ---
 
 ## Justificativa
 
-### 1. Alinhamento com DDD
+### 1. Aderência ao Domain-Driven Design (DDD)
 
-Embora simplificada, a abordagem respeita conceitos importantes:
+A arquitetura garante:
 
-- Separação por **bounded contexts (agregados)**
-- Isolamento de responsabilidades por domínio
-- Organização orientada ao negócio
+- Isolamento completo do domínio
+- Centralização das regras de negócio
+- Separação clara por contextos (agregados)
 
-Cada pasta representa um **contexto de domínio claro**, facilitando entendimento e evolução.
-
----
-
-### 2. Simplicidade para MVP
-
-A escolha evita:
-
-- Overengineering
-- Complexidade desnecessária (ex: múltiplas camadas DDD completas)
-- Curva de aprendizado alta para equipe
-
-Permite:
-
-- Entrega rápida
-- Desenvolvimento direto e eficiente
-- Facilidade de manutenção inicial
+O domínio se torna independente de detalhes técnicos, conforme recomendado pelo DDD.
 
 ---
 
-### 3. Facilidade e praticidade para a equipe de desenvolvimento
+### 2. Isolamento do domínio
 
-A estrutura:
+O pacote `domain`:
 
-- É intuitiva (baseada em MVC conhecido)
-- Permite com que cada desenvolvedor trabalhe isoladamente em cada contexto
-- Evita confusão com arquiteturas mais complexas (hexagonal, clean, etc.)
+- Não depende de frameworks
+- Não possui anotações do Spring
+- Contém apenas regras de negócio
 
----
+Isso garante:
 
-### 4. Escalabilidade evolutiva
-
-A arquitetura permite evolução futura para:
-
-- Arquitetura em camadas mais sofisticada
-- Separação em microsserviços por agregado
-- Introdução de Domain Services mais robustos
-- Aplicação de Clean Architecture ou Hexagonal
-
-Ou seja:
-
-➡️ **Não bloqueia evolução — apenas posterga complexidade**
+- Alta coesão
+- Baixo acoplamento
+- Facilidade de manutenção
 
 ---
 
-### 5. Benefícios para o negócio
+### 3. Desacoplamento de infraestrutura
 
-- Entrega mais rápida de valor
-- Redução de custo inicial
-- Menor risco de atrasos
-- Possibilidade de validar o produto rapidamente (MVP)
+A utilização de portas e adaptadores permite:
+
+- Trocar banco de dados sem impacto no domínio
+- Trocar framework sem reescrever regras de negócio
+- Evoluir a infraestrutura de forma independente
 
 ---
 
-### 6. Trade-off consciente
+### 4. Testabilidade
 
-A decisão reconhece que:
+A arquitetura permite:
 
-- Não é a arquitetura DDD mais "pura"
-- Não separa completamente domínio de infraestrutura
+- Testes unitários isolados do domínio
+- Uso de mocks para portas de saída
+- Execução de testes sem dependência de banco ou framework
 
-Mas aceita isso em troca de:
+---
 
-✔ Simplicidade  
-✔ Velocidade  
-✔ Clareza  
+### 5. Preparação para evolução futura
+
+Mesmo sendo um MVP, a arquitetura:
+
+- Facilita transição para microsserviços
+- Permite adoção de mensageria (ex: Kafka)
+- Suporta crescimento do sistema sem reestruturação completa
+
+---
+
+### 6. Clareza e organização
+
+A separação em:
+
+- `domain`
+- `port`
+- `adapter`
+- `config`
+
+torna explícito:
+
+- O que é regra de negócio
+- O que é infraestrutura
+- O que é interface externa
+
+---
+
+### 7. Alinhamento com Clean Architecture
+
+A decisão segue princípios como:
+
+- Dependency Inversion Principle
+- Separation of Concerns
+- Independência do domínio
 
 ---
 
@@ -210,71 +218,65 @@ Mas aceita isso em troca de:
 
 ### Consequências Positivas
 
-- Estrutura simples e intuitiva
-- Fácil manutenção inicial
-- Rápido desenvolvimento
-- Melhor organização por domínio
-- Baixo acoplamento entre features
-- Boa base para evolução futura
+- Forte isolamento do domínio
+- Baixo acoplamento com frameworks
+- Alta testabilidade
+- Melhor organização por contexto
+- Facilidade de evolução futura
+- Código mais sustentável a longo prazo
 
 ---
 
 ### Consequências Negativas
 
-- Mistura parcial de camadas (não totalmente isoladas)
-- Pode dificultar testes mais isolados do domínio
-- Pode exigir refatoração em fases futuras
-- Menor aderência a DDD completo (Domain Layer puro)
+- Aumento de complexidade inicial
+- Maior quantidade de código (interfaces, adapters)
+- Curva de aprendizado para equipe
+- Necessidade de disciplina arquitetural
 
 ---
 
 ## Alternativas Consideradas
 
-### 1. Arquitetura em camadas tradicional (global)
+### 1. Arquitetura MVC tradicional
 
-```plaintext
-controller/
-service/
-repository/
-entity/
-```
+**Prós:**
+- Simples
+- Fácil de implementar
 
-**Problema:**
-- Mistura todos os domínios
-- Baixa coesão
-- Difícil manutenção com crescimento
+**Contras:**
+- Alto acoplamento com framework
+- Mistura regras de negócio com infraestrutura
 
-❌ Rejeitada por não escalar bem.
+❌ Rejeitada por não atender aos requisitos de isolamento do domínio.
 
 ---
 
-### 2. Clean Architecture / Hexagonal
+### 2. Arquitetura em camadas tradicional
 
 **Prós:**
-- Alta separação de responsabilidades
-- Forte aderência ao DDD
+- Amplamente conhecida
+- Simples organização
 
 **Contras:**
-- Alta complexidade inicial
-- Curva de aprendizado elevada
-- Overengineering para MVP
+- Baixa coesão por domínio
+- Mistura diferentes contextos
 
-❌ Rejeitada para Fase 1.
+❌ Rejeitada por dificultar evolução e manutenção.
 
 ---
 
-### 3. Microsserviços desde o início
+### 3. Vertical Slice Architecture
 
 **Prós:**
-- Alta escalabilidade
-- Isolamento completo de contextos
+- Organização por caso de uso
+- Alta coesão funcional
 
 **Contras:**
-- Complexidade operacional alta
-- Overhead de infraestrutura
-- Desnecessário para MVP
+- Menor foco no isolamento do domínio
+- Pode misturar infraestrutura com lógica de negócio
 
-❌ Rejeitada por complexidade.
+❌ Rejeitada como padrão principal.
 
 ---
 
@@ -282,14 +284,15 @@ entity/
 
 ### Passos:
 
-1. Criar estrutura de pacotes por agregado
-2. Definir controllers REST para cada agregado
-3. Implementar services com regras de negócio
-4. Criar repositories com Spring Data JPA
-5. Definir DTOs para entrada e saída
-6. Implementar mappers para conversão
-7. Centralizar configurações e utilitários em `shared`
-8. Garantir baixo acoplamento entre agregados
+1. Criar estrutura base de pacotes (domain, port, adapter, config)
+2. Definir modelos de domínio (sem dependências externas)
+3. Criar interfaces de entrada e saída (ports)
+4. Implementar use cases no domínio
+5. Criar controllers (input adapters)
+6. Criar adapters de saída (persistência)
+7. Implementar mapeamentos (DTO ↔ Domain)
+8. Configurar injeção de dependência via Spring
+9. Criar testes unitários para o domínio
 
 ---
 
@@ -297,15 +300,15 @@ entity/
 
 - Domain-Driven Design — Eric Evans  
 - Clean Architecture — Robert C. Martin  
-- Spring Boot Best Practices  
-- Feature-Based Package Structure  
-- Modular Monolith Architecture  
+- Hexagonal Architecture — Alistair Cockburn  
+- Ports and Adapters Pattern  
+- SOLID Principles  
 
 ---
 
 ## Links úteis:
 
-- https://martinfowler.com/bliki/BoundedContext.html  
-- https://martinfowler.com/articles/microservices.html  
+- https://alistair.cockburn.us/hexagonal-architecture/  
+- https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html  
+- https://martinfowler.com/bliki/HexagonalArchitecture.html  
 - https://docs.spring.io/spring-boot/docs/current/reference/html/  
-- https://herbertograca.com/2017/07/03/the-software-architecture-chronicles/
