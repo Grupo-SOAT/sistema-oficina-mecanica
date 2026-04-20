@@ -126,8 +126,8 @@
                             <inputSpec>${project.basedir}/src/main/resources/openapi/api.yaml</inputSpec>
                             <generatorName>${openapi.generator}</generatorName>
                             <output>${project.build.directory}/generated-sources/openapi</output>
-                            <apiPackage>br.com.fiap.postech.api</apiPackage>
-                            <modelPackage>br.com.fiap.postech.model</modelPackage>
+                            <apiPackage>br.com.fiap.postech.port.api</apiPackage>
+                            <modelPackage>br.com.fiap.postech.adapter.input.api.model</modelPackage>
                         </configuration>
                     </execution>
                 </executions>

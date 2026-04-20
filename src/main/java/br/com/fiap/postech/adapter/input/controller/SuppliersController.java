@@ -1,6 +1,6 @@
 package br.com.fiap.postech.adapter.input.controller;
 
-import br.com.fiap.postech.api.SuppliersApi;
+import br.com.fiap.postech.port.api.SuppliersApi;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
