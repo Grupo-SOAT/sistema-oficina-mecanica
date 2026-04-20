@@ -33,7 +33,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Outras rotas
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);

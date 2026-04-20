@@ -1,6 +1,6 @@
 get:
   tags: [ Purchase Orders ]
-  summary: Listar fornecedores (paginado)
+  summary: Listar pedidos de compra (paginado)
   operationId: listPurchaseOrders
   security:
     - SessionToken: [ ]
@@ -31,7 +31,7 @@ get:
       schema: { type: string }
   responses:
     '200':
-      description: Lista de fornecedores
+      description: Lista de pedidos de compra
       content:
         application/json:
           schema:

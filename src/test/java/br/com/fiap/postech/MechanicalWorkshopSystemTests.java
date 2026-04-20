@@ -1,13 +1,13 @@
-package com.postfiap.postfiap;
+package br.com.fiap.postech;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PostfiapApplicationTests {
+class MechanicalWorkshopSystemTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

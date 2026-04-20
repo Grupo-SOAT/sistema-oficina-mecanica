@@ -1,4 +1,4 @@
-title: Lista de OSs
+title: Lista de Pedidos de Compra
 type: object
 allOf: [ { $ref: './PaginatedResponse.yaml' } ]
 required: [ data ]

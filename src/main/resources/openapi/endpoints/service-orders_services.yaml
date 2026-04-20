@@ -8,6 +8,7 @@ get:
     - in: path
       name: id
       description: ID da OS
+      required: true
       schema: { type: integer, format: int64 }
     - in: query
       name: serviceId
@@ -68,16 +69,19 @@ post:
             $ref: '../schemas/ServiceData.yaml'
     '400':
       description: Inválido
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
     '401':
       description: Não autenticado
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
     '403':
       description: Não autorizado
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
