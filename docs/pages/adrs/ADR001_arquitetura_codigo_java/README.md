@@ -55,7 +55,6 @@ src/main/java/com/oficina
 │   │   ├── model
 │   │   │   └── Cliente.java
 │   │   └── usecase
-│   │       ├── ClienteUseCase.java
 │   │       └── ClienteUseCaseImpl.java
 │   │
 │   ├── veiculo
@@ -66,8 +65,8 @@ src/main/java/com/oficina
 │
 ├── port
 │   ├── cliente
-│   │   ├── ClienteInputPort.java
-│   │   └── ClienteOutputPort.java
+│   │   ├── ClienteUseCase.java (input)
+│   │   └── ClientePort.java (output)
 │   │
 │   ├── veiculo
 │   ├── ordemservico
