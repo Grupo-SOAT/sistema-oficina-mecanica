@@ -1,1 +1,24 @@
-# TODO: criar docker-compose
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: workshop-db
+    environment:
+      POSTGRES_DB: workshop
+      POSTGRES_USER: example
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-seed/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+      - ./db-seed/seed-db.sql:/docker-entrypoint-initdb.d/02-seed-db.sql
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U example -d workshop"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

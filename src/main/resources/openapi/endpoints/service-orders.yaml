@@ -1,0 +1,99 @@
+get:
+  tags: [ Service Orders ]
+  summary: Listar Ordens de Serviço (paginado)
+  operationId: listServiceOrders
+  security:
+    - SessionToken: [ ]
+  parameters:
+    - in: query
+      name: id
+      description: ID da OS
+      schema: { type: integer, format: int64 }
+    - in: query
+      name: status
+      description: Status da OS
+      schema: { $ref: '../schemas/ServiceOrderStatus.yaml' }
+    - in: query
+      name: clientId
+      description: ID do cliente
+      schema: { type: integer, format: int64 }
+    - in: query
+      name: clientDocument
+      description: Documento do cliente
+      schema: { type: string }
+    - in: query
+      name: clientPhone
+      description: Telefone do cliente
+      schema: { type: string }
+    - in: query
+      name: vehicleId
+      description: ID do veículo
+      schema: { type: integer, format: int64 }
+    - in: query
+      name: vehicleLicensePlate
+      description: Placa do Veículo
+      schema: { type: string }
+    - in: query
+      name: pageSize
+      description: Tamanho da página
+      schema: { type: integer, default: 10 }
+    - in: query
+      name: cursor
+      description: Cursor da paginação (obtido através da página anterior)
+      schema: { type: string }
+  responses:
+    '200':
+      description: Busca paginada
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/PaginatedServiceOrderResponse.yaml'
+    '204':
+      description: Sem resultados
+    '401':
+      description: Não autenticado
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
+    '403':
+      description: Não autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
+
+post:
+  tags: [ Service Orders ]
+  summary: Criar nova Ordem de Serviço
+  operationId: createServiceOrder
+  security:
+    - SessionToken: [ ]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/ServiceOrderRequest.yaml'
+  responses:
+    '201':
+      description: OS criada
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ServiceOrderData.yaml'
+    '400':
+      description: Inválido
+      application/json:
+        schema:
+          $ref: '../schemas/ErrorResponse.yaml'
+    '401':
+      description: Não autenticado
+      application/json:
+        schema:
+          $ref: '../schemas/ErrorResponse.yaml'
+    '403':
+      description: Não autorizado
+      application/json:
+        schema:
+          $ref: '../schemas/ErrorResponse.yaml'
