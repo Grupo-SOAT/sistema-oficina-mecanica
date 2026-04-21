@@ -116,7 +116,7 @@ src/main/java/com/oficina
 Fluxo padrão de execução:
 
 1. Controller (adapter/input) recebe requisição externa
-2. Controller chama uma porta de entrada (Input Port)
+2. Controller chama uma porta de entrada (UseCase - Input Port)
 3. Use Case (domain) executa a regra de negócio
 4. Use Case utiliza uma porta de saída (Output Port)
 5. Adapter (adapter/output) implementa a porta e acessa infraestrutura
