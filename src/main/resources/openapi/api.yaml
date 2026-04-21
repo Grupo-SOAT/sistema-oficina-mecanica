@@ -27,7 +27,7 @@ tags:
   - name: Catalog Services
     description: Gerenciamento do catálogo de serviços ofertados
   - name: Services
-    description: Gerenciamento do serviços de uma OS
+    description: Gerenciamento de serviços de uma OS
   - name: Supplies
     description: Gerenciamento de insumos e estoque
   - name: Suppliers
