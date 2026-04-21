@@ -1,6 +1,6 @@
 post:
   tags: [ Service Orders ]
-  summary: Registrar Ação sobre uma da OS
+  summary: Registrar Ação sobre uma OS
   operationId: registerProgress
   security:
     - SessionToken: [ ]

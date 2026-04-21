@@ -1,5 +1,5 @@
 get:
-  tags: [ CatalogServices ]
+  tags: [ Catalog Services ]
   summary: Obter serviço catalogado por ID
   operationId: getCatalogServiceById
   security:
@@ -8,7 +8,7 @@ get:
     - in: path
       name: id
       required: true
-      schema: { type: integer }
+      schema: { type: integer, format: int64 }
   responses:
     '200':
       description: Recurso
@@ -36,7 +36,7 @@ get:
             $ref: '../schemas/ErrorResponse.yaml'
 
 patch:
-  tags: [ CatalogServices ]
+  tags: [ Catalog Services ]
   summary: Atualizar serviço catalogado
   operationId: updateCatalogService
   security:
@@ -45,7 +45,7 @@ patch:
     - in: path
       name: id
       required: true
-      schema: { type: integer }
+      schema: { type: integer, format: int64 }
   requestBody:
     required: true
     content:
@@ -85,12 +85,13 @@ patch:
             $ref: '../schemas/ErrorResponse.yaml'
     '409':
       description: Conflito
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
 
 delete:
-  tags: [ CatalogServices ]
+  tags: [ Catalog Services ]
   summary: Deletar serviço catalogado
   operationId: deleteCatalogService
   security:
@@ -99,7 +100,7 @@ delete:
     - in: path
       name: id
       required: true
-      schema: { type: integer }
+      schema: { type: integer, format: int64 }
   responses:
     '202':
       description: Aceito

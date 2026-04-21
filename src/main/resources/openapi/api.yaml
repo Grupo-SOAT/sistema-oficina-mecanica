@@ -24,8 +24,8 @@ tags:
     description: Gerenciamento de clientes
   - name: Vehicles
     description: Gerenciamento de veículos
-  - name: Services
-    description: Gerenciamento de serviços
+  - name: Catalog Services
+    description: Gerenciamento do catálogo de serviços
   - name: Supplies
     description: Gerenciamento de insumos e estoque
   - name: Suppliers

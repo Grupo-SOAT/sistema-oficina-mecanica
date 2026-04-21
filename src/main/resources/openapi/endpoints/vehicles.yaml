@@ -8,7 +8,7 @@ get:
     - in: query
       name: id
       description: Id do veículo
-      schema: { type: string }
+      schema: { type: integer, format: int64 }
     - in: query
       name: licensePlate
       description: Placa do veículo

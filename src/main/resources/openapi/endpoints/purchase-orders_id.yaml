@@ -85,9 +85,10 @@ patch:
             $ref: '../schemas/ErrorResponse.yaml'
     '409':
       description: Conflito
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
 
 delete:
   tags: [ Purchase Orders ]

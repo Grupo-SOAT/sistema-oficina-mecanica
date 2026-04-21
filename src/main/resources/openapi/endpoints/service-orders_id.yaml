@@ -45,7 +45,7 @@ patch:
     - in: path
       name: id
       required: true
-      schema: { type: integer }
+      schema: { type: integer, format: int64 }
   requestBody:
     required: true
     content:
@@ -85,9 +85,10 @@ patch:
             $ref: '../schemas/ErrorResponse.yaml'
     '409':
       description: Conflito
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
 
 delete:
   tags: [ Service Orders ]
@@ -99,7 +100,7 @@ delete:
     - in: path
       name: id
       required: true
-      schema: { type: integer }
+      schema: { type: integer, format: int64 }
   responses:
     '202':
       description: Aceito
