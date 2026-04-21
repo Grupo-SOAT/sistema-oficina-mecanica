@@ -1,5 +1,5 @@
 get:
-  tags: [ Service Orders ]
+  tags: [ Services ]
   summary: Obter Serviço da OS por ID
   operationId: getServiceById
   security:
@@ -40,7 +40,7 @@ get:
             $ref: '../schemas/ErrorResponse.yaml'
 
 patch:
-  tags: [ Service Orders ]
+  tags: [ Services ]
   summary: Atualizar Serviço da OS
   operationId: updateService
   security:
@@ -99,7 +99,7 @@ patch:
             $ref: '../schemas/ErrorResponse.yaml'
 
 delete:
-  tags: [ Service Orders ]
+  tags: [ Services ]
   summary: Deletar Serviço da OS
   operationId: deleteService
   security:

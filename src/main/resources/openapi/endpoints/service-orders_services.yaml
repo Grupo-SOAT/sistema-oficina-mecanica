@@ -1,5 +1,5 @@
 get:
-  tags: [ Service Orders ]
+  tags: [ Services ]
   summary: Listar serviços de uma OS (paginado)
   operationId: listServices
   security:
@@ -49,7 +49,7 @@ get:
             $ref: '../schemas/ErrorResponse.yaml'
 
 post:
-  tags: [ Service Orders ]
+  tags: [ Services ]
   summary: Incluir novo Serviço na OS
   operationId: includeService
   security:

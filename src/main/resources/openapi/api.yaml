@@ -25,7 +25,9 @@ tags:
   - name: Vehicles
     description: Gerenciamento de veículos
   - name: Catalog Services
-    description: Gerenciamento do catálogo de serviços
+    description: Gerenciamento do catálogo de serviços ofertados
+  - name: Services
+    description: Gerenciamento do serviços de uma OS
   - name: Supplies
     description: Gerenciamento de insumos e estoque
   - name: Suppliers
