@@ -1,5 +1,5 @@
 get:
-  tags: [ Services ]
+  tags: [ Catalog Services ]
   summary: Listar serviços catalogados (paginado)
   operationId: listCatalogServices
   security:
@@ -27,7 +27,7 @@ get:
             $ref: '../schemas/ErrorResponse.yaml'
 
 post:
-  tags: [ Services ]
+  tags: [ Catalog Services ]
   summary: Criar novo serviço catalogado
   operationId: createCatalogService
   security:
@@ -47,22 +47,26 @@ post:
             $ref: '../schemas/CatalogServiceData.yaml'
     '400':
       description: Inválido
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
     '401':
       description: Não autenticado
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
     '403':
       description: Não autorizado
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
     '409':
       description: Conflito
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
 

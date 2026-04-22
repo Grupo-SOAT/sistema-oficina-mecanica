@@ -7,9 +7,10 @@ get:
   responses:
     '200':
       description: Dados do usuário
-      application/json:
-        schema:
-          $ref: '../schemas/UserData.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/UserData.yaml'
     '401':
       description: Não autenticado
       content:

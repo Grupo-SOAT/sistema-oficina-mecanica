@@ -8,7 +8,7 @@ get:
     - in: query
       name: id
       description: Id do usuário
-      schema: { type: string }
+      schema: { type: integer, format: int64 }
     - in: query
       name: username
       description: Nome de usuário (login)
@@ -58,26 +58,31 @@ post:
   responses:
     '201':
       description: Usuário criado
-      application/json:
-        schema:
-          $ref: '../schemas/UserData.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/UserData.yaml'
     '400':
       description: Inválido
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
     '401':
       description: Não autenticado
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
     '403':
       description: Não autorizado
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'
     '409':
       description: Conflito
-      application/json:
-        schema:
-          $ref: '../schemas/ErrorResponse.yaml'
+      content:
+        application/json:
+          schema:
+            $ref: '../schemas/ErrorResponse.yaml'

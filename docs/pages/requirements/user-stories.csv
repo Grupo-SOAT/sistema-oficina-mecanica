@@ -3,7 +3,7 @@ Eu, como;Quando;Desejo;Para que
 😎 Admin;logado;alterar minha própria senha;
 😎 Admin;logado;sair da minha conta;
 😎 Admin;logado;criar novos usuários usando um nome de usuário único, um cargo e uma senha aleatória;eles sejam capazes de logar no sistema
-😎 Admin;logado;gerar uma nova senha aleatória para outros usuários;eles sejam capazes de redefiní-la ao efeturarem o próximo login
+😎 Admin;logado;gerar uma nova senha aleatória para outros usuários;eles sejam capazes de redefiní-la ao efetuarem o próximo login
 😎 Admin;logado;cadastrar novos serviços para a oficina;eles fiquem disponíveis para os Mecânicos selecionarem durante o preenchimento da OS
 😎 Admin;logado;editar um serviço;as mudanças surtam efeito nas próximas OSs
 😎 Admin;logado;excluir um serviço;eles não apareçam mais em novas OSs
