@@ -1,4 +1,4 @@
-package br.com.fiap.postech.adapter.input.controller;
+package br.com.fiap.postech.adapter.input.reporting.controller;
 
 import br.com.fiap.postech.port.api.ReportsApi;
 import org.springframework.web.bind.annotation.RestController;

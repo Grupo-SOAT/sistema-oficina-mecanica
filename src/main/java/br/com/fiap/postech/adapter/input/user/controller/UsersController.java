@@ -1,4 +1,4 @@
-package br.com.fiap.postech.adapter.input.controller;
+package br.com.fiap.postech.adapter.input.user.controller;
 
 import br.com.fiap.postech.port.api.UsersApi;
 import org.springframework.web.bind.annotation.RestController;
