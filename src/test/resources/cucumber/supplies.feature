@@ -73,8 +73,8 @@ Funcionalidade: Gerenciamento de Insumos
   Cenário: Cadastro de insumo com sku duplicado
     Dado que eu esteja devidamente logado
     E que o corpo do novo insumo seja:
-      | sku     | name           | description      | unitPrice | suppliedBy |
-      | SKU-001 | Insumo repetido| Conflito de sku  | 29.90     | 10         |
+      | sku     | name            | description     | unitPrice | suppliedBy |
+      | SKU-001 | Insumo repetido | Conflito de sku | 29.90     | 10         |
     Quando eu criar o insumo
     Então a resposta deve ter status 409
     E a resposta deve conter o campo reason com valor "SUPPLY_CONFLICT_DUPLICATED_SKU"
@@ -85,7 +85,7 @@ Funcionalidade: Gerenciamento de Insumos
     Dado que eu esteja devidamente logado
     E que o id do insumo seja 1
     E que o corpo de atualizacao do insumo seja:
-      | id | sku     | name                      | description          | unitPrice | suppliedBy | reservedQuantity | availableQuantity |
+      | id | sku             | name                      | description          | unitPrice | suppliedBy | reservedQuantity | availableQuantity |
       | 1  | SKU-001-UPDATED | Oleo sintetico atualizado | Descricao atualizada | 55.00     | 10         | 2                | 8                 |
     Quando eu atualizar o insumo
     Então a resposta deve ter status 200
@@ -95,8 +95,8 @@ Funcionalidade: Gerenciamento de Insumos
     Dado que eu esteja devidamente logado
     E que o id do insumo seja 1
     E que o corpo de atualizacao do insumo seja:
-      | id | sku     | name             | description         | unitPrice | suppliedBy | reservedQuantity | availableQuantity |
-      | 1  | SKU-002 | Insumo conflito  | Atualizacao invalida| 55.00     | 10         | 2                | 8                 |
+      | id | sku     | name            | description          | unitPrice | suppliedBy | reservedQuantity | availableQuantity |
+      | 1  | SKU-002 | Insumo conflito | Atualizacao invalida | 55.00     | 10         | 2                | 8                 |
     Quando eu atualizar o insumo
     Então a resposta deve ter status 409
     E a resposta deve conter o campo reason com valor "SUPPLY_CONFLICT_DUPLICATED_SKU"
