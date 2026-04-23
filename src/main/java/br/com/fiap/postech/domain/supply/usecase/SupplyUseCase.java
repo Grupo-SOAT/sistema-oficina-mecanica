@@ -6,13 +6,13 @@ import br.com.fiap.postech.domain.supply.exception.NoMatchingSuppliesException;
 import br.com.fiap.postech.domain.supply.exception.SupplyNotFoundException;
 import br.com.fiap.postech.domain.supply.model.Supply;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
 public class SupplyUseCase {
     private final SupplyPersistencePort persistencePort;
+
+    public SupplyUseCase(SupplyPersistencePort persistencePort) {
+        this.persistencePort = persistencePort;
+    }
 
     public ScrollPage<Supply> scroll(String sku, Integer pageSize, String cursor) {
         final var result = persistencePort.scroll(sku, pageSize, cursor);
