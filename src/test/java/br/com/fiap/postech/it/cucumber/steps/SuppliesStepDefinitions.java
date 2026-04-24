@@ -7,26 +7,25 @@ import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Map;
+import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 public class SuppliesStepDefinitions extends BaseStepDefinition {
-
     @Autowired
     private WebApplicationContext webContext;
 
@@ -34,11 +33,7 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
     private DataSource dataSource;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private Integer pageSize;
-    private String cursor;
-    private String sku;
     private Long supplyId;
-    private String requestBody;
 
     @Before("@supplies")
     public void initialize() {
@@ -49,32 +44,29 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
                 .apply(springSecurity())
                 .build();
 
-        pageSize = null;
-        cursor = null;
-        sku = null;
         supplyId = null;
-        requestBody = null;
     }
 
     private void resetSuppliesData() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("db/supplies-reset.sql"));
+        populator.addScript(new ClassPathResource("db/supplies-seed.sql"));
         populator.execute(dataSource);
     }
 
     @Dado("que o tamanho da pagina seja {int}")
     public void setPageSize(Integer value) {
-        pageSize = value;
+        context.setPageSize(value);
     }
 
     @Dado("que o cursor seja {string}")
     public void setCursor(String value) {
-        cursor = value;
+        context.setCursor(value);
     }
 
     @Dado("que o filtro sku seja {string}")
     public void setSku(String value) {
-        sku = value;
+        context.setFilterName("sku");
+        context.setFilterValue(value);
     }
 
     @Dado("que o id do insumo seja {long}")
@@ -91,12 +83,12 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
 
     @Dado("que o corpo do novo insumo seja:")
     public void setCreateBody(DataTable table) throws Exception {
-        requestBody = dataTableToJson(table);
+        context.setRequestBody(dataTableToJson(table));
     }
 
-    @Dado("que o corpo de atualizacao do insumo seja:")
+    @Dado("que o corpo de atualização do insumo seja:")
     public void setUpdateBody(DataTable table) throws Exception {
-        requestBody = dataTableToJson(table);
+        context.setRequestBody(dataTableToJson(table));
     }
 
     private String dataTableToJson(DataTable table) throws Exception {
@@ -126,14 +118,14 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
         try {
             MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/supplies")
                     .accept(MediaType.APPLICATION_JSON);
-            if (pageSize != null) {
-                request.param("pageSize", String.valueOf(pageSize));
+            if (context.getPageSize() != null) {
+                request.param("pageSize", String.valueOf(context.getPageSize()));
             }
-            if (cursor != null) {
-                request.param("cursor", cursor);
+            if (context.getCursor() != null) {
+                request.param("cursor", context.getCursor());
             }
-            if (sku != null) {
-                request.param("sku", sku);
+            if (context.getFilterName() != null && context.getFilterValue() != null) {
+                request.param(context.getFilterName(), context.getFilterValue());
             }
             request = withRoleAuth(request);
             if (hasRoleAuth()) {
@@ -156,12 +148,12 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
 
     @Quando("eu criar o insumo")
     public void createSupply() {
-        executeWithOptionalAuth("POST", "/supplies", requestBody);
+        executeWithOptionalAuth("POST", "/supplies", context.getRequestBody());
     }
 
     @Quando("eu atualizar o insumo")
     public void updateSupply() {
-        executeWithOptionalAuth("PATCH", "/supplies/" + supplyId, requestBody);
+        executeWithOptionalAuth("PATCH", "/supplies/" + supplyId, context.getRequestBody());
     }
 
     @Quando("eu remover o insumo")
@@ -213,7 +205,7 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
         assertTrue(found, "Nenhum insumo com sku encontrado: " + expectedSku);
     }
 
-    @Então("o primeiro insumo retornado deve ter id maior que {long}")
+    @Então("o primeiro item retornado deve ter id maior que {long}")
     public void verifyFirstSupplyIdGreaterThan(long minId) throws Exception {
         JsonNode root = context.getLastResponseBody();
         assertTrue(root.has("data"), "Campo data ausente");
@@ -233,7 +225,7 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
 
     @Então("a resposta deve refletir o payload enviado")
     public void verifyPayloadValues() throws Exception {
-        JsonNode request = objectMapper.readTree(requestBody);
+        JsonNode request = objectMapper.readTree(context.getRequestBody());
         JsonNode response = context.getLastResponseBody();
 
         for (String fieldName : iterable(request.fieldNames())) {
@@ -242,31 +234,5 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
             assertEquals(expectedValue.asText(), response.get(fieldName).asText(),
                     "Valor divergente para campo: " + fieldName);
         }
-    }
-
-    private void executeWithOptionalAuth(String method, String url, String body) {
-        try {
-            MockHttpServletRequestBuilder request = withRoleAuth(buildRequest(method, url)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON));
-
-            if (body != null) {
-                request.content(body);
-            }
-            if (hasRoleAuth() && !"GET".equalsIgnoreCase(method)) {
-                request.with(SecurityMockMvcRequestPostProcessors.csrf());
-            }
-
-            MvcResult result = mockMvc.perform(request).andReturn();
-            context.setLastStatusCode(result.getResponse().getStatus());
-            context.setLastResponseBody(result.getResponse().getContentAsString());
-        } catch (Exception e) {
-            context.setLastStatusCode(0);
-            context.setLastResponseBody(e.getMessage());
-        }
-    }
-
-    private static <T> Iterable<T> iterable(java.util.Iterator<T> iterator) {
-        return () -> iterator;
     }
 }

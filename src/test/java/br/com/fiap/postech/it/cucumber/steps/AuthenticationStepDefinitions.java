@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 public class AuthenticationStepDefinitions extends BaseStepDefinition {
-
     @Autowired
     private WebApplicationContext webContext;
 

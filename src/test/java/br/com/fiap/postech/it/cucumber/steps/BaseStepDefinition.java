@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 public abstract class BaseStepDefinition {
-
     protected CucumberTestContext context;
 
     public BaseStepDefinition() {
@@ -116,4 +115,29 @@ public abstract class BaseStepDefinition {
         return valueNode.isValueNode() ? valueNode.asText() : valueNode.toString();
     }
 
+    protected void executeWithOptionalAuth(String method, String url, String body) {
+        try {
+            MockHttpServletRequestBuilder request = withRoleAuth(buildRequest(method, url)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON));
+
+            if (body != null) {
+                request.content(body);
+            }
+            if (hasRoleAuth() && !"GET".equalsIgnoreCase(method)) {
+                request.with(SecurityMockMvcRequestPostProcessors.csrf());
+            }
+
+            MvcResult result = mockMvc.perform(request).andReturn();
+            context.setLastStatusCode(result.getResponse().getStatus());
+            context.setLastResponseBody(result.getResponse().getContentAsString());
+        } catch (Exception e) {
+            context.setLastStatusCode(0);
+            context.setLastResponseBody(e.getMessage());
+        }
+    }
+
+    protected static <T> Iterable<T> iterable(java.util.Iterator<T> iterator) {
+        return () -> iterator;
+    }
 }

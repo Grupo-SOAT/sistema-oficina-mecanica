@@ -24,6 +24,11 @@ public class CucumberTestContext {
     private int lastStatusCode;
     private String lastErrorMessage;
     private JsonNode lastResponseBody = NullNode.getInstance();
+    private Integer pageSize;
+    private String cursor;
+    private String filterName;
+    private String filterValue;
+    private String requestBody;
 
     public static synchronized CucumberTestContext getInstance() {
         return INSTANCE;
@@ -38,6 +43,11 @@ public class CucumberTestContext {
         this.lastStatusCode = 0;
         this.lastErrorMessage = null;
         this.lastResponseBody = NullNode.getInstance();
+        this.pageSize = null;
+        this.cursor = null;
+        this.filterName = null;
+        this.filterValue = null;
+        this.requestBody = null;
     }
 
     public void setLastResponseBody(String rawBody) {

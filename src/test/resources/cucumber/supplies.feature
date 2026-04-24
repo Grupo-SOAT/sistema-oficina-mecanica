@@ -15,6 +15,7 @@ Funcionalidade: Gerenciamento de Insumos
     E a resposta deve conter uma lista de dados
     E a resposta deve conter o campo "pageSize"
     E a resposta deve conter o campo "cursor"
+    E a resposta deve conter o campo "isLast"
 
   Cenário: Busca de insumos por SKU
     Dado que eu esteja devidamente logado
@@ -38,7 +39,7 @@ Funcionalidade: Gerenciamento de Insumos
     E que o tamanho da pagina seja 10
     Quando eu listar os insumos
     Então a resposta deve ter status 200
-    E o primeiro insumo retornado deve ter id maior que 1
+    E o primeiro item retornado deve ter id maior que 1
 
   # === DETALHAMENTO POR ID ===
 
@@ -84,7 +85,7 @@ Funcionalidade: Gerenciamento de Insumos
   Cenário: Atualização de insumo existente
     Dado que eu esteja devidamente logado
     E que o id do insumo seja 1
-    E que o corpo de atualizacao do insumo seja:
+    E que o corpo de atualização do insumo seja:
       | id | sku             | name                      | description          | unitPrice | suppliedBy | reservedQuantity | availableQuantity |
       | 1  | SKU-001-UPDATED | Oleo sintetico atualizado | Descricao atualizada | 55.00     | 10         | 2                | 8                 |
     Quando eu atualizar o insumo
@@ -94,7 +95,7 @@ Funcionalidade: Gerenciamento de Insumos
   Cenário: Atualização de insumo com sku duplicado
     Dado que eu esteja devidamente logado
     E que o id do insumo seja 1
-    E que o corpo de atualizacao do insumo seja:
+    E que o corpo de atualização do insumo seja:
       | id | sku     | name            | description          | unitPrice | suppliedBy | reservedQuantity | availableQuantity |
       | 1  | SKU-002 | Insumo conflito | Atualizacao invalida | 55.00     | 10         | 2                | 8                 |
     Quando eu atualizar o insumo
@@ -104,7 +105,7 @@ Funcionalidade: Gerenciamento de Insumos
   Cenário: Atualização de insumo inexistente
     Dado que eu esteja devidamente logado
     E que o id do insumo seja 99999
-    E que o corpo de atualizacao do insumo seja:
+    E que o corpo de atualização do insumo seja:
       | id    | sku   | name           | description    | unitPrice | suppliedBy | reservedQuantity | availableQuantity |
       | 99999 | SKU-X | Nao encontrado | Nao encontrado | 10.00     | 10         | 0                | 0                 |
     Quando eu atualizar o insumo
