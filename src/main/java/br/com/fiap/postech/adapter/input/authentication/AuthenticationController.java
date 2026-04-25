@@ -3,7 +3,9 @@ package br.com.fiap.postech.adapter.input.authentication;
 import br.com.fiap.postech.adapter.input.api.model.ChangePasswordRequest;
 import br.com.fiap.postech.adapter.input.api.model.LoginRequest;
 import br.com.fiap.postech.adapter.input.api.model.TokenResponse;
+import br.com.fiap.postech.domain.authentication.AuthenticationUseCase;
 import br.com.fiap.postech.port.api.AuthenticationApi;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 
@@ -14,7 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequiredArgsConstructor
 public class AuthenticationController implements AuthenticationApi {
+
+    private final AuthenticationUseCase authenticationUseCase;
 
     @Override
     public ResponseEntity<TokenResponse> authenticate(LoginRequest request) {

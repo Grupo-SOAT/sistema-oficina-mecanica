@@ -4,22 +4,35 @@ import br.com.fiap.postech.adapter.input.api.model.OneTimePassword;
 import br.com.fiap.postech.adapter.input.api.model.PaginatedUserResponse;
 import br.com.fiap.postech.adapter.input.api.model.UserData;
 import br.com.fiap.postech.adapter.input.api.model.UserRequest;
+import br.com.fiap.postech.domain.user.UserUseCase;
+import br.com.fiap.postech.domain.user.model.UserDTO;
 import br.com.fiap.postech.port.api.UsersApi;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class UsersController implements UsersApi {
+
+    private final UserUseCase userUseCase;
+    private final Mapper mapper;
 
     @Override
     public ResponseEntity<UserData> createUser(UserRequest request) {
 
-        // Mock de resposta
-        UserData response = new UserData();
+        System.out.println("Request recebida para criar usuario!");
 
-        return ResponseEntity.ok(response);
+        var userDomainDTO = new UserDTO(request.getUsername(), 
+        mapper.toDomain(request.getRoles()));
+
+        var domainResponse = userUseCase.criarUsuario(userDomainDTO);
+
+        var clientResponse = mapper.toClientResponse(domainResponse);
+
+        return ResponseEntity.ok(clientResponse);
     }
 
     @Override
