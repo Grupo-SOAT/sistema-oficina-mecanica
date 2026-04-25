@@ -1,7 +1,7 @@
 get:
-  tags: [ Clients ]
+  tags: [ Owners ]
   summary: Listar clientes (paginado)
-  operationId: listClients
+  operationId: listOwners
   security:
     - SessionToken: [ ]
   parameters:
@@ -32,7 +32,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../schemas/PaginatedClientResponse.yaml'
+            $ref: '../schemas/PaginatedOwnerResponse.yaml'
     '204':
       description: Sem resultados
     '401':
@@ -49,9 +49,9 @@ get:
             $ref: '../schemas/ErrorResponse.yaml'
 
 post:
-  tags: [ Clients ]
+  tags: [ Owners ]
   summary: Criar novo cliente
-  operationId: createClient
+  operationId: createOwner
   security:
     - SessionToken: [ ]
   requestBody:
@@ -59,14 +59,14 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../schemas/ClientRequest.yaml'
+          $ref: '../schemas/OwnerRequest.yaml'
   responses:
     '201':
       description: Cliente criado
       content:
         application/json:
           schema:
-            $ref: '../schemas/ClientData.yaml'
+            $ref: '../schemas/OwnerData.yaml'
     '400':
       description: Inválido
       content:
