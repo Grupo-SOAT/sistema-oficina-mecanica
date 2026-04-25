@@ -6,8 +6,8 @@ services:
     container_name: workshop-db
     environment:
       POSTGRES_DB: workshop
-      POSTGRES_USER: example
-      POSTGRES_PASSWORD: example
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
     ports:
       - "5432:5432"
 #    volumes:
