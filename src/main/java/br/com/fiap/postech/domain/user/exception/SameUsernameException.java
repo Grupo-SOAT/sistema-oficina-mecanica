@@ -1,4 +1,4 @@
-package br.com.fiap.postech.adapter.output.user.exception;
+package br.com.fiap.postech.domain.user.exception;
 
 
 public class SameUsernameException extends RuntimeException {

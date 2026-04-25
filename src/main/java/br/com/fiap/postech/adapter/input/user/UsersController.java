@@ -38,7 +38,7 @@ public class UsersController implements UsersApi {
     @Override
     public ResponseEntity<Void> deleteUser(Long id) {
 
-        // lógica aqui
+        //userUseCase.deletarUsuario();
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

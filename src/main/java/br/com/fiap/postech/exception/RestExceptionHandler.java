@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.com.fiap.postech.adapter.input.api.model.ErrorResponse;
-import br.com.fiap.postech.adapter.output.user.exception.SameUsernameException;
+import br.com.fiap.postech.domain.user.exception.SameUsernameException;
 
 
 @RestControllerAdvice
@@ -20,5 +20,5 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
-    
+
 }
