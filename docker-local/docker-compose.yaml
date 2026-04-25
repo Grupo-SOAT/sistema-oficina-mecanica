@@ -10,10 +10,10 @@ services:
       POSTGRES_PASSWORD: example
     ports:
       - "5432:5432"
-    volumes:
-      - ./db-seed/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
-      - ./db-seed/seed-db.sql:/docker-entrypoint-initdb.d/02-seed-db.sql
-      - postgres_data:/var/lib/postgresql/data
+#    volumes:
+#      - ./db-seed/create-db.sql:/docker-entrypoint-initdb.d/01-create-db.sql
+#      - ./db-seed/seed-db.sql:/docker-entrypoint-initdb.d/02-seed-db.sql
+#      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U example -d workshop"]
       interval: 10s
