@@ -1,7 +1,7 @@
 -- =========================
--- CLIENT
+-- CLIENTS
 -- =========================
-CREATE TABLE client (
+CREATE TABLE IF NOT EXISTS clients (
     client_id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     document VARCHAR(50),
@@ -11,9 +11,9 @@ CREATE TABLE client (
 );
 
 -- =========================
--- VEHICLE
+-- VEHICLES
 -- =========================
-CREATE TABLE vehicle (
+CREATE TABLE IF NOT EXISTS vehicles (
     vehicle_id SERIAL PRIMARY KEY,
     license_plate VARCHAR(20),
     brand VARCHAR(100),
@@ -23,9 +23,9 @@ CREATE TABLE vehicle (
 );
 
 -- =========================
--- USER
+-- USERS
 -- =========================
-CREATE TABLE "user" (
+CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
     user_name VARCHAR(100),
     password VARCHAR(255),
@@ -33,9 +33,9 @@ CREATE TABLE "user" (
 );
 
 -- =========================
--- SERVICE ORDER
+-- SERVICE ORDERS
 -- =========================
-CREATE TABLE service_order (
+CREATE TABLE IF NOT EXISTS service_orders (
     service_order_id SERIAL PRIMARY KEY,
     status VARCHAR(50),
 
@@ -64,16 +64,16 @@ CREATE TABLE service_order (
     CONSTRAINT fk_so_client FOREIGN KEY (client_id) REFERENCES client(client_id),
     CONSTRAINT fk_so_vehicle FOREIGN KEY (vehicle_id) REFERENCES vehicle(vehicle_id),
 
-    CONSTRAINT fk_so_created_by FOREIGN KEY (created_by) REFERENCES "user"(user_id),
-    CONSTRAINT fk_so_inspect_by FOREIGN KEY (inspect_by) REFERENCES "user"(user_id),
-    CONSTRAINT fk_so_completed_by FOREIGN KEY (completed_by) REFERENCES "user"(user_id),
-    CONSTRAINT fk_so_delivered_by FOREIGN KEY (delivered_by) REFERENCES "user"(user_id)
+    CONSTRAINT fk_so_created_by FOREIGN KEY (created_by) REFERENCES users(user_id),
+    CONSTRAINT fk_so_inspect_by FOREIGN KEY (inspect_by) REFERENCES users(user_id),
+    CONSTRAINT fk_so_completed_by FOREIGN KEY (completed_by) REFERENCES users(user_id),
+    CONSTRAINT fk_so_delivered_by FOREIGN KEY (delivered_by) REFERENCES users(user_id)
 );
 
 -- =========================
--- CATALOG SERVICE
+-- CATALOG SERVICES
 -- =========================
-CREATE TABLE catalog_service (
+CREATE TABLE IF NOT EXISTS catalog_services (
     catalog_service_id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     description TEXT,
@@ -81,9 +81,9 @@ CREATE TABLE catalog_service (
 );
 
 -- =========================
--- SERVICE
+-- SERVICES
 -- =========================
-CREATE TABLE service (
+CREATE TABLE IF NOT EXISTS services (
     service_id SERIAL PRIMARY KEY,
     status VARCHAR(50),
 
@@ -106,9 +106,9 @@ CREATE TABLE service (
 );
 
 -- =========================
--- SUPPLIER
+-- SUPPLIERS
 -- =========================
-CREATE TABLE supplier (
+CREATE TABLE IF NOT EXISTS suppliers (
     supplier_id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     document VARCHAR(50),
@@ -118,30 +118,30 @@ CREATE TABLE supplier (
 );
 
 -- =========================
--- SUPPLY
+-- SUPPLIES
 -- =========================
-CREATE TABLE supply (
+CREATE TABLE IF NOT EXISTS supplies (
     supply_id SERIAL PRIMARY KEY,
-    sku VARCHAR(100),
+    sku BIGINT,
     name VARCHAR(255),
     description TEXT,
     unit_price NUMERIC(10,2),
-    supplier_id INT,
-    status VARCHAR(50),
+    supplied_by INT,
+    reserved_quantity INT,
     available_quantity INT,
 
-    CONSTRAINT fk_supply_supplier FOREIGN KEY (supplier_id)
+    CONSTRAINT fk_supply_supplier FOREIGN KEY (supplied_by)
         REFERENCES supplier(supplier_id)
 );
 
 -- =========================
 -- SERVICE SUPPLIES
 -- =========================
-CREATE TABLE service_supplies (
+CREATE TABLE IF NOT EXISTS service_supplies (
     service_supplies_id SERIAL PRIMARY KEY,
     catalog_service_id INT,
     supply_id INT,
-    supply_amount NUMERIC(10,2),
+    supply_amount INT,
 
     CONSTRAINT fk_ss_catalog FOREIGN KEY (catalog_service_id)
         REFERENCES catalog_service(catalog_service_id),
@@ -153,7 +153,7 @@ CREATE TABLE service_supplies (
 -- =========================
 -- SERVICE OUTSIDE SUPPLIES
 -- =========================
-CREATE TABLE service_outside_supplies (
+CREATE TABLE IF NOT EXISTS service_outside_supplies (
     service_out_supplies_id SERIAL PRIMARY KEY,
     catalog_service_id INT,
     name VARCHAR(255),
@@ -164,13 +164,21 @@ CREATE TABLE service_outside_supplies (
 );
 
 -- =========================
--- PURCHASE ORDER
+-- PURCHASE ORDERS
 -- =========================
-CREATE TABLE purchase_order (
+CREATE TABLE IF NOT EXISTS purchase_orders (
     purchase_order_id SERIAL PRIMARY KEY,
     supply_id INT,
+    status VARCHAR(50),
+    stimated_amount NUMERIC(10,2),
     quoted_unit_price NUMERIC(10,2),
     requested_quantity INT,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    confirmed_at TIMESTAMP,
+    cancelled_at TIMESTAMP,
+    dispatched_at TIMESTAMP,
+    completed_at TIMESTAMP,
 
     CONSTRAINT fk_po_supply FOREIGN KEY (supply_id)
         REFERENCES supply(supply_id)
