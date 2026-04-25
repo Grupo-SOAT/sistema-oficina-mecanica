@@ -113,7 +113,7 @@ paths:
   /service-orders/{id}/budget:
     $ref: './endpoints/service-orders_budget_decision.yaml'
 
-  /reports/services/{id}/average-time:
+  /reports/catalog/services/{id}/average-time:
     $ref: './endpoints/reports_service_average_time.yaml'
   /reports/service-orders/{id}/budget:
     $ref: './endpoints/reports_service-order_budget.yaml'

@@ -30,6 +30,7 @@
         <postgresql.version>42.7.10</postgresql.version>
         <thymeleaf-extras-springsecurity6.version>3.1.3.RELEASE</thymeleaf-extras-springsecurity6.version>
         <junit-platform-suite.version>6.0.3</junit-platform-suite.version>
+        <itextpdf.version>6.1.0</itextpdf.version>
 
         <!-- Configs -->
         <!-- OpenAPI Generator -->
@@ -64,6 +65,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Relatórios -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>html2pdf</artifactId>
+            <version>${itextpdf.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- OpenApi -->
