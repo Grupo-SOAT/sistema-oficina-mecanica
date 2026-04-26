@@ -9,6 +9,9 @@ import br.com.fiap.postech.adapter.input.api.model.ErrorResponse;
 import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
 import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
 import br.com.fiap.postech.domain.user.exception.SameUsernameException;
+import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
+import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
+import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
 
 
 @RestControllerAdvice
@@ -37,6 +40,29 @@ public class RestExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+    
+    @ExceptionHandler(NoMatchingVehiclesException.class)
+    public ResponseEntity<Object> handleNoMatchingVehiclesException(NoMatchingVehiclesException ex) {
+        
+        var response = new ErrorResponse(400, "VEHICLE_NOT_FOUND_PAGINATION" , ex.getMessage());
 
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicatedVehicleException.class)
+    public ResponseEntity<Object> handleDuplicatedVehicleException(DuplicatedVehicleException ex) {
+        
+        var response = new ErrorResponse(400, "VEHICLE_ALREADY_EXISTS" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(VehicleNotFoundException.class)
+    public ResponseEntity<Object> handleVehicleNotFoundException(VehicleNotFoundException ex) {
+        
+        var response = new ErrorResponse(400, "VEHICLE_NOT_FOUND" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
 }
