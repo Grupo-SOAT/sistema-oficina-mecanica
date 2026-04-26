@@ -54,7 +54,7 @@ public class UserAdapter implements UserPort {
 
         entity.setUsername(userDTO.username());
         entity.setPassword(defaultPassword);
-        entity.setRoles(rolesEnumToRolesString(userDTO.roles()));
+        entity.setRolesList(rolesEnumToRolesString(userDTO.roles()));
 
         var savedUser = userRepository.save(entity);
 
@@ -110,7 +110,7 @@ public class UserAdapter implements UserPort {
         return new User(
                 entity.getId(),
                 entity.getUsername(),
-                rolesStringToRolesEnum(entity.getRoles()));
+                rolesStringToRolesEnum(entity.getRolesList()));
     }
 
     private List<String> rolesEnumToRolesString(List<Roles> roles) {
