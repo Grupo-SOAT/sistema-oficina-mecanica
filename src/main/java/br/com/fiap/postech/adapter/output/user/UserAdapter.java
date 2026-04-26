@@ -73,7 +73,7 @@ public class UserAdapter implements UserPort {
         return userRepository.updateUser(
                 id,
                 userDTO.username(),
-                rolesEnumToRolesString(userDTO.roles()));
+                rolesEnumToRolesString(userDTO.roles()).toArray(new String[0]));
     }
 
     @Override
