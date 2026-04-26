@@ -20,5 +20,7 @@ public interface UserPort {
 
     ScrollPage<User> scroll(String username, Integer pageSize, String cursor);
 
+    void resetarSenhaUsuario(Long id);
+
     String getSenhaDefault();
 }

@@ -72,4 +72,17 @@ public class UserUseCase {
 
         return result;
     }
+
+    public void resetarSenhaUsuario(Long id){
+
+        userPort.encontrarUsuarioPorId(id)
+            .orElseThrow(() -> 
+                new IdUsuarioInexistenteException("Não existe nenhum usuário com o id selecionado.")
+            );
+        
+        userPort.resetarSenhaUsuario(id);
+
+    }
+
+
 }

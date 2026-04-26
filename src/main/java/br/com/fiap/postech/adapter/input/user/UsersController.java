@@ -84,9 +84,13 @@ public class UsersController implements UsersApi {
     // reseta para a senha default
     public ResponseEntity<OneTimePassword> resetPassword(Long id) {
 
-        System.out.println("Request para resetar a senha do usuario recebida. id: ");
+        System.out.println("Request para resetar a senha do usuario recebida. id: " + id);
 
-        OneTimePassword response = new OneTimePassword();
+        userUseCase.resetarSenhaUsuario(id);
+
+        var response = new OneTimePassword("[message]: senha resetada com sucesso. O usuário com id " +
+            id + " está utilizando a senha default do sistema."
+         );
 
         return ResponseEntity.ok(response);
     }

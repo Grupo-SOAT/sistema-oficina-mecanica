@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fiap.postech.domain.user.enums.Roles;
 import br.com.fiap.postech.domain.user.model.User;
@@ -66,6 +67,7 @@ public class UserAdapter implements UserPort {
     }
 
     @Override
+    @Transactional
     public int atualizarUsuario(Long id, UserDTO userDTO) {
 
         return userRepository.updateUser(
@@ -88,6 +90,16 @@ public class UserAdapter implements UserPort {
                             .map(this::toDomain)
                             .toList();
                 });
+    }
+
+    @Override
+    @Transactional
+    public void resetarSenhaUsuario(Long id){
+
+        var usuario = userRepository.findById(id);
+
+        usuario.get().setPassword(this.defaultPassword);
+
     }
 
     // =========================
