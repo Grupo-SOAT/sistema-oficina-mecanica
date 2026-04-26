@@ -1,0 +1,59 @@
+package br.com.fiap.postech.domain.vehicle.usecase;
+
+import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
+import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
+import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
+import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
+import br.com.fiap.postech.domain.vehicle.model.Vehicle;
+import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
+
+public class VehicleUseCase {
+    private final VehiclePersistencePort persistencePort;
+
+    public VehicleUseCase(VehiclePersistencePort persistencePort) {
+        this.persistencePort = persistencePort;
+    }
+
+    public ScrollPage<Vehicle> scroll(String licensePlate, Integer pageSize, String cursor) {
+        final var result = persistencePort.scroll(licensePlate, pageSize, cursor);
+
+        if (result.data().isEmpty()) {
+            throw new NoMatchingVehiclesException(licensePlate);
+        }
+
+        return result;
+    }
+
+    public Vehicle getById(Long id) {
+        return persistencePort.findById(id)
+                .orElseThrow(() -> new VehicleNotFoundException(id));
+    }
+
+    public Vehicle create(Vehicle vehicle) {
+        persistencePort.findByLicensePlate(vehicle.getLicensePlate()).ifPresent(s -> {
+            throw new DuplicatedVehicleException(vehicle.getLicensePlate());
+        });
+        return persistencePort.save(vehicle);
+    }
+
+    public Vehicle update(Long id, Vehicle vehicle) {
+        persistencePort.findByLicensePlate(vehicle.getLicensePlate()).ifPresent(s -> {
+            throw new DuplicatedVehicleException(vehicle.getLicensePlate());
+        });
+
+        persistencePort.findById(id)
+                .orElseThrow(() -> new VehicleNotFoundException(id));
+
+        vehicle.setId(id);
+
+        return persistencePort.save(vehicle);
+    }
+
+    public void delete(Long id) {
+        if (!persistencePort.existsById(id)) {
+            throw new VehicleNotFoundException(id);
+        }
+
+        persistencePort.deleteById(id);
+    }
+}

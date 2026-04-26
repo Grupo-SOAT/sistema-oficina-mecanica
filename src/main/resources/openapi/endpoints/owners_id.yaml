@@ -1,7 +1,7 @@
 get:
-  tags: [ Clients ]
+  tags: [ Owners ]
   summary: Obter cliente por ID
-  operationId: getClientById
+  operationId: getOwnerById
   security:
     - SessionToken: [ ]
   parameters:
@@ -15,7 +15,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../schemas/ClientData.yaml'
+            $ref: '../schemas/OwnerData.yaml'
     '401':
       description: Não autenticado
       content:
@@ -36,9 +36,9 @@ get:
             $ref: '../schemas/ErrorResponse.yaml'
 
 patch:
-  tags: [ Clients ]
+  tags: [ Owners ]
   summary: Atualizar cliente
-  operationId: updateClient
+  operationId: updateOwner
   security:
     - SessionToken: [ ]
   parameters:
@@ -51,14 +51,14 @@ patch:
     content:
       application/json:
         schema:
-          $ref: '../schemas/ClientData.yaml'
+          $ref: '../schemas/OwnerData.yaml'
   responses:
     '200':
       description: Recurso
       content:
         application/json:
           schema:
-            $ref: '../schemas/ClientData.yaml'
+            $ref: '../schemas/OwnerData.yaml'
     '400':
       description: Inválido
       content:
@@ -91,9 +91,9 @@ patch:
             $ref: '../schemas/ErrorResponse.yaml'
 
 delete:
-  tags: [ Clients ]
+  tags: [ Owners ]
   summary: Deletar cliente
-  operationId: deleteClient
+  operationId: deleteOwner
   security:
     - SessionToken: [ ]
   parameters:
