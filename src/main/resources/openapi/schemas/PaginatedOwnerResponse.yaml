@@ -6,4 +6,4 @@ properties:
   data:
     type: array
     items:
-      $ref: './ClientData.yaml'
+      $ref: './OwnerData.yaml'
