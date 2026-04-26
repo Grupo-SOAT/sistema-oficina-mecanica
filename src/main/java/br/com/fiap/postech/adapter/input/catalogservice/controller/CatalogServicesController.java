@@ -1,9 +1,50 @@
 package br.com.fiap.postech.adapter.input.catalogservice.controller;
 
+import br.com.fiap.postech.adapter.input.api.model.*;
+import br.com.fiap.postech.adapter.input.catalogservice.mapper.CatalogServicesMapper;
+import br.com.fiap.postech.domain.catalogServices.usecase.CatalogServicesUseCase;
 import br.com.fiap.postech.port.api.CatalogServicesApi;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 
 @RestController
+@RequiredArgsConstructor
 public class CatalogServicesController implements CatalogServicesApi {
+    private final CatalogServicesUseCase catalogServicesUseCase;
+
+    @Override
+    public ResponseEntity<PaginatedCatalogServiceResponse> listCatalogServices(Long id, String name, Integer pageSize, String cursor) {
+        final var pageResult = catalogServicesUseCase.scroll(name, pageSize, cursor);
+        final var responseBody = CatalogServicesMapper.toPaginatedResponse(pageResult);
+
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @Override
+    public ResponseEntity<CatalogServiceData> createCatalogService(CatalogServiceRequest catalogServiceRequest){
+        final var newCatalogService = CatalogServicesMapper.fromApiRequest(catalogServiceRequest);
+        final var created = catalogServicesUseCase.create(newCatalogService);
+        final var responseBody = CatalogServicesMapper.toApiData(created);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+    }
+
+    @Override
+    public ResponseEntity<CatalogServiceData> updateCatalogService(Long id, CatalogServiceData catalogServiceData) {
+        final var existingCatalogService = CatalogServicesMapper.fromApiData(catalogServiceData);
+        final var updated = catalogServicesUseCase.update(id, existingCatalogService);
+        final var responseBody = CatalogServicesMapper.toApiData(updated);
+
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteCatalogService(Long id) {
+        catalogServicesUseCase.delete(id);
+
+        return ResponseEntity.accepted().build();
+    }
 
 }
