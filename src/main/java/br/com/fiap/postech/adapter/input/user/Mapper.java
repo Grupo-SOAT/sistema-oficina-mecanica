@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import br.com.fiap.postech.adapter.input.api.model.PaginatedUserResponse;
 import br.com.fiap.postech.adapter.input.api.model.Role;
 import br.com.fiap.postech.adapter.input.api.model.UserData;
+import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.domain.user.enums.Roles;
 import br.com.fiap.postech.domain.user.model.User;
 
@@ -68,6 +70,17 @@ public class Mapper {
         }
 
         return Role.valueOf(role.name());
+    }
+
+    public PaginatedUserResponse toPaginatedResponse(ScrollPage<User> page) {
+        final var result = new PaginatedUserResponse()
+                .pageSize(page.pageSize())
+                .cursor(page.cursor())
+                .isLast(page.isLast());
+
+        page.data().forEach(item -> result.addDataItem(toClientResponse(item)));
+
+        return result;
     }
 
 }

@@ -30,6 +30,8 @@ public class UsersController implements UsersApi {
 
         var domainResponse = userUseCase.criarUsuario(userDomainDTO);
 
+        System.out.println("usuário criado: " + domainResponse);
+
         var clientResponse = mapper.toClientResponse(domainResponse);
 
         return ResponseEntity.ok(clientResponse);
@@ -38,7 +40,11 @@ public class UsersController implements UsersApi {
     @Override
     public ResponseEntity<Void> deleteUser(Long id) {
 
-        //userUseCase.deletarUsuario();
+        System.out.println("Request recebida: deletar usuario. ");
+
+        userUseCase.deletarUsuario(id);
+
+        System.out.println("usuário deletado com sucesso.");
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
@@ -46,11 +52,16 @@ public class UsersController implements UsersApi {
     @Override
     public ResponseEntity<UserData> getUserById(Long id) {
 
-        // validação da API key aqui
+        System.out.println("Request recebida para obter usuário. id: " + id);
 
-        UserData response = new UserData();
+        var domainResponse = userUseCase.obterUsuarioPorId(id);
 
-        return ResponseEntity.ok(response);
+        var clientResponse = mapper.toClientResponse(domainResponse);
+
+        System.out.println("Usuário encontrado! " + domainResponse);
+
+        return ResponseEntity.ok(clientResponse);
+
     }
 
     @Override
@@ -59,18 +70,21 @@ public class UsersController implements UsersApi {
         Integer size,
         String cursor
     ) {
+        System.out.println("Request recebida para paginação de usuários! tamanho: " + size +
+            " cursor: " + cursor
+        );
 
-        // validação da API key aqui
+        final var pageResult = userUseCase.scroll(username, size, cursor);
+        final var responseBody = mapper.toPaginatedResponse(pageResult);
 
-        PaginatedUserResponse response = new PaginatedUserResponse();
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(responseBody);
     }
 
     @Override
+    // reseta para a senha default
     public ResponseEntity<OneTimePassword> resetPassword(Long id) {
 
-        // validação da API key aqui
+        System.out.println("Request para resetar a senha do usuario recebida. id: ");
 
         OneTimePassword response = new OneTimePassword();
 
@@ -80,13 +94,18 @@ public class UsersController implements UsersApi {
     @Override
     public ResponseEntity<UserData> updateUser(Long id, UserData userData) {
 
-        // validação da API key aqui
+        System.out.println("Request recebida para atualizar usuário.");
 
-        UserData response = new UserData();
+        var userDTO = new UserDTO(userData.getUsername(), mapper.toDomain(userData.getRoles()));
 
-        return ResponseEntity.ok(response);
+        var domainResponse = userUseCase.atualizarUsuarioPorId(id, userDTO);
+        
+        System.out.println("usuario atualizado com sucesso: " + domainResponse);
+
+        var clientResponse = mapper.toClientResponse(domainResponse);
+
+        return ResponseEntity.ok(clientResponse);
     }
-
 
 
 }

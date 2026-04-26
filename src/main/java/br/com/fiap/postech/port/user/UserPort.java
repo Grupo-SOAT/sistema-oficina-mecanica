@@ -1,16 +1,24 @@
 package br.com.fiap.postech.port.user;
 
+import java.util.Optional;
+
+import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.domain.user.model.User;
 import br.com.fiap.postech.domain.user.model.UserDTO;
 
 public interface UserPort {
 
-    public User encontrarUsuarioPorUsername(String username);
+    Optional<User> encontrarUsuarioPorUsername(String username);
 
-    public User criarUsuario(UserDTO userDTO, String senhaDefault);
+    Optional<User> encontrarUsuarioPorId(Long id);
 
-    //public void deletarUsuario(Long id);
+    User criarUsuario(UserDTO userDTO, String senhaDefault);
 
-    public String getSenhaDefault();
-    
+    void deletarUsuario(Long id);
+
+    int atualizarUsuario(Long id, UserDTO userDTO);
+
+    ScrollPage<User> scroll(String username, Integer pageSize, String cursor);
+
+    String getSenhaDefault();
 }

@@ -16,17 +16,16 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class UserEntity {
-
-    @Builder.Default
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id = 0L;
+    private Long id;
 
     @Column(name = "user_name", nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Type(ListArrayType.class)
