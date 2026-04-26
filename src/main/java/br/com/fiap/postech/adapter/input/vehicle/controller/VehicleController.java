@@ -42,7 +42,7 @@ public class VehicleController implements VehiclesApi {
     }
 
     @Override
-    public ResponseEntity<PaginatedVehicleResponse> listVehicles(Long id, String licensePlate, Integer pageSize, String cursor) {
+    public ResponseEntity<PaginatedVehicleResponse> listVehicles(String licensePlate, Integer pageSize, String cursor) {
         final var pageResult = vehicleUseCase.scroll(licensePlate, pageSize, cursor);
         final var responseBody = VehicleMapper.toPaginatedResponse(pageResult);
 
