@@ -2,11 +2,12 @@ package br.com.fiap.postech.adapter.output.user.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import com.vladmihalcea.hibernate.type.array.ListArrayType;
-import org.hibernate.annotations.Type;
-
+import java.util.Arrays;
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class UserEntity {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -28,7 +29,17 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Type(ListArrayType.class)
+    @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "role", columnDefinition = "text[]")
-    private List<String> roles;
+    private String[] roles;
+
+
+    public List<String> getRolesList() {
+        return roles == null ? List.of() : Arrays.asList(roles);
+    }
+
+    public void setRolesList(List<String> roles) {
+        this.roles = roles == null ? null : roles.toArray(new String[0]);
+    }
+    
 }
