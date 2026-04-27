@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -45,12 +46,14 @@ class ReportsControllerTest {
         ResponseEntity<Resource> result = controller.getServiceAverageTime(serviceId);
         ResponseEntity<Resource> expectedResult = ResponseEntity.ok(new ByteArrayResource(pdfBytes));
 
-        assertThat(result.getStatusCode()).isEqualTo(expectedResult.getStatusCode());
-        assertThat(result.getBody()).isInstanceOf(ByteArrayResource.class);
-        assert result.getBody() != null;
-        assert expectedResult.getBody() != null;
-        assertThat(((ByteArrayResource) result.getBody()).getByteArray())
-                .containsExactly(((ByteArrayResource) expectedResult.getBody()).getByteArray());
+        assertThat(result)
+                .usingRecursiveComparison()
+                .ignoringFields("headers")
+                .isEqualTo(expectedResult);
+        assertThat(result.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_PDF);
+        assertThat(result.getHeaders().getFirst("Content-Disposition"))
+                .startsWith("attachment; filename=\"service-" + serviceId + "-average-time")
+                .endsWith(".pdf\"");
 
         verify(catalogServiceReportingUseCase).calculateAverageTime(serviceId);
         verify(catalogServiceReportingPort).writePDF(calculatedData);
@@ -70,7 +73,12 @@ class ReportsControllerTest {
 
         assertThat(result)
                 .usingRecursiveComparison()
+                .ignoringFields("headers")
                 .isEqualTo(expectedResult);
+        assertThat(result.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("text/csv"));
+        assertThat(result.getHeaders().getFirst("Content-Disposition"))
+                .startsWith("attachment; filename=\"services-average-time_")
+                .endsWith(".csv\"");
 
         verify(catalogServiceReportingUseCase).calculateAverageTime();
         verify(catalogServiceReportingPort).writeCSV(calculatedData);
