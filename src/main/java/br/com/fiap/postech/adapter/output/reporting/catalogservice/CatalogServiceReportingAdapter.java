@@ -1,10 +1,11 @@
-package br.com.fiap.postech.adapter.output.reporting.helper;
+package br.com.fiap.postech.adapter.output.reporting.catalogservice;
 
 import br.com.fiap.postech.domain.reporting.model.CatalogServiceCalculatedAverageTime;
 import br.com.fiap.postech.port.reporting.catalogservice.CatalogServiceReportingPort;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
@@ -17,37 +18,64 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class PDFWriterAdapter implements CatalogServiceReportingPort {
+public class CatalogServiceReportingAdapter implements CatalogServiceReportingPort {
     private static final String BASE_URL_PROP = "baseUrl";
     private static final String REPORT_GENERATED_AT_PROP = "reportGeneratedAt";
     private static final String LOCALHOST = "http://localhost";
     private static final int BUFFER_SIZE = 100000;
     private static final DateTimeFormatter REPORT_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final int DECIMAL_PRECISION = 1;
+    private static final String DECIMAL_SEPARATOR = ".";
+    private static final String BR_DECIMAL_SEPARATOR = ",";
+    private static final String HOUR_INDICATOR = "H";
 
     private static final Map<String, String> TEMPLATE_BY_CLASS_NAME = Map.of(
             CatalogServiceCalculatedAverageTime.class.getSimpleName(), "catalog-service-average-time-report.html"
     );
 
+    private static final String CSV_SEPARATOR = ";";
+    private static final String CSV_LINE_BREAK = "\n";
+    private static final String CSV_HEADER = String.join(
+            CSV_SEPARATOR,
+            List.of(
+                    "ID",
+                    "Nome",
+                    "Total Criado",
+                    "Total Concluído",
+                    "Média criação-conclusão",
+                    "Média início-conclusão",
+                    "Média aprovação-conclusão",
+                    "Média aguardando aprovação"
+            )
+    );
+
     private final TemplateEngine templateEngine;
-    private final ServletWebServerApplicationContext applicationContext;
+    private final ObjectProvider<ServletWebServerApplicationContext> applicationContextProvider;
 
     private String getBaseUrl() {
-        return LOCALHOST + ':' + Objects.requireNonNull(applicationContext.getWebServer()).getPort();
+        final var applicationContext = applicationContextProvider.getIfAvailable();
+        if (applicationContext == null || applicationContext.getWebServer() == null) {
+            return LOCALHOST;
+        }
+
+        return LOCALHOST + ':' + applicationContext.getWebServer().getPort();
     }
 
     private String formatHours(Double value) {
         return BigDecimal.valueOf(value)
-                .setScale(1, RoundingMode.DOWN)
+                .setScale(DECIMAL_PRECISION, RoundingMode.DOWN)
                 .toPlainString()
-                .concat("h");
+                .replace(DECIMAL_SEPARATOR, BR_DECIMAL_SEPARATOR)
+                .concat(HOUR_INDICATOR);
     }
 
-    private Map<String, Object> toReportVariables(CatalogServiceCalculatedAverageTime input) {
+    private Map<String, Object> toTemplateVariables(CatalogServiceCalculatedAverageTime input) {
         final var variables = new LinkedHashMap<String, Object>();
         variables.put("id", input.id());
         variables.put("name", input.name());
@@ -84,8 +112,30 @@ public class PDFWriterAdapter implements CatalogServiceReportingPort {
     @Override
     public byte[] writePDF(CatalogServiceCalculatedAverageTime input) {
         return this.writePDF(
-                toReportVariables(input),
+                toTemplateVariables(input),
                 TEMPLATE_BY_CLASS_NAME.get(input.getClass().getSimpleName())
         );
+    }
+
+    private String writeCSVLine(CatalogServiceCalculatedAverageTime item) {
+        return item.id() + CSV_SEPARATOR +
+                item.name() + CSV_SEPARATOR +
+                item.totalCreated() + CSV_SEPARATOR +
+                item.totalCompleted() + CSV_SEPARATOR +
+                formatHours(item.averageTimeBetweenCreateAndComplete()) + CSV_SEPARATOR +
+                formatHours(item.averageTimeBetweenStartAndComplete()) + CSV_SEPARATOR +
+                formatHours(item.averageTimeBetweenApproveAndComplete()) + CSV_SEPARATOR +
+                formatHours(item.averageTimeAwaitingBudgetApproval()) + CSV_LINE_BREAK;
+    }
+
+    @Override
+    public String writeCSV(List<CatalogServiceCalculatedAverageTime> items) {
+        var csv = CSV_HEADER + CSV_LINE_BREAK;
+
+        csv += items.stream()
+                .map(this::writeCSVLine)
+                .collect(Collectors.joining());
+
+        return csv;
     }
 }
