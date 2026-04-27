@@ -72,9 +72,11 @@ public abstract class BaseStepDefinition {
             MvcResult result = mockMvc.perform(request).andReturn();
             context.setLastStatusCode(result.getResponse().getStatus());
             context.setLastResponseBody(result.getResponse().getContentAsString());
+            context.setLastResponseContentType(result.getResponse().getContentType());
         } catch (Exception e) {
             context.setLastStatusCode(0);
             context.setLastResponseBody(e.getMessage());
+            context.setLastResponseContentType(null);
         }
     }
 
@@ -85,9 +87,11 @@ public abstract class BaseStepDefinition {
             MvcResult result = mockMvc.perform(request).andReturn();
             context.setLastStatusCode(result.getResponse().getStatus());
             context.setLastResponseBody(result.getResponse().getContentAsString());
+            context.setLastResponseContentType(result.getResponse().getContentType());
         } catch (Exception e) {
             context.setLastStatusCode(0);
             context.setLastResponseBody(e.getMessage());
+            context.setLastResponseContentType(null);
         }
     }
 
@@ -131,9 +135,11 @@ public abstract class BaseStepDefinition {
             MvcResult result = mockMvc.perform(request).andReturn();
             context.setLastStatusCode(result.getResponse().getStatus());
             context.setLastResponseBody(result.getResponse().getContentAsString());
+            context.setLastResponseContentType(result.getResponse().getContentType());
         } catch (Exception e) {
             context.setLastStatusCode(0);
             context.setLastResponseBody(e.getMessage());
+            context.setLastResponseContentType(null);
         }
     }
 

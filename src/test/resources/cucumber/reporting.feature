@@ -9,8 +9,22 @@ Funcionalidade: Exportação de Relatórios
 
   Esquema do Cenário: Consulta de tempo médio de execução por serviço
     Dado que eu esteja devidamente logado
-    Quando acesso o endpoint "GET" "/reports/services/:id/average-time"
+    Quando acesso o endpoint "GET" "/reports/catalog/services/:id/average-time"
     Então devo receber uma resposta com status "<status>"
+    E o content-type da resposta deve ser "application/pdf"
+    E o body da resposta não deve ser vazio
+    E o nome do arquivo deve indicar exportação recente
+    Exemplos:
+      | status |
+      | 200    |
+
+  Esquema do Cenário: Consulta de tempo médio de execução de todos os serviços em CSV
+    Dado que eu esteja devidamente logado
+    Quando acesso o endpoint "GET" "/reports/catalog/services/average-time"
+    Então devo receber uma resposta com status "<status>"
+    E o content-type da resposta deve ser "text/csv"
+    E o body da resposta não deve ser vazio
+    E o nome do arquivo deve indicar exportação recente
     Exemplos:
       | status |
       | 200    |
@@ -21,6 +35,9 @@ Funcionalidade: Exportação de Relatórios
     Dado que eu esteja devidamente logado
     Quando acesso o endpoint "GET" "/reports/service-orders/:id/budget"
     Então devo receber uma resposta com status "<status>"
+    E o content-type da resposta deve ser "application/pdf"
+    E o body da resposta não deve ser vazio
+    E o nome do arquivo deve indicar exportação recente
     Exemplos:
       | status |
       | 200    |
@@ -31,6 +48,9 @@ Funcionalidade: Exportação de Relatórios
     Dado que eu esteja devidamente logado
     Quando acesso o endpoint "GET" "/reports/purchase-order/:id"
     Então devo receber uma resposta com status "<status>"
+    E o content-type da resposta deve ser "application/pdf"
+    E o body da resposta não deve ser vazio
+    E o nome do arquivo deve indicar exportação recente
     Exemplos:
       | status |
       | 200    |
