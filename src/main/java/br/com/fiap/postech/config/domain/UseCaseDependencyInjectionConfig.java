@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.LongStream;
 
 @Configuration
 public class UseCaseDependencyInjectionConfig {
@@ -18,6 +20,14 @@ public class UseCaseDependencyInjectionConfig {
     @ConditionalOnBooleanProperty(name = "config.api.mock.reports.average-time.enabled")
     public CatalogServiceReportingUseCase catalogServiceReportingUseCase() {
         class Mock implements CatalogServiceReportingUseCase {
+            private long randomTotalizer() {
+                return ThreadLocalRandom.current().nextLong(0, 1001);
+            }
+
+            private double randomHours() {
+                return ThreadLocalRandom.current().nextDouble(1.0, 72.0);
+            }
+
             @Override
             public CatalogServiceCalculatedAverageTime calculateAverageTime(Long catalogServiceId) {
                 return CatalogServiceCalculatedAverageTime.builder()
@@ -32,12 +42,11 @@ public class UseCaseDependencyInjectionConfig {
                         .build();
             }
 
-            private long randomTotalizer() {
-                return ThreadLocalRandom.current().nextLong(0, 1001);
-            }
-
-            private double randomHours() {
-                return ThreadLocalRandom.current().nextDouble(1.0, 72.0);
+            @Override
+            public List<CatalogServiceCalculatedAverageTime> calculateAverageTime() {
+                return LongStream.rangeClosed(1, 100)
+                        .mapToObj(this::calculateAverageTime)
+                        .toList();
             }
         }
 
