@@ -115,6 +115,8 @@ paths:
 
   /reports/catalog/services/{id}/average-time:
     $ref: './endpoints/reports_service_average_time.yaml'
+  /reports/catalog/services/average-time:
+    $ref: './endpoints/reports_all_services_average_time.yaml'
   /reports/service-orders/{id}/budget:
     $ref: './endpoints/reports_service-order_budget.yaml'
   /reports/purchase-order/{id}:
