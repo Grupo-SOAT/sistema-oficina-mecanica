@@ -11,7 +11,7 @@ Funcionalidade: Gerenciamento de Clientes
     Dado que eu esteja devidamente logado
     E que o tamanho da pagina seja 10
     Quando eu listar os clientes
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter uma lista de dados
     E a resposta deve conter o campo "pageSize"
     E a resposta deve conter o campo "cursor"
@@ -22,7 +22,7 @@ Funcionalidade: Gerenciamento de Clientes
     E que o filtro document seja "123.456.789-09"
     E que o tamanho da pagina seja 10
     Quando eu listar os clientes
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter no maximo 1 clientes
     E a resposta deve conter ao menos um cliente com document "123.456.789-09"
 
@@ -31,14 +31,14 @@ Funcionalidade: Gerenciamento de Clientes
     E que o filtro document seja "000.000.000-00"
     E que o tamanho da pagina seja 10
     Quando eu listar os clientes
-    Então a resposta deve ter status 204
+    Então devo receber uma resposta com status "204"
 
   Cenário: Paginação de clientes com cursor
     Dado que eu esteja devidamente logado
     E que o cursor seja "1"
     E que o tamanho da pagina seja 10
     Quando eu listar os clientes
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E o primeiro item retornado deve ter id maior que 1
 
   # === DETALHAMENTO POR ID ===
@@ -47,7 +47,7 @@ Funcionalidade: Gerenciamento de Clientes
     Dado que eu esteja devidamente logado
     E que o id do cliente seja 1
     Quando eu consultar o cliente por id
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter o campo "id"
     E a resposta deve conter o campo "name"
     E a resposta deve conter o campo "document"
@@ -59,7 +59,7 @@ Funcionalidade: Gerenciamento de Clientes
     Dado que eu esteja devidamente logado
     E que o id do cliente seja 99999
     Quando eu consultar o cliente por id
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "CLIENT_NOT_FOUND"
 
   # === CADASTRO ===
@@ -70,7 +70,7 @@ Funcionalidade: Gerenciamento de Clientes
       | name          | document       | documentType | phone           | email                     |
       | Joao Ferreira | 321.654.987-00 | CPF          | (11) 97777-1111 | joao.ferreira@cliente.com |
     Quando eu criar o cliente
-    Então a resposta deve ter status 201
+    Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
     E a resposta deve refletir o payload enviado
 
@@ -80,7 +80,7 @@ Funcionalidade: Gerenciamento de Clientes
       | name   | document   | documentType   | phone   | email   |
       | <name> | <document> | <documentType> | <phone> | <email> |
     Quando eu criar o cliente
-    Então a resposta deve ter status 201
+    Então devo receber uma resposta com status "201"
     Exemplos:
       | name                     | document           | documentType | phone           | email                           |
       | Joao Sem Mascara         | 32165498700        | CPF          | (11) 97777-1111 | joao.sem.mascara@cliente.com    |
@@ -93,7 +93,7 @@ Funcionalidade: Gerenciamento de Clientes
       | name                 | document   | documentType | phone           | email                    |
       | Cliente CPF Inválido | <document> | CPF          | (11) 98888-7777 | cpf.inválido@cliente.com |
     Quando eu criar o cliente
-    Então a resposta deve ter status 400
+    Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "INVALID_CLIENT_DOCUMENT"
     Exemplos:
       | document       |
@@ -107,7 +107,7 @@ Funcionalidade: Gerenciamento de Clientes
       | name        | document       | documentType | phone           | email         |
       | Cliente Dup | 123.456.789-09 | CPF          | (11) 98888-7777 | dup@email.com |
     Quando eu criar o cliente
-    Então a resposta deve ter status 409
+    Então devo receber uma resposta com status "409"
     E a resposta deve conter o campo reason com valor "CLIENT_CONFLICT_DUPLICATED_DOCUMENT"
 
   # === ATUALIZAÇÃO ===
@@ -119,7 +119,7 @@ Funcionalidade: Gerenciamento de Clientes
       | id | name            | document       | documentType | phone           | email          |
       | 1  | Joao Atualizado | 123.456.789-09 | CPF          | (11) 99999-9999 | novo@email.com |
     Quando eu atualizar o cliente
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado
 
   Esquema do Cenário: Atualização de cliente com documento inválido ou duplicado
@@ -129,7 +129,7 @@ Funcionalidade: Gerenciamento de Clientes
       | id | name            | document   | documentType | phone           | email            |
       | 1  | Cliente Ajuste  | <document> | CPF          | (11) 99999-9999 | ajuste@email.com |
     Quando eu atualizar o cliente
-    Então a resposta deve ter status <status>
+    Então devo receber uma resposta com status "<status>"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
       | document       | status | reason                               |
@@ -143,7 +143,7 @@ Funcionalidade: Gerenciamento de Clientes
       | id    | name       | document       | documentType | phone           | email        |
       | 99999 | Nao Existe | 987.654.321-00 | CPF          | (11) 95555-1111 | ne@email.com |
     Quando eu atualizar o cliente
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "CLIENT_NOT_FOUND"
 
   # === EXCLUSÃO ===
@@ -152,11 +152,11 @@ Funcionalidade: Gerenciamento de Clientes
     Dado que eu esteja devidamente logado
     E que o id do cliente seja 2
     Quando eu remover o cliente
-    Então a resposta deve ter status 202
+    Então devo receber uma resposta com status "202"
 
   Cenário: Exclusão de cliente inexistente
     Dado que eu esteja devidamente logado
     E que o id do cliente seja 99999
     Quando eu remover o cliente
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "CLIENT_NOT_FOUND"
