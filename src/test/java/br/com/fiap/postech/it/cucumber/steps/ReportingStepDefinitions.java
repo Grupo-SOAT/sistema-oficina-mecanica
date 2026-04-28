@@ -3,6 +3,7 @@ package br.com.fiap.postech.it.cucumber.steps;
 import io.cucumber.java.pt.E;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReportingStepDefinitions extends BaseStepDefinition {
     private static final Pattern ISO_LOCAL_DATE_TIME_IN_FILENAME = Pattern.compile(
-            "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?)"
+            "(\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2})"
     );
 
     @E("o content-type da resposta deve ser {string}")
@@ -39,7 +40,10 @@ public class ReportingStepDefinitions extends BaseStepDefinition {
         var matcher = ISO_LOCAL_DATE_TIME_IN_FILENAME.matcher(contentDisposition);
         assertTrue(matcher.find(), "Nome do arquivo sem timestamp ISO. Header: " + contentDisposition);
 
-        LocalDateTime exportedAt = LocalDateTime.parse(matcher.group(1));
+        LocalDateTime exportedAt = LocalDateTime.parse(
+                matcher.group(1),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")
+        );
         LocalDateTime now = LocalDateTime.now();
 
         assertFalse(

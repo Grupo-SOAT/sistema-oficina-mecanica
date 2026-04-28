@@ -23,22 +23,23 @@ Funcionalidade: Exportação de Relatórios
     E o body da resposta não deve ser vazio
     E o nome do arquivo deve indicar exportação recente
 
-	# === RELATÓRIO DE ORÇAMENTO DA OS ===
+#	# === RELATÓRIO DE ORÇAMENTO DA OS ===
+#
+#  Cenário: Consulta de orçamento de ordem de serviço
+#    Dado que eu esteja devidamente logado
+#    Quando acesso o endpoint "GET" "/reports/service-orders/:id/budget"
+#    Então devo receber uma resposta com status "200"
+#    E o content-type da resposta deve ser "application/pdf"
+#    E o body da resposta não deve ser vazio
+#    E o nome do arquivo deve indicar exportação recente
+#
+#	# === RELATÓRIO DE PEDIDO DE COMPRA ===
+#
+#  Cenário: Consulta de pedido de compra
+#    Dado que eu esteja devidamente logado
+#    Quando acesso o endpoint "GET" "/reports/purchase-order/:id"
+#    Então devo receber uma resposta com status "200"
+#    E o content-type da resposta deve ser "application/pdf"
+#    E o body da resposta não deve ser vazio
+#    E o nome do arquivo deve indicar exportação recente
 
-  Cenário: Consulta de orçamento de ordem de serviço
-    Dado que eu esteja devidamente logado
-    Quando acesso o endpoint "GET" "/reports/service-orders/:id/budget"
-    Então devo receber uma resposta com status "200"
-    E o content-type da resposta deve ser "application/pdf"
-    E o body da resposta não deve ser vazio
-    E o nome do arquivo deve indicar exportação recente
-
-	# === RELATÓRIO DE PEDIDO DE COMPRA ===
-
-  Cenário: Consulta de pedido de compra
-    Dado que eu esteja devidamente logado
-    Quando acesso o endpoint "GET" "/reports/purchase-order/:id"
-    Então devo receber uma resposta com status "200"
-    E o content-type da resposta deve ser "application/pdf"
-    E o body da resposta não deve ser vazio
-    E o nome do arquivo deve indicar exportação recente
