@@ -2,6 +2,7 @@ package br.com.fiap.postech.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,9 +13,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final Environment environment;
+
+    public SecurityConfig(Environment environment) {
+        this.environment = environment;
+    }
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        http.authorizeHttpRequests(auth -> auth
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        boolean isMockProfile = environment.matchesProfiles("mock");
+
+        if (isMockProfile) {
+            return http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                    .httpBasic(AbstractHttpConfigurer::disable)
+                    .formLogin(AbstractHttpConfigurer::disable)
+                    .build();
+        }
+
+        return http.authorizeHttpRequests(auth -> auth
                         // SWAGGER DOCS
                         .requestMatchers(
                                 "/v3/api-docs/**",
@@ -36,9 +52,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable);
-
-        return http.build();
+                .formLogin(AbstractHttpConfigurer::disable)
+                .build();
     }
 
 }
