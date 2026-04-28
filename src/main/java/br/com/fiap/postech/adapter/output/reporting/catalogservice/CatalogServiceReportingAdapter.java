@@ -29,7 +29,7 @@ public class CatalogServiceReportingAdapter implements CatalogServiceReportingPo
     private static final String REPORT_GENERATED_AT_PROP = "reportGeneratedAt";
     private static final String LOCALHOST = "http://localhost";
     private static final int BUFFER_SIZE = 100000;
-    private static final DateTimeFormatter REPORT_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private static final DateTimeFormatter REPORT_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     private static final int DECIMAL_PRECISION = 1;
     private static final String DECIMAL_SEPARATOR = ".";
     private static final String BR_DECIMAL_SEPARATOR = ",";
