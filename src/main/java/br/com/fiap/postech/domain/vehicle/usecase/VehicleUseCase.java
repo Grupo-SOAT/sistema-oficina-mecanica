@@ -37,9 +37,12 @@ public class VehicleUseCase {
     }
 
     public Vehicle update(Long id, Vehicle vehicle) {
-        persistencePort.findByLicensePlate(vehicle.getLicensePlate()).ifPresent(s -> {
-            throw new DuplicatedVehicleException(vehicle.getLicensePlate());
-        });
+        persistencePort.findByLicensePlate(vehicle.getLicensePlate())
+            .ifPresent(existingVehicle -> {
+                if (!existingVehicle.getId().equals(id)) {
+                    throw new DuplicatedVehicleException(vehicle.getLicensePlate());
+                }
+            });
 
         persistencePort.findById(id)
                 .orElseThrow(() -> new VehicleNotFoundException(id));
