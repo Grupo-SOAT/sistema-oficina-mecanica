@@ -38,9 +38,12 @@ public class OwnerUseCase {
     }
 
     public Owner update(Long id, Owner owner) {
-        persistencePort.findByDocument(owner.getDocument()).ifPresent(s -> {
-            throw new DuplicatedOwnerException(owner.getDocument());
-        });
+        persistencePort.findByDocument(owner.getDocument())
+            .ifPresent(existingOwner -> {
+                if (!existingOwner.getId().equals(id)) {
+                    throw new DuplicatedOwnerException(owner.getDocument());
+                }
+            });
 
         persistencePort.findById(id)
                 .orElseThrow(() -> new OwnerNotFoundException(id));
