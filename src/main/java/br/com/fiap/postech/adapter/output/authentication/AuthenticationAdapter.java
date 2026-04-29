@@ -1,0 +1,74 @@
+package br.com.fiap.postech.adapter.output.authentication;
+
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+
+import javax.crypto.SecretKey;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import br.com.fiap.postech.adapter.output.user.persistence.repository.UserRepository;
+import br.com.fiap.postech.domain.authentication.exception.SenhaInvalidaException;
+import br.com.fiap.postech.domain.authentication.model.Authentication;
+import br.com.fiap.postech.domain.authentication.model.UserLogin;
+import br.com.fiap.postech.domain.user.model.User;
+import br.com.fiap.postech.port.authentication.AuthenticationPort;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class AuthenticationAdapter implements AuthenticationPort {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Value("${security.jwt.secret}")
+    private String jwtSecret;
+
+    @Value("${authentication.chatbot.api.key}")
+    private String chatBotAuthKey;
+
+    private static final long EXPIRATION_MINUTES = 30;
+
+    @Override
+    public Authentication autenticar(User user, UserLogin userLogin) {
+
+        var usuario = userRepository.findById(user.id());
+
+        if (!passwordEncoder.matches(userLogin.password(), usuario.get().getPassword())) {
+            throw new SenhaInvalidaException("senha invalida. tente novamente.");
+        }
+
+        Instant now = Instant.now();
+        Instant expiration = now.plus(EXPIRATION_MINUTES, ChronoUnit.MINUTES);
+
+        List<String> roles = user.roles().stream()
+                .map(Enum::name)
+                .toList();
+
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+
+        String token = Jwts.builder()
+                .subject(user.username())
+                .issuer("mechanic-workshop-system")
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiration))
+                .claim("roles", roles)
+                .claim("userId", user.id())
+                .signWith(key, Jwts.SIG.HS256)
+                .compact();
+
+        return new Authentication(
+                token,
+                OffsetDateTime.ofInstant(expiration, ZoneOffset.UTC));
+    }
+}

@@ -3,6 +3,7 @@ package br.com.fiap.postech.adapter.input.authentication;
 import br.com.fiap.postech.adapter.input.api.model.ChangePasswordRequest;
 import br.com.fiap.postech.adapter.input.api.model.LoginRequest;
 import br.com.fiap.postech.adapter.input.api.model.TokenResponse;
+import br.com.fiap.postech.adapter.input.authentication.mapper.AuthenticationMapper;
 import br.com.fiap.postech.domain.authentication.AuthenticationUseCase;
 import br.com.fiap.postech.port.api.AuthenticationApi;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +21,20 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController implements AuthenticationApi {
 
     private final AuthenticationUseCase authenticationUseCase;
+    private final AuthenticationMapper mapper;
 
     @Override
     public ResponseEntity<TokenResponse> authenticate(LoginRequest request) {
 
-        // Mock de resposta
-        TokenResponse response = new TokenResponse("dummy-token", OffsetDateTime.parse("2026-04-24T15:30:00-03:00"));
+        System.out.println("Request para login recebida!");
 
-        return ResponseEntity.ok(response);
+        var domainResponse = authenticationUseCase.gerarTokenParaUsuario(mapper.toDomain(request));
+
+        var clientResponse = mapper.toClientResponse(domainResponse);
+
+        System.out.println("token gerado com sucesso.");
+
+        return ResponseEntity.ok(clientResponse);
     }
 
     @Override
