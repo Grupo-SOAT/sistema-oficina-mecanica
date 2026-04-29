@@ -15,6 +15,7 @@ import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
 import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
 import br.com.fiap.postech.domain.user.exception.SameUsernameException;
 import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
+import br.com.fiap.postech.domain.vehicle.excecption.InvalidLicensePlateException;
 import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
 import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
 
@@ -106,6 +107,14 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleInvalidEmailException(InvalidEmailException ex) {
         
         var response = new ErrorResponse(400, "EMAIL_INVALID" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidLicensePlateException.class)
+    public ResponseEntity<Object> handleInvalidLicensePlateException(InvalidLicensePlateException ex) {
+        
+        var response = new ErrorResponse(400, "LICENSE_PLATE_INVALID" , ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

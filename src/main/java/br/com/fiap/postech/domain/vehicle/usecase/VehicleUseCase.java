@@ -2,9 +2,11 @@ package br.com.fiap.postech.domain.vehicle.usecase;
 
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
+import br.com.fiap.postech.domain.vehicle.excecption.InvalidLicensePlateException;
 import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
 import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
 import br.com.fiap.postech.domain.vehicle.model.Vehicle;
+import br.com.fiap.postech.domain.vehicle.validation.VehicleLicensePlateValidator;
 import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
 
 public class VehicleUseCase {
@@ -30,6 +32,8 @@ public class VehicleUseCase {
     }
 
     public Vehicle create(Vehicle vehicle) {
+        validateLicensePlate(vehicle);
+
         persistencePort.findByLicensePlate(vehicle.getLicensePlate()).ifPresent(s -> {
             throw new DuplicatedVehicleException(vehicle.getLicensePlate());
         });
@@ -37,6 +41,8 @@ public class VehicleUseCase {
     }
 
     public Vehicle update(Long id, Vehicle vehicle) {
+        validateLicensePlate(vehicle);
+
         persistencePort.findByLicensePlate(vehicle.getLicensePlate())
             .ifPresent(existingVehicle -> {
                 if (!existingVehicle.getId().equals(id)) {
@@ -58,5 +64,12 @@ public class VehicleUseCase {
         }
 
         persistencePort.deleteById(id);
+    }
+
+    private void validateLicensePlate(Vehicle vehicle) {
+
+        if (!VehicleLicensePlateValidator.isValid(vehicle.getLicensePlate())) {
+            throw new InvalidLicensePlateException(vehicle.getLicensePlate());
+        }
     }
 }
