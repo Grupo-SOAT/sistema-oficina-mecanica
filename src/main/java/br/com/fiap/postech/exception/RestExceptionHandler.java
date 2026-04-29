@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.com.fiap.postech.adapter.input.api.model.ErrorResponse;
 import br.com.fiap.postech.domain.owner.exception.DuplicatedOwnerException;
+import br.com.fiap.postech.domain.owner.exception.InvalidDocumentException;
+import br.com.fiap.postech.domain.owner.exception.InvalidEmailException;
 import br.com.fiap.postech.domain.owner.exception.NoMatchingOwnersException;
 import br.com.fiap.postech.domain.owner.exception.OwnerNotFoundException;
 import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
@@ -88,6 +90,22 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleOwnerNotFoundException(OwnerNotFoundException ex) {
         
         var response = new ErrorResponse(400, "OWNER_NOT_FOUND" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidDocumentException.class)
+    public ResponseEntity<Object> handleInvalidDocumentException(InvalidDocumentException ex) {
+        
+        var response = new ErrorResponse(400, "DOCUMENT_INVALID" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    public ResponseEntity<Object> handleInvalidEmailException(InvalidEmailException ex) {
+        
+        var response = new ErrorResponse(400, "EMAIL_INVALID" , ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
