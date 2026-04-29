@@ -47,4 +47,12 @@ public class CatalogServicesController implements CatalogServicesApi {
         return ResponseEntity.accepted().build();
     }
 
+    @Override
+    public ResponseEntity<CatalogServiceData> getCatalogServiceById(Long id) {
+        var catalogService = catalogServicesUseCase.getById(id);
+        final var responseBody = CatalogServicesMapper.toApiData(catalogService);
+
+        return ResponseEntity.ok(responseBody);
+    }
+
 }

@@ -19,7 +19,6 @@ public class CatalogServicesPersistenceAdapter implements CatalogServicesPersist
 
     @Override
     public ScrollPage<CatalogServices> scroll(String name, Integer pageSize, String cursor) {
-        var x = repository.findAll();
         return Scroller.scroll(
                 cursor,
                 pageSize,
