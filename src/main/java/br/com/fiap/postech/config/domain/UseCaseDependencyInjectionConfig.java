@@ -25,8 +25,8 @@ public class UseCaseDependencyInjectionConfig {
     }
 
     @Bean
-    public VehicleUseCase vehicleUseCase(VehiclePersistencePort persistencePort) {
-        return new VehicleUseCase(persistencePort);
+    public VehicleUseCase vehicleUseCase(VehiclePersistencePort persistencePort, OwnerPersistencePort ownerPersistencePort) {
+        return new VehicleUseCase(persistencePort, ownerPersistencePort);
     }
 
     @Bean
