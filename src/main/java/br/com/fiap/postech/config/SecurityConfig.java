@@ -7,50 +7,71 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-                http
-                                .csrf(AbstractHttpConfigurer::disable)
+    private final RoleAuthorizationFilter roleAuthorizationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-                                .authorizeHttpRequests(auth -> auth
-                                                // Swagger liberado
-                                                .requestMatchers(
-                                                                "/v3/api-docs/**",
-                                                                "/swagger-resources/**",
-                                                                "/swagger-ui/**",
-                                                                "/swagger-ui.html")
-                                                .permitAll()
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
 
-                                                // Auth liberado
-                                                .requestMatchers(
-                                                                HttpMethod.POST,
-                                                                "/auth/login",
-                                                                "/auth/chatbot",
-                                                                "/auth/change-password")
-                                                .permitAll()
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                                                // resto protegido
-                                                .anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html")
+                        .permitAll()
 
-                                .exceptionHandling(ex -> ex
-                                                .authenticationEntryPoint((request, response, authException) -> response
-                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/auth/login",
+                                "/auth/chatbot",
+                                "/auth/change-password")
+                        .permitAll()
 
-                                .httpBasic(AbstractHttpConfigurer::disable)
-                                .formLogin(AbstractHttpConfigurer::disable);
+                        .anyRequest().authenticated())
 
-                return http.build();
-        }
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, exAuth) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\":\"UNAUTHORIZED\"}");
+                        })
+                        .accessDeniedHandler((request, response, exDenied) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\":\"FORBIDDEN\"}");
+                        }))
 
+                // JWT primeiro
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+                // depois autorização
+                .addFilterAfter(roleAuthorizationFilter, JwtAuthenticationFilter.class)
+
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable);
+
+        return http.build();
+    }
 }

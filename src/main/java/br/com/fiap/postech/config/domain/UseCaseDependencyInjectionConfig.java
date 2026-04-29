@@ -1,7 +1,9 @@
 package br.com.fiap.postech.config.domain;
 
+import br.com.fiap.postech.domain.authentication.AuthenticationUseCase;
 import br.com.fiap.postech.domain.supply.usecase.SupplyUseCase;
 import br.com.fiap.postech.domain.user.UserUseCase;
+import br.com.fiap.postech.port.authentication.AuthenticationPort;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
 import br.com.fiap.postech.port.user.UserPort;
 import br.com.fiap.postech.domain.vehicle.usecase.VehicleUseCase;
@@ -20,6 +22,13 @@ public class UseCaseDependencyInjectionConfig {
     @Bean
     public UserUseCase userUseCase(UserPort userPort){
         return new UserUseCase(userPort);
+    }
+
+    @Bean
+    public AuthenticationUseCase authenticationUseCase(AuthenticationPort authenticationPort,
+        UserPort userPort
+    ){
+        return new AuthenticationUseCase(authenticationPort, userPort);
     }
 
     @Bean
