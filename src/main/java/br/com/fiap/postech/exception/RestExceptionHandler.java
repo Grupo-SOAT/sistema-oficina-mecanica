@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.com.fiap.postech.adapter.input.api.model.ErrorResponse;
+import br.com.fiap.postech.domain.owner.exception.DuplicatedOwnerException;
+import br.com.fiap.postech.domain.owner.exception.NoMatchingOwnersException;
+import br.com.fiap.postech.domain.owner.exception.OwnerNotFoundException;
 import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
 import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
 import br.com.fiap.postech.domain.user.exception.SameUsernameException;
@@ -65,4 +68,27 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoMatchingOwnersException.class)
+    public ResponseEntity<Object> handleNoMatchingOwnersException(NoMatchingOwnersException ex) {
+        
+        var response = new ErrorResponse(400, "OWNER_NOT_FOUND_PAGINATION" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicatedOwnerException.class)
+    public ResponseEntity<Object> handleDuplicatedOwnerException(DuplicatedOwnerException ex) {
+        
+        var response = new ErrorResponse(400, "OWNER_ALREADY_EXISTS" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OwnerNotFoundException.class)
+    public ResponseEntity<Object> handleOwnerNotFoundException(OwnerNotFoundException ex) {
+        
+        var response = new ErrorResponse(400, "OWNER_NOT_FOUND" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

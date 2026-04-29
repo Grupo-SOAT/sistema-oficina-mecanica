@@ -1,0 +1,73 @@
+package br.com.fiap.postech.adapter.output.owner.persistence;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
+import br.com.fiap.postech.adapter.output.owner.persistence.entity.OwnerEntity;
+import br.com.fiap.postech.adapter.output.owner.persistence.repository.OwnerRepository;
+import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
+import br.com.fiap.postech.adapter.output.persistence.helper.scroll.Scroller;
+import br.com.fiap.postech.domain.owner.model.Owner;
+import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
+public class OwnerPersistenceAdapter implements OwnerPersistencePort{
+    private final OwnerRepository repository;
+
+    @Override
+    public ScrollPage<Owner> scroll(String email, Integer pageSize, String cursor) {
+        return Scroller.scroll(
+                cursor,
+                pageSize,
+                (parsedCursor, pageable) -> {
+                    List<OwnerEntity> results = (email == null || email.isBlank())
+                            ? repository.findAllAfterCursor(parsedCursor, pageable)
+                            : repository.findByEmailAfterCursor(email, parsedCursor, pageable);
+
+                    return results.stream().map(item -> (Owner) item).toList();
+                }
+        );
+    }
+
+    @Override
+    public Optional<Owner> findById(Long id) {
+        return repository.findById(id).map(item -> (Owner) item);
+    }
+
+    @Override
+    public Optional<Owner> findByDocument(String document) {
+        return repository.findByDocument(document).map(item -> (Owner) item);
+    }
+
+    @Override
+    public Owner save(Owner owner) {
+        OwnerEntity entity;
+        if (owner instanceof OwnerEntity ownerEntity) {
+            entity = ownerEntity;
+        } else {
+            entity = new OwnerEntity();
+            entity.setId(owner.getId());
+            entity.setName(owner.getName());
+            entity.setDocument(owner.getDocument());
+            entity.setDocumentType(owner.getDocumentType());
+            entity.setPhone(owner.getPhone());
+            entity.setEmail(owner.getEmail());
+        }
+
+        return repository.save(entity);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
+}

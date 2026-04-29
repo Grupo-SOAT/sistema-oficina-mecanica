@@ -6,19 +6,7 @@ get:
     - SessionToken: [ ]
   parameters:
     - in: query
-      name: id
-      schema: { type: integer, format: int64 }
-    - in: query
-      name: document
-      schema: { type: string }
-    - in: query
-      name: phone
-      schema: { type: string }
-    - in: query
       name: email
-      schema: { type: string }
-    - in: query
-      name: name
       schema: { type: string }
     - in: query
       name: pageSize
