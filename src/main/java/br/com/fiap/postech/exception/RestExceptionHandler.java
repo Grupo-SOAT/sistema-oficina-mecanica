@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import br.com.fiap.postech.adapter.input.api.model.ErrorResponse;
+import br.com.fiap.postech.domain.authentication.exception.ChatBotApiKeyInvalidaException;
 import br.com.fiap.postech.domain.authentication.exception.SenhaInvalidaException;
 import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
 import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
@@ -52,6 +53,14 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleSenhaInvalidaException(SenhaInvalidaException ex) {
         
         var response = new ErrorResponse(400, "SENHA_INVALIDA" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ChatBotApiKeyInvalidaException.class)
+    public ResponseEntity<Object> handleChatBotApiKeyInvalidaException(ChatBotApiKeyInvalidaException ex) {
+        
+        var response = new ErrorResponse(400, "API_KEY_CHATBOT_INVALIDA" , ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

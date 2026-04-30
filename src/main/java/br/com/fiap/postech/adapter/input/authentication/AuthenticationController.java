@@ -5,6 +5,7 @@ import br.com.fiap.postech.adapter.input.api.model.LoginRequest;
 import br.com.fiap.postech.adapter.input.api.model.TokenResponse;
 import br.com.fiap.postech.adapter.input.authentication.mapper.AuthenticationMapper;
 import br.com.fiap.postech.domain.authentication.AuthenticationUseCase;
+import br.com.fiap.postech.domain.authentication.model.UserChangePassword;
 import br.com.fiap.postech.port.api.AuthenticationApi;
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +41,14 @@ public class AuthenticationController implements AuthenticationApi {
     @Override
     public ResponseEntity<Void> changePassword(ChangePasswordRequest request) {
 
-        // lógica aqui
+        System.out.println("Request para mudar a senha do usuario recebida.");
+
+        var userData = new UserChangePassword(request.getNewPassword(), 
+        request.getUsername(), request.getPassword());
+
+        authenticationUseCase.mudarSenhaUsuario(userData);
+
+        System.out.println("Senha alterada com sucesso! Usuario:" + request.getUsername());
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
@@ -48,11 +56,15 @@ public class AuthenticationController implements AuthenticationApi {
     @Override
     public ResponseEntity<TokenResponse> authenticatedWithApiKey(String apiKey) {
 
-        // validação da API key aqui
+        System.out.println("Request para autenticacao do CHATBOT recebida.");
 
-        TokenResponse response = new TokenResponse("dummy-token-chatbot", OffsetDateTime.parse("2026-04-24T15:30:00-03:00"));
+        var domainResponse = authenticationUseCase.autenticarChatBot(apiKey);
 
-        return ResponseEntity.ok(response);
+        System.out.println("chat bot autenticado!!");
+
+        var clientResponse = mapper.toClientResponse(domainResponse);
+
+        return ResponseEntity.ok(clientResponse);
     }
 
 }

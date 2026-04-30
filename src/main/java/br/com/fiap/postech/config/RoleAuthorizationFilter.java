@@ -24,9 +24,8 @@ public class RoleAuthorizationFilter extends OncePerRequestFilter {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        
-        if (auth == null || !auth.isAuthenticated() 
-            || auth.getPrincipal().equals("anonymousUser")) {
+        if (auth == null || !auth.isAuthenticated()
+                || auth.getPrincipal().equals("anonymousUser")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -35,9 +34,8 @@ public class RoleAuthorizationFilter extends OncePerRequestFilter {
 
         List<String> allowedRoles = RolePermissions.PERMISSIONS.get(key);
 
-        
         if (allowedRoles == null) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -45,7 +43,9 @@ public class RoleAuthorizationFilter extends OncePerRequestFilter {
                 .anyMatch(a -> allowedRoles.contains(a.getAuthority()));
 
         if (!hasAccess) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\":\"FORBIDDEN\"}");
             return;
         }
 
