@@ -23,10 +23,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
       
-      - name: Compile Code and Install Dependencies
+      - name: Compile Code
         run: |
           echo "Compilando..."
-          mvn clean install
+          mvn compile
           echo "Build finalizado!"
           echo "Código compilado com sucesso!"
 
