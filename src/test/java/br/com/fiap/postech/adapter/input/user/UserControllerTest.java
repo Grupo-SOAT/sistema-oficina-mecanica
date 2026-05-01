@@ -58,7 +58,7 @@ class UsersControllerTest {
 
         ResponseEntity<UserData> response = controller.createUser(request);
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals("200 OK", response.getStatusCode());
         assertEquals(userData, response.getBody());
 
         verify(userUseCase).criarUsuario(any(UserDTO.class));
@@ -68,7 +68,7 @@ class UsersControllerTest {
     void shouldDeleteUser() {
         ResponseEntity<Void> response = controller.deleteUser(1L);
 
-        assertEquals(202, response.getStatusCode());
+        assertEquals("202 ACCEPTED", response.getStatusCode());
         verify(userUseCase).deletarUsuario(1L);
     }
 
@@ -79,7 +79,7 @@ class UsersControllerTest {
 
         ResponseEntity<UserData> response = controller.getUserById(1L);
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals("200 OK", response.getStatusCode());
         assertEquals(userData, response.getBody());
     }
 
@@ -94,7 +94,7 @@ class UsersControllerTest {
         ResponseEntity<PaginatedUserResponse> response =
                 controller.listUsers(null, "andre", 10, "abc");
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals("200 OK", response.getStatusCode());
         assertEquals(paginated, response.getBody());
     }
 
@@ -102,7 +102,7 @@ class UsersControllerTest {
     void shouldResetPassword() {
         ResponseEntity<OneTimePassword> response = controller.resetPassword(1L);
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals("200 OK", response.getStatusCode());
         assertTrue(response.getBody().getPassword().contains("senha resetada"));
 
         verify(userUseCase).resetarSenhaUsuario(1L);
@@ -116,7 +116,7 @@ class UsersControllerTest {
 
         ResponseEntity<UserData> response = controller.updateUser(1L, userData);
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals("200 OK", response.getStatusCode());
         assertEquals(userData, response.getBody());
     }
 }
