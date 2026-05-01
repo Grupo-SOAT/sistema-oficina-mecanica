@@ -208,30 +208,43 @@
                     </execution>
                 </executions>
             </plugin>
-                <plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
+
+                <configuration>
+                    <!-- Exclusões globais (afetam report e check) -->
+                    <excludes>
+                        <exclude>br/com/fiap/postech/config/**</exclude>
+                        <exclude>br/com/fiap/postech/port/**</exclude>
+                        <exclude>br/com/fiap/postech/adapter/input/api/model/**</exclude>
+                        <exclude>br/com/fiap/postech/port/api/**</exclude>
+                    </excludes>
+                </configuration>
+
                 <executions>
-                    <!-- Inicializa o agente -->
+
+                    <!-- Inicializa -->
                     <execution>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
 
-                    <!-- Gera o relatório -->
+                    <!-- Gera relatório -->
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
 
-                    <!-- Verifica cobertura -->
+                    <!-- Validação -->
                     <execution>
                         <id>check</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
@@ -248,17 +261,9 @@
                                     </limits>
                                 </rule>
                             </rules>
-
-                            <!-- Exclusões -->
-                            <excludes>
-                                <exclude>br/com/fiap/postech/config/**</exclude>
-                                <exclude>br/com/fiap/postech/port/**</exclude>
-                                <!--exclusoes paths open api target-->
-                                <exclude>br/com/fiap.postech/adapter/input/api/model/**</exclude>
-                                <exclude>br/com/fiap/postech/port/api/**</exclude>
-                            </excludes>
                         </configuration>
                     </execution>
+
                 </executions>
             </plugin>
         </plugins>
