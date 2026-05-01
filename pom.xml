@@ -253,6 +253,9 @@
                             <excludes>
                                 <exclude>br/com/fiap/postech/config/**</exclude>
                                 <exclude>br/com/fiap/postech/port/**</exclude>
+                                <!--exclusoes paths open api target-->
+                                <exclude>br/com/fiap.postech/adapter/input/api/model/**</exclude>
+                                <exclude>br/com/fiap/postech/port/api/**</exclude>
                             </excludes>
                         </configuration>
                     </execution>
