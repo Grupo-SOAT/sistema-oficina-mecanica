@@ -113,12 +113,9 @@ jobs:
         with:
           target: 'http://localhost:8080'
           cmd_options: >
-            -a
-            -z "-config replacer.full_list(0).description=auth
-                -config replacer.full_list(0).enabled=true
-                -config replacer.full_list(0).matchtype=REQ_HEADER
-                -config replacer.full_list(0).matchstr=Authorization
-                -config replacer.full_list(0).replacement=Bearer ${{ env.ZAP_AUTH_TOKEN }}"
+            -a -z "-config replacer.full_list(0).description=auth -config replacer.full_list(0).enabled=true -config replacer.full_list(0).matchtype=REQ_HEADER -config replacer.full_list(0).matchstr=Authorization -config replacer.full_list(0).replacement=Bearer ${ZAP_AUTH_TOKEN}"
+        env:
+          ZAP_AUTH_TOKEN: ${{ env.ZAP_AUTH_TOKEN }}
 
       - name: Debug - list generated files
         run: ls -la
