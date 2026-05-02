@@ -1,11 +1,11 @@
-name: Relatorio OWASP
+name: Relatorio OWASP | Trivy | ZAP
 
 on:
   workflow_dispatch:
 
 jobs:
-  owasp-analysis:
-    name: OWASP Dependency Check + ZAP
+  security-analysis:
+    name: Security Scan (Trivy + OWASP + ZAP)
     runs-on: ubuntu-latest
 
     services:
@@ -44,26 +44,43 @@ jobs:
         run: mvn clean package -DskipTests
 
       # =========================
-      # 🔐 OWASP Dependency Check
+      # 🔐 TRIVY (scanner principal)
       # =========================
-      # Cache
-      - name: Cache OWASP data
-        uses: actions/cache@v4
+      - name: Run Trivy (table report)
+        uses: aquasecurity/trivy-action@0.35.0
         with:
-          path: ~/.m2/repository/org/owasp
-          key: owasp-${{ runner.os }}-v3
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          vuln-type: 'library'
+          ignore-unfixed: true
+          exit-code: '0'
 
-      # Tenta atualizar (pode falhar)
-      - name: Update OWASP DB (best effort)
-        run: |
-          mvn org.owasp:dependency-check-maven:update-only \
-            -DfailOnError=false
+      - name: Run Trivy (JSON report)
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'json'
+          output: 'trivy-report.json'
+          vuln-type: 'library'
+          ignore-unfixed: true
+          exit-code: '0'
 
-      # Executa com base local
-      - name: Run OWASP Dependency Check
+      - name: Upload Trivy Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: trivy-report.json
+
+      # =========================
+      # 🔐 OWASP (best effort)
+      # =========================
+      - name: Run OWASP Dependency Check (try)
+        continue-on-error: true
         run: |
           mvn org.owasp:dependency-check-maven:check \
-            -DautoUpdate=false \
             -DfailOnError=false \
             -Dformats=HTML,JSON
 
