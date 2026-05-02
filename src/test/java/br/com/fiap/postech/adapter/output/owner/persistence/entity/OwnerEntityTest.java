@@ -1,4 +1,4 @@
-package br.com.fiap.postech.adapter.output.persistence.owner.persistence.entity;
+package br.com.fiap.postech.adapter.output.owner.persistence.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

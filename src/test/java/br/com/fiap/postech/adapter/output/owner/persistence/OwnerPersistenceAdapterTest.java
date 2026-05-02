@@ -1,4 +1,4 @@
-package br.com.fiap.postech.adapter.output.persistence.owner.persistence;
+package br.com.fiap.postech.adapter.output.owner.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
