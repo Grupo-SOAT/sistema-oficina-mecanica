@@ -46,17 +46,26 @@ jobs:
       # =========================
       # 🔐 OWASP Dependency Check
       # =========================
-      - name: Cache OWASP Dependency-Check data
+      # Cache
+      - name: Cache OWASP data
         uses: actions/cache@v4
         with:
-          path: ~/.m2/repository/org/owasp/dependency-check-data
-          key: owasp-data
+          path: ~/.m2/repository/org/owasp
+          key: owasp-${{ runner.os }}-v3
 
+      # Tenta atualizar (pode falhar)
+      - name: Update OWASP DB (best effort)
+        run: |
+          mvn org.owasp:dependency-check-maven:update-only \
+            -DfailOnError=false
+
+      # Executa com base local
       - name: Run OWASP Dependency Check
         run: |
-            mvn org.owasp:dependency-check-maven:check \
+          mvn org.owasp:dependency-check-maven:check \
             -DautoUpdate=false \
-            -DfailOnError=false
+            -DfailOnError=false \
+            -Dformats=HTML,JSON
 
       - name: Upload OWASP Report
         if: always()
