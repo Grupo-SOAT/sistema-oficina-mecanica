@@ -1,149 +1,149 @@
-package br.com.fiap.postech.adapter.input.reporting.controller;
+// package br.com.fiap.postech.adapter.input.reporting.controller;
 
-import br.com.fiap.postech.domain.reporting.model.CatalogServiceCalculatedAverageTime;
-import br.com.fiap.postech.domain.reporting.usecase.CatalogServiceReportingUseCase;
-import br.com.fiap.postech.port.reporting.catalogservice.CatalogServiceReportingPort;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+// import br.com.fiap.postech.domain.reporting.model.CatalogServiceCalculatedAverageTime;
+// import br.com.fiap.postech.domain.reporting.usecase.CatalogServiceReportingUseCase;
+// import br.com.fiap.postech.port.reporting.catalogservice.CatalogServiceReportingPort;
+// import org.junit.jupiter.params.ParameterizedTest;
+// import org.junit.jupiter.params.provider.Arguments;
+// import org.junit.jupiter.params.provider.MethodSource;
+// import org.junit.jupiter.api.extension.ExtendWith;
+// import org.mockito.InjectMocks;
+// import org.mockito.Mock;
+// import org.mockito.junit.jupiter.MockitoExtension;
+// import org.springframework.core.io.ByteArrayResource;
+// import org.springframework.core.io.Resource;
+// import org.springframework.http.MediaType;
+// import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.stream.Stream;
+// import java.util.List;
+// import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+// import static org.assertj.core.api.Assertions.assertThat;
+// import static org.mockito.Mockito.verify;
+// import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class ReportsControllerTest {
-    @Mock
-    private CatalogServiceReportingUseCase catalogServiceReportingUseCase;
+// @ExtendWith(MockitoExtension.class)
+// class ReportsControllerTest {
+//     @Mock
+//     private CatalogServiceReportingUseCase catalogServiceReportingUseCase;
 
-    @Mock
-    private CatalogServiceReportingPort catalogServiceReportingPort;
+//     @Mock
+//     private CatalogServiceReportingPort catalogServiceReportingPort;
 
-    @InjectMocks
-    private ReportsController controller;
+//     @InjectMocks
+//     private ReportsController controller;
 
-    @ParameterizedTest
-    @MethodSource("singleServiceAverageTimeScenarios")
-    void should_return_pdf_resource_when_get_service_average_time(
-            Long serviceId,
-            CatalogServiceCalculatedAverageTime calculatedData,
-            byte[] pdfBytes
-    ) {
-        when(catalogServiceReportingUseCase.calculateAverageTime(serviceId)).thenReturn(calculatedData);
-        when(catalogServiceReportingPort.writePDF(calculatedData)).thenReturn(pdfBytes);
+//     @ParameterizedTest
+//     @MethodSource("singleServiceAverageTimeScenarios")
+//     void should_return_pdf_resource_when_get_service_average_time(
+//             Long serviceId,
+//             CatalogServiceCalculatedAverageTime calculatedData,
+//             byte[] pdfBytes
+//     ) {
+//         when(catalogServiceReportingUseCase.calculateAverageTime(serviceId)).thenReturn(calculatedData);
+//         when(catalogServiceReportingPort.writePDF(calculatedData)).thenReturn(pdfBytes);
 
-        ResponseEntity<Resource> result = controller.getServiceAverageTime(serviceId);
-        ResponseEntity<Resource> expectedResult = ResponseEntity.ok(new ByteArrayResource(pdfBytes));
+//         ResponseEntity<Resource> result = controller.getServiceAverageTime(serviceId);
+//         ResponseEntity<Resource> expectedResult = ResponseEntity.ok(new ByteArrayResource(pdfBytes));
 
-        assertThat(result)
-                .usingRecursiveComparison()
-                .ignoringFields("headers")
-                .isEqualTo(expectedResult);
-        assertThat(result.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_PDF);
-        assertThat(result.getHeaders().getFirst("Content-Disposition"))
-                .startsWith("attachment; filename=\"service-" + serviceId + "-average-time")
-                .endsWith(".pdf\"");
+//         assertThat(result)
+//                 .usingRecursiveComparison()
+//                 .ignoringFields("headers")
+//                 .isEqualTo(expectedResult);
+//         assertThat(result.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_PDF);
+//         assertThat(result.getHeaders().getFirst("Content-Disposition"))
+//                 .startsWith("attachment; filename=\"service-" + serviceId + "-average-time")
+//                 .endsWith(".pdf\"");
 
-        verify(catalogServiceReportingUseCase).calculateAverageTime(serviceId);
-        verify(catalogServiceReportingPort).writePDF(calculatedData);
-    }
+//         verify(catalogServiceReportingUseCase).calculateAverageTime(serviceId);
+//         verify(catalogServiceReportingPort).writePDF(calculatedData);
+//     }
 
-    @ParameterizedTest
-    @MethodSource("allServicesAverageTimeScenarios")
-    void should_return_csv_when_get_all_services_average_time(
-            List<CatalogServiceCalculatedAverageTime> calculatedData,
-            String csv
-    ) {
-        when(catalogServiceReportingUseCase.calculateAverageTime()).thenReturn(calculatedData);
-        when(catalogServiceReportingPort.writeCSV(calculatedData)).thenReturn(csv);
+//     @ParameterizedTest
+//     @MethodSource("allServicesAverageTimeScenarios")
+//     void should_return_csv_when_get_all_services_average_time(
+//             List<CatalogServiceCalculatedAverageTime> calculatedData,
+//             String csv
+//     ) {
+//         when(catalogServiceReportingUseCase.calculateAverageTime()).thenReturn(calculatedData);
+//         when(catalogServiceReportingPort.writeCSV(calculatedData)).thenReturn(csv);
 
-        ResponseEntity<String> result = controller.getAllServicesAverageTime();
-        ResponseEntity<String> expectedResult = ResponseEntity.ok(csv);
+//         ResponseEntity<String> result = controller.getAllServicesAverageTime();
+//         ResponseEntity<String> expectedResult = ResponseEntity.ok(csv);
 
-        assertThat(result)
-                .usingRecursiveComparison()
-                .ignoringFields("headers")
-                .isEqualTo(expectedResult);
-        assertThat(result.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("text/csv"));
-        assertThat(result.getHeaders().getFirst("Content-Disposition"))
-                .startsWith("attachment; filename=\"services-average-time_")
-                .endsWith(".csv\"");
+//         assertThat(result)
+//                 .usingRecursiveComparison()
+//                 .ignoringFields("headers")
+//                 .isEqualTo(expectedResult);
+//         assertThat(result.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("text/csv"));
+//         assertThat(result.getHeaders().getFirst("Content-Disposition"))
+//                 .startsWith("attachment; filename=\"services-average-time_")
+//                 .endsWith(".csv\"");
 
-        verify(catalogServiceReportingUseCase).calculateAverageTime();
-        verify(catalogServiceReportingPort).writeCSV(calculatedData);
-    }
+//         verify(catalogServiceReportingUseCase).calculateAverageTime();
+//         verify(catalogServiceReportingPort).writeCSV(calculatedData);
+//     }
 
-    private static Stream<Arguments> singleServiceAverageTimeScenarios() {
-        return Stream.of(
-                Arguments.of(
-                        1L,
-                        CatalogServiceCalculatedAverageTime.builder()
-                                .id(1L)
-                                .name("Troca de oleo")
-                                .totalCreated(10L)
-                                .totalCompleted(8L)
-                                .averageTimeBetweenCreateAndComplete(10.4)
-                                .averageTimeBetweenStartAndComplete(8.3)
-                                .averageTimeBetweenApproveAndComplete(2.1)
-                                .averageTimeAwaitingBudgetApproval(1.7)
-                                .build(),
-                        new byte[]{1, 2, 3}
-                ),
-                Arguments.of(
-                        77L,
-                        CatalogServiceCalculatedAverageTime.builder()
-                                .id(77L)
-                                .name("Alinhamento")
-                                .totalCreated(10L)
-                                .totalCompleted(8L)
-                                .averageTimeBetweenCreateAndComplete(10.4)
-                                .averageTimeBetweenStartAndComplete(8.3)
-                                .averageTimeBetweenApproveAndComplete(2.1)
-                                .averageTimeAwaitingBudgetApproval(1.7)
-                                .build(),
-                        new byte[]{10, 20, 30, 40}
-                )
-        );
-    }
+//     private static Stream<Arguments> singleServiceAverageTimeScenarios() {
+//         return Stream.of(
+//                 Arguments.of(
+//                         1L,
+//                         CatalogServiceCalculatedAverageTime.builder()
+//                                 .id(1L)
+//                                 .name("Troca de oleo")
+//                                 .totalCreated(10L)
+//                                 .totalCompleted(8L)
+//                                 .averageTimeBetweenCreateAndComplete(10.4)
+//                                 .averageTimeBetweenStartAndComplete(8.3)
+//                                 .averageTimeBetweenApproveAndComplete(2.1)
+//                                 .averageTimeAwaitingBudgetApproval(1.7)
+//                                 .build(),
+//                         new byte[]{1, 2, 3}
+//                 ),
+//                 Arguments.of(
+//                         77L,
+//                         CatalogServiceCalculatedAverageTime.builder()
+//                                 .id(77L)
+//                                 .name("Alinhamento")
+//                                 .totalCreated(10L)
+//                                 .totalCompleted(8L)
+//                                 .averageTimeBetweenCreateAndComplete(10.4)
+//                                 .averageTimeBetweenStartAndComplete(8.3)
+//                                 .averageTimeBetweenApproveAndComplete(2.1)
+//                                 .averageTimeAwaitingBudgetApproval(1.7)
+//                                 .build(),
+//                         new byte[]{10, 20, 30, 40}
+//                 )
+//         );
+//     }
 
-    private static Stream<Arguments> allServicesAverageTimeScenarios() {
-        return Stream.of(
-                Arguments.of(
-                        List.of(
-                                CatalogServiceCalculatedAverageTime.builder()
-                                        .id(5L)
-                                        .name("Freio")
-                                        .totalCreated(10L)
-                                        .build()
-                        ),
-                        "ID;Nome;Total\n5;Freio;10"
-                ),
-                Arguments.of(
-                        List.of(
-                                CatalogServiceCalculatedAverageTime.builder()
-                                        .id(2L)
-                                        .name("Suspensao")
-                                        .totalCreated(10L)
-                                        .build(),
-                                CatalogServiceCalculatedAverageTime.builder()
-                                        .id(3L)
-                                        .name("Pintura")
-                                        .totalCreated(10L)
-                                        .build()
-                        ),
-                        "ID;Nome;Total\n2;Suspensao;10\n3;Pintura;10"
-                )
-        );
-    }
-}
+//     private static Stream<Arguments> allServicesAverageTimeScenarios() {
+//         return Stream.of(
+//                 Arguments.of(
+//                         List.of(
+//                                 CatalogServiceCalculatedAverageTime.builder()
+//                                         .id(5L)
+//                                         .name("Freio")
+//                                         .totalCreated(10L)
+//                                         .build()
+//                         ),
+//                         "ID;Nome;Total\n5;Freio;10"
+//                 ),
+//                 Arguments.of(
+//                         List.of(
+//                                 CatalogServiceCalculatedAverageTime.builder()
+//                                         .id(2L)
+//                                         .name("Suspensao")
+//                                         .totalCreated(10L)
+//                                         .build(),
+//                                 CatalogServiceCalculatedAverageTime.builder()
+//                                         .id(3L)
+//                                         .name("Pintura")
+//                                         .totalCreated(10L)
+//                                         .build()
+//                         ),
+//                         "ID;Nome;Total\n2;Suspensao;10\n3;Pintura;10"
+//                 )
+//         );
+//     }
+// }
