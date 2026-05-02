@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import br.com.fiap.postech.adapter.input.api.model.DocumentType;
-import br.com.fiap.postech.adapter.output.owner.persistence.entity.OwnerEntity;
 import br.com.fiap.postech.domain.owner.model.Owner;
 
 public class OwnerEntityTest {

@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.fiap.postech.adapter.input.api.model.DocumentType;
-import br.com.fiap.postech.adapter.output.owner.persistence.OwnerPersistenceAdapter;
 import br.com.fiap.postech.adapter.output.owner.persistence.entity.OwnerEntity;
 import br.com.fiap.postech.adapter.output.owner.persistence.repository.OwnerRepository;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
