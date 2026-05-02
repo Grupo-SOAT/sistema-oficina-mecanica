@@ -1,5 +1,9 @@
 package br.com.fiap.postech.config.domain;
 
+import br.com.fiap.postech.domain.owner.usecase.OwnerUseCase;
+import br.com.fiap.postech.domain.supply.usecase.SupplyUseCase;
+import br.com.fiap.postech.domain.user.UserUseCase;
+import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
 import br.com.fiap.postech.domain.authentication.AuthenticationUseCase;
 import br.com.fiap.postech.domain.reporting.model.CatalogServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.reporting.usecase.CatalogServiceReportingUseCase;
@@ -71,14 +75,23 @@ public class UseCaseDependencyInjectionConfig {
     }
 
     @Bean
-    public AuthenticationUseCase authenticationUseCase(AuthenticationPort authenticationPort,
-        UserPort userPort
-    ){
-        return new AuthenticationUseCase(authenticationPort, userPort);
+    public VehicleUseCase vehicleUseCase(
+            VehiclePersistencePort persistencePort,
+            OwnerPersistencePort ownerPersistencePort
+    ) {
+        return new VehicleUseCase(persistencePort, ownerPersistencePort);
     }
 
     @Bean
-    public VehicleUseCase vehicleUseCase(VehiclePersistencePort persistencePort) {
-        return new VehicleUseCase(persistencePort);
+    public OwnerUseCase ownerUseCase(OwnerPersistencePort persistencePort) {
+        return new OwnerUseCase(persistencePort);
+    }
+
+    @Bean
+    public AuthenticationUseCase authenticationUseCase(
+            AuthenticationPort authenticationPort,
+            UserPort userPort
+    ) {
+        return new AuthenticationUseCase(authenticationPort, userPort);
     }
 }
