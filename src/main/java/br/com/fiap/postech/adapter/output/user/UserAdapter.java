@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import br.com.fiap.postech.adapter.output.user.persistence.repository.UserReposi
 public class UserAdapter implements UserPort {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${user.password.default}")
     private String defaultPassword;
@@ -53,7 +55,7 @@ public class UserAdapter implements UserPort {
         var entity = new UserEntity();
 
         entity.setUsername(userDTO.username());
-        entity.setPassword(defaultPassword);
+        entity.setPassword(passwordEncoder.encode(defaultPassword));
         entity.setRolesList(rolesEnumToRolesString(userDTO.roles()));
 
         var savedUser = userRepository.save(entity);
@@ -98,7 +100,7 @@ public class UserAdapter implements UserPort {
 
         var usuario = userRepository.findById(id);
 
-        usuario.get().setPassword(this.defaultPassword);
+        usuario.get().setPassword(passwordEncoder.encode(this.defaultPassword));
 
     }
 

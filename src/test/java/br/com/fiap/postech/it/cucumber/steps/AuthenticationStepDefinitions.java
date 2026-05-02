@@ -161,9 +161,13 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
             MvcResult result = mockMvc.perform(request).andReturn();
             context.setLastStatusCode(result.getResponse().getStatus());
             context.setLastResponseBody(result.getResponse().getContentAsString());
+            context.setLastResponseContentType(result.getResponse().getContentType());
+            context.setLastResponseContentDisposition(result.getResponse().getHeader("Content-Disposition"));
         } catch (Exception e) {
             context.setLastStatusCode(0);
             context.setLastResponseBody(e.getMessage());
+            context.setLastResponseContentType(null);
+            context.setLastResponseContentDisposition(null);
         }
     }
 

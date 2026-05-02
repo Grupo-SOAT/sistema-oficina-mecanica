@@ -18,6 +18,12 @@ import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
 import br.com.fiap.postech.domain.vehicle.excecption.InvalidLicensePlateException;
 import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
 import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
+import br.com.fiap.postech.domain.authentication.exception.ChatBotApiKeyInvalidaException;
+import br.com.fiap.postech.domain.authentication.exception.SenhaInvalidaException;
+import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
+import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
+import br.com.fiap.postech.domain.user.exception.SameUsernameException;
+import br.com.fiap.postech.domain.user.exception.UsuarioNaoEncontradoPorUsernameException;
 
 
 @RestControllerAdvice
@@ -86,11 +92,39 @@ public class RestExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
+  
     @ExceptionHandler(OwnerNotFoundException.class)
     public ResponseEntity<Object> handleOwnerNotFoundException(OwnerNotFoundException ex) {
         
         var response = new ErrorResponse(400, "OWNER_NOT_FOUND" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+  
+    @ExceptionHandler(UsuarioNaoEncontradoPorUsernameException.class)
+    public ResponseEntity<Object> handleUsuarioNaoEncontradoPorUsernameException(UsuarioNaoEncontradoPorUsernameException ex) {
+        
+        var response = new ErrorResponse(400, "USERNAME_NOT_FOUND" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SenhaInvalidaException.class)
+    public ResponseEntity<Object> handleSenhaInvalidaException(SenhaInvalidaException ex) {
+        
+        var response = new ErrorResponse(400, "SENHA_INVALIDA" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ChatBotApiKeyInvalidaException.class)
+    public ResponseEntity<Object> handleChatBotApiKeyInvalidaException(ChatBotApiKeyInvalidaException ex) {
+        
+        var response = new ErrorResponse(400, "API_KEY_CHATBOT_INVALIDA" , ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
