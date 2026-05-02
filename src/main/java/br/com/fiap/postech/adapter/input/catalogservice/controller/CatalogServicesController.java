@@ -26,6 +26,7 @@ public class CatalogServicesController implements CatalogServicesApi {
     public ResponseEntity<CatalogServiceData> createCatalogService(CatalogServiceRequest catalogServiceRequest){
         final var newCatalogService = CatalogServicesMapper.fromApiRequest(catalogServiceRequest);
         final var created = catalogServicesUseCase.create(newCatalogService);
+
         final var responseBody = CatalogServicesMapper.toApiData(created);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);

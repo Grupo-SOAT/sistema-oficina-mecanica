@@ -1,11 +1,15 @@
 package br.com.fiap.postech.adapter.output.catalogService.persistence.entity;
 
+import br.com.fiap.postech.adapter.input.api.model.NeededSupplyData;
 import br.com.fiap.postech.domain.catalogServices.model.CatalogServices;
+import br.com.fiap.postech.domain.catalogServices.model.NeededSupply;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,5 +34,8 @@ public class CatalogServicesEntity implements CatalogServices {
 
     @Column(name = "base_price", nullable = false)
     private BigDecimal basePrice;
+
+    @OneToMany(mappedBy = "catalogServices", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NeededSupplyEntity> supplies = new ArrayList<>();
 
 }

@@ -42,14 +42,7 @@ public class CatalogServicesUseCase {
     }
 
     public CatalogServices update(Long id, CatalogServices catalogServices) {
-        persistencePort.findByName(catalogServices.getName()).ifPresent(s -> {
-            throw new DuplicatedCatalogServicesException(catalogServices.getName());
-        });
-
-        final var existing = persistencePort.findById(id)
-                .orElseThrow(() -> new SupplyNotFoundException(id));
-        catalogServices.setCatalogServiceId(id);
-
+        persistencePort.findById(id).orElseThrow(() -> new CatalogServicesNotFoundException(id));
         return persistencePort.save(catalogServices);
     }
 }

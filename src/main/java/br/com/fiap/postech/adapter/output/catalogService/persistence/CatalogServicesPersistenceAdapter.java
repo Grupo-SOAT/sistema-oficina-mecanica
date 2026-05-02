@@ -1,6 +1,7 @@
 package br.com.fiap.postech.adapter.output.catalogService.persistence;
 
 import br.com.fiap.postech.adapter.output.catalogService.persistence.entity.CatalogServicesEntity;
+import br.com.fiap.postech.adapter.output.catalogService.persistence.entity.NeededSupplyEntity;
 import br.com.fiap.postech.adapter.output.catalogService.persistence.repository.CatalogServicesRepository;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.Scroller;
@@ -45,6 +46,11 @@ public class CatalogServicesPersistenceAdapter implements CatalogServicesPersist
             entity.setDescription(catalogServices.getDescription());
             entity.setBasePrice(catalogServices.getBasePrice());
         }
+        if (entity.getSupplies() != null) {
+            for (NeededSupplyEntity supply : entity.getSupplies()) {
+                supply.setCatalogServices(entity);
+            }
+        }
         return repository.save(entity);
     }
 
@@ -65,6 +71,6 @@ public class CatalogServicesPersistenceAdapter implements CatalogServicesPersist
 
     @Override
     public Optional<CatalogServices> findById(Long id) {
-        return repository.findById(id).map(item -> (CatalogServices) item);
+        return repository.findWithSuppliesByCatalogServiceId(id).map(item -> (CatalogServices) item);
     }
 }

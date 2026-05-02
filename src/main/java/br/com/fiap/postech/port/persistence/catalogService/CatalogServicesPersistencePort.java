@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface CatalogServicesPersistencePort {
     ScrollPage<CatalogServices> scroll(String name, Integer pageSize, String cursor);
 
-    CatalogServices save(CatalogServices supply);
+    CatalogServices save(CatalogServices catalogServices);
 
     Optional<CatalogServices> findByName(String name);
 
