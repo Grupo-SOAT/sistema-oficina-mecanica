@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.OffsetDateTime;
@@ -54,7 +54,7 @@ class AuthenticationControllerTest {
 
         ResponseEntity<TokenResponse> response = controller.authenticate(request);
 
-        assertEquals("200 OK", response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(tokenResponse, response.getBody());
 
         verify(useCase).gerarTokenParaUsuario(any());
@@ -67,7 +67,7 @@ class AuthenticationControllerTest {
 
         ResponseEntity<Void> response = controller.changePassword(request);
 
-        assertEquals("202 ACCEPTED", response.getStatusCode());
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
 
         verify(useCase).mudarSenhaUsuario(any());
     }
@@ -83,7 +83,7 @@ class AuthenticationControllerTest {
         ResponseEntity<TokenResponse> response =
                 controller.authenticatedWithApiKey("api-key");
 
-        assertEquals("200 OK", response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(tokenResponse, response.getBody());
     }
 }
