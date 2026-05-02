@@ -1,9 +1,18 @@
 package br.com.fiap.postech.config.domain;
 
+import br.com.fiap.postech.domain.owner.usecase.OwnerUseCase;
+import br.com.fiap.postech.domain.supply.usecase.SupplyUseCase;
+import br.com.fiap.postech.domain.user.UserUseCase;
+import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
+import br.com.fiap.postech.domain.authentication.AuthenticationUseCase;
 import br.com.fiap.postech.domain.reporting.model.CatalogServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.reporting.usecase.CatalogServiceReportingUseCase;
-import br.com.fiap.postech.domain.supply.usecase.SupplyUseCase;
+import br.com.fiap.postech.port.authentication.AuthenticationPort;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
+import br.com.fiap.postech.port.user.UserPort;
+import br.com.fiap.postech.domain.vehicle.usecase.VehicleUseCase;
+import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,5 +65,31 @@ public class UseCaseDependencyInjectionConfig {
     @Bean
     public SupplyUseCase supplyUseCase(SupplyPersistencePort persistencePort) {
         return new SupplyUseCase(persistencePort);
+    }
+
+    @Bean
+    public UserUseCase userUseCase(UserPort userPort){
+        return new UserUseCase(userPort);
+    }
+
+    @Bean
+    public VehicleUseCase vehicleUseCase(
+            VehiclePersistencePort persistencePort,
+            OwnerPersistencePort ownerPersistencePort
+    ) {
+        return new VehicleUseCase(persistencePort, ownerPersistencePort);
+    }
+
+    @Bean
+    public OwnerUseCase ownerUseCase(OwnerPersistencePort persistencePort) {
+        return new OwnerUseCase(persistencePort);
+    }
+
+    @Bean
+    public AuthenticationUseCase authenticationUseCase(
+            AuthenticationPort authenticationPort,
+            UserPort userPort
+    ) {
+        return new AuthenticationUseCase(authenticationPort, userPort);
     }
 }
