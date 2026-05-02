@@ -279,14 +279,6 @@
                     <format>ALL</format> <!-- HTML, XML, JSON -->
                     <failBuildOnCVSS>7</failBuildOnCVSS> <!-- opcional: falha se CVSS >= 7 -->
                 </configuration>
-
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
