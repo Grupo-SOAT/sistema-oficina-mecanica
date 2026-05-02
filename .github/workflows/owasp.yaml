@@ -114,6 +114,7 @@ jobs:
           target: 'http://localhost:8080'
           cmd_options: '-a'
           allow_issue_writing: false
+          artifact_name: ""
         env:
           ZAP_AUTH_HEADER: Authorization
           ZAP_AUTH_HEADER_VALUE: Bearer ${{ env.ZAP_AUTH_TOKEN }}
