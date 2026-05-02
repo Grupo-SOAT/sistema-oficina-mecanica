@@ -161,11 +161,6 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
         executeWithOptionalAuth("DELETE", "/supplies/" + supplyId, null);
     }
 
-    @Então("a resposta deve ter status {int}")
-    public void verifyStatus(int status) {
-        assertEquals(status, context.getLastStatusCode(), "Body: " + context.getLastResponseBodyAsString());
-    }
-
     @Então("a resposta deve conter o campo {string}")
     public void verifyFieldExists(String field) throws Exception {
         JsonNode root = context.getLastResponseBody();

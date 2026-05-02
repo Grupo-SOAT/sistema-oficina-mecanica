@@ -2,6 +2,7 @@ package br.com.fiap.postech.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,6 +23,7 @@ public class SecurityConfig {
 
     private final RoleAuthorizationFilter roleAuthorizationFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final Environment environment;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -30,6 +32,20 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        boolean isMockProfile = environment.matchesProfiles("mock");
+
+        
+        if (isMockProfile) {
+            return http
+                    .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                    .httpBasic(AbstractHttpConfigurer::disable)
+                    .formLogin(AbstractHttpConfigurer::disable)
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .build();
+        }
+
+        
         http
                 .csrf(AbstractHttpConfigurer::disable)
 
