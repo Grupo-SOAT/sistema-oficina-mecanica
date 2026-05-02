@@ -20,9 +20,6 @@ import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException
 import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
 import br.com.fiap.postech.domain.authentication.exception.ChatBotApiKeyInvalidaException;
 import br.com.fiap.postech.domain.authentication.exception.SenhaInvalidaException;
-import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
-import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
-import br.com.fiap.postech.domain.user.exception.SameUsernameException;
 import br.com.fiap.postech.domain.user.exception.UsuarioNaoEncontradoPorUsernameException;
 
 
@@ -121,10 +118,6 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleChatBotApiKeyInvalidaException(ChatBotApiKeyInvalidaException ex) {
         
         var response = new ErrorResponse(400, "API_KEY_CHATBOT_INVALIDA" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
