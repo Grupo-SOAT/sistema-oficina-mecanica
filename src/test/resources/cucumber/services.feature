@@ -11,7 +11,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     Dado que eu esteja devidamente logado
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços da ordem de serviço
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter uma lista de dados
     E a resposta deve conter o campo "pageSize"
     E a resposta deve conter o campo "cursor"
@@ -22,7 +22,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o filtro name seja "troca"
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços da ordem de serviço
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter no maximo 1 serviços da ordem de serviço
     E a resposta deve conter ao menos um serviço da ordem de serviço com name "troca-oleo"
 
@@ -31,14 +31,14 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o filtro serviceId seja 99999
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços da ordem de serviço
-    Então a resposta deve ter status 204
+    Então devo receber uma resposta com status "204"
 
   Cenário: Paginação de serviços da ordem de serviço com cursor
     Dado que eu esteja devidamente logado
     E que o cursor seja "1"
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços da ordem de serviço
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E o primeiro item retornado deve ter id maior que 1
 
   # === DETALHAMENTO POR ID ===
@@ -48,7 +48,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o id da ordem de serviço seja 1
     E que o id do serviço da ordem de serviço seja 1
     Quando eu consultar o serviço da ordem de serviço por id
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter o campo "id"
     E a resposta deve conter o campo "serviceOrderId"
     E a resposta deve conter o campo "catalogServiceId"
@@ -60,7 +60,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o id da ordem de serviço seja 1
     E que o id do serviço da ordem de serviço seja 99999
     Quando eu consultar o serviço da ordem de serviço por id
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SERVICE_NOT_FOUND"
 
   Cenário: Detalhamento de serviço da ordem de serviço por ID inexistente
@@ -68,7 +68,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o id da ordem de serviço seja 99999
     E que o id do serviço da ordem de serviço seja 1
     Quando eu consultar o serviço da ordem de serviço por id
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SERVICE_ORDER_NOT_FOUND"
 
   # === CADASTRO ===
@@ -80,7 +80,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
       | serviceOrderId | catalogServiceId | price  | neededSupplies         |
       | 1              | 1                | 150.00 | sku=SKU-001,quantity=1 |
     Quando eu incluir o serviço na ordem de serviço
-    Então a resposta deve ter status 201
+    Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
     E a resposta deve refletir o payload enviado
 
@@ -91,7 +91,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
       | serviceOrderId   | catalogServiceId   | price   | neededSupplies   |
       | <serviceOrderId> | <catalogServiceId> | <price> | <neededSupplies> |
     Quando eu incluir o serviço na ordem de serviço
-    Então a resposta deve ter status <code>
+    Então devo receber uma resposta com status "<code>"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
       | serviceOrderId | catalogServiceId | price | neededSupplies          | reason                         | code |
@@ -113,7 +113,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
       | id | serviceOrderId | catalogServiceId | price  | status      |
       | 1  | 1              | 1                | 160.00 | IN_PROGRESS |
     Quando eu atualizar o serviço da ordem de serviço
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado
 
   Cenário: Atualização de serviço da ordem de serviço com id inexistente
@@ -124,7 +124,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
       | id | serviceOrderId | catalogServiceId | price  | status      |
       | 1  | 1              | 1                | 160.00 | IN_PROGRESS |
     Quando eu atualizar o serviço da ordem de serviço
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SERVICE_ORDER_NOT_FOUND"
 
   Cenário: Atualização de serviço com id inexistente
@@ -135,7 +135,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
       | id    | serviceOrderId | catalogServiceId | price  | status      |
       | 99999 | 1              | 1                | 160.00 | IN_PROGRESS |
     Quando eu atualizar o serviço da ordem de serviço
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SERVICE_NOT_FOUND"
 
   Esquema do Cenário: Atualização de serviço na ordem de serviço com payload inválido
@@ -146,7 +146,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
       | serviceOrderId   | catalogServiceId   | price   | neededSupplies   |
       | <serviceOrderId> | <catalogServiceId> | <price> | <neededSupplies> |
     Quando eu atualizar o serviço da ordem de serviço
-    Então a resposta deve ter status <code>
+    Então devo receber uma resposta com status "<code>"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
       | id    | serviceOrderId | catalogServiceId | price | neededSupplies          | reason                         | code |
@@ -166,14 +166,14 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o id da ordem de serviço seja 1
     E que o id do serviço da ordem de serviço seja 1
     Quando eu remover o serviço da ordem de serviço
-    Então a resposta deve ter status 202
+    Então devo receber uma resposta com status "202"
 
   Cenário: Exclusão de serviço da ordem de serviço inexistente
     Dado que eu esteja devidamente logado
     E que o id da ordem de serviço seja 99999
     E que o id do serviço da ordem de serviço seja 1
     Quando eu remover o serviço da ordem de serviço
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SERVICE_ORDER_NOT_FOUND"
 
   Cenário: Exclusão de serviço com id inexistente
@@ -181,5 +181,5 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o id da ordem de serviço seja 1
     E que o id do serviço da ordem de serviço seja 99999
     Quando eu remover o serviço da ordem de serviço
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SERVICE_NOT_FOUND"

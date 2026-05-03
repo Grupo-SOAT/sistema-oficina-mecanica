@@ -29,6 +29,8 @@ public class CucumberTestContext {
     private String filterName;
     private String filterValue;
     private String requestBody;
+    private String lastResponseContentType;
+    private String lastResponseContentDisposition;
 
     public static synchronized CucumberTestContext getInstance() {
         return INSTANCE;
@@ -48,6 +50,8 @@ public class CucumberTestContext {
         this.filterName = null;
         this.filterValue = null;
         this.requestBody = null;
+        this.lastResponseContentType = null;
+        this.lastResponseContentDisposition = null;
     }
 
     public void setLastResponseBody(String rawBody) {

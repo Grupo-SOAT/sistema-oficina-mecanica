@@ -1,7 +1,0 @@
-title: Dados do cliente
-description: Informações de um cliente
-type: object
-allOf: [ { $ref: './ClientRequest.yaml' } ]
-required: [ id ]
-properties:
-  id: { type: integer, format: int64 }

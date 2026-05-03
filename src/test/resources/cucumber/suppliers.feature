@@ -11,7 +11,7 @@ Funcionalidade: Gerenciamento de Fornecedores
     Dado que eu esteja devidamente logado
     E que o tamanho da pagina seja 10
     Quando eu listar os fornecedores
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter uma lista de dados
     E a resposta deve conter o campo "pageSize"
     E a resposta deve conter o campo "cursor"
@@ -22,7 +22,7 @@ Funcionalidade: Gerenciamento de Fornecedores
     E que o filtro document seja "12.345.678/0001-95"
     E que o tamanho da pagina seja 10
     Quando eu listar os fornecedores
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter no maximo 1 fornecedores
     E a resposta deve conter ao menos um fornecedor com document "12.345.678/0001-95"
 
@@ -31,14 +31,14 @@ Funcionalidade: Gerenciamento de Fornecedores
     E que o filtro document seja "00.000.000/0000-00"
     E que o tamanho da pagina seja 10
     Quando eu listar os fornecedores
-    Então a resposta deve ter status 204
+    Então devo receber uma resposta com status "204"
 
   Cenário: Paginação de fornecedores com cursor
     Dado que eu esteja devidamente logado
     E que o cursor seja "1"
     E que o tamanho da pagina seja 10
     Quando eu listar os fornecedores
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E o primeiro item retornado deve ter id maior que 1
 
   # === DETALHAMENTO POR ID ===
@@ -47,7 +47,7 @@ Funcionalidade: Gerenciamento de Fornecedores
     Dado que eu esteja devidamente logado
     E que o id do fornecedor seja 1
     Quando eu consultar o fornecedor por id
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter o campo "id"
     E a resposta deve conter o campo "name"
     E a resposta deve conter o campo "document"
@@ -59,7 +59,7 @@ Funcionalidade: Gerenciamento de Fornecedores
     Dado que eu esteja devidamente logado
     E que o id do fornecedor seja 99999
     Quando eu consultar o fornecedor por id
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SUPPLIER_NOT_FOUND"
 
   # === CADASTRO ===
@@ -70,7 +70,7 @@ Funcionalidade: Gerenciamento de Fornecedores
       | name   | document   | contactPerson   | email   | phone   |
       | <name> | <document> | <contactPerson> | <email> | <phone> |
     Quando eu criar o fornecedor
-    Então a resposta deve ter status 201
+    Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
     E a resposta deve refletir o payload enviado
     Exemplos:
@@ -84,7 +84,7 @@ Funcionalidade: Gerenciamento de Fornecedores
       | name   | document   | contactPerson   | email   | phone   |
       | <name> | <document> | <contactPerson> | <email> | <phone> |
     Quando eu criar o fornecedor
-    Então a resposta deve ter status 400
+    Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
       | name                   | document           | contactPerson | email               | phone          | reason                    |
@@ -101,7 +101,7 @@ Funcionalidade: Gerenciamento de Fornecedores
       | name                | document           | contactPerson | email                | phone          |
       | Fornecedor Conflito | 12.345.678/0001-95 | Joao Silva    | conflito@forn.com.br | (11) 3333-4444 |
     Quando eu criar o fornecedor
-    Então a resposta deve ter status 409
+    Então devo receber uma resposta com status "409"
     E a resposta deve conter o campo reason com valor "SUPPLIER_CONFLICT_DUPLICATED_DOCUMENT"
 
   # === ATUALIZAÇÃO ===
@@ -113,7 +113,7 @@ Funcionalidade: Gerenciamento de Fornecedores
       | id | name             | document           | contactPerson | email               | phone          |
       | 1  | Fornecedor Atual | 12.345.678/0001-95 | Ana Pereira   | novo@fornecedor.com | (11) 9999-9999 |
     Quando eu atualizar o fornecedor
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado
 
   Esquema do Cenário: Atualização de fornecedor com campos inválidos
@@ -123,7 +123,7 @@ Funcionalidade: Gerenciamento de Fornecedores
       | id | name   | document   | contactPerson   | email   | phone   |
       | 1  | <name> | <document> | <contactPerson> | <email> | <phone> |
     Quando eu atualizar o fornecedor
-    Então a resposta deve ter status 400
+    Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
       | name                   | document           | contactPerson | email               | phone          | reason                    |
@@ -138,7 +138,7 @@ Funcionalidade: Gerenciamento de Fornecedores
       | id | name                | document           | contactPerson | email                | phone          |
       | 1  | Fornecedor Conflito | 12.345.678/0001-95 | Joao Silva    | conflito@forn.com.br | (11) 3333-4444 |
     Quando eu atualizar o fornecedor
-    Então a resposta deve ter status 409
+    Então devo receber uma resposta com status "409"
     E a resposta deve conter o campo reason com valor "SUPPLIER_CONFLICT_DUPLICATED_DOCUMENT"
 
   Cenário: Atualização de fornecedor inexistente
@@ -148,7 +148,7 @@ Funcionalidade: Gerenciamento de Fornecedores
       | id    | name       | document           | contactPerson | email             | phone           |
       | 99999 | Nao Existe | 66.777.888/0001-99 | Sem Registro  | ne@fornecedor.com | (11) 92222-1111 |
     Quando eu atualizar o fornecedor
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SUPPLIER_NOT_FOUND"
 
   # === EXCLUSÃO ===
@@ -157,11 +157,11 @@ Funcionalidade: Gerenciamento de Fornecedores
     Dado que eu esteja devidamente logado
     E que o id do fornecedor seja 2
     Quando eu remover o fornecedor
-    Então a resposta deve ter status 202
+    Então devo receber uma resposta com status "202"
 
   Cenário: Exclusão de fornecedor inexistente
     Dado que eu esteja devidamente logado
     E que o id do fornecedor seja 99999
     Quando eu remover o fornecedor
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SUPPLIER_NOT_FOUND"

@@ -11,7 +11,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     Dado que eu esteja devidamente logado
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços catalogados
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter uma lista de dados
     E a resposta deve conter o campo "pageSize"
     E a resposta deve conter o campo "cursor"
@@ -22,7 +22,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     E que o filtro sku seja "SKU-001"
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços catalogados
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter no maximo 1 serviços catalogados
     E a resposta deve conter ao menos um serviço catalogado com nome "Troca de Óleo do Motor"
 
@@ -31,14 +31,14 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     E que o filtro id seja 99999
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços catalogados
-    Então a resposta deve ter status 204
+    Então devo receber uma resposta com status "204"
 
   Cenário: Paginação de serviços catalogados com cursor
     Dado que eu esteja devidamente logado
     E que o cursor seja "1"
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços catalogados
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E o primeiro item retornado deve ter id maior que 1
 
   # === DETALHAMENTO POR ID ===
@@ -47,7 +47,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     Dado que eu esteja devidamente logado
     E que o id do serviço catalogado seja 1
     Quando eu consultar o serviço catalogado por id
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve conter o campo "id"
     E a resposta deve conter o campo "name"
     E a resposta deve conter o campo "description"
@@ -58,7 +58,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     Dado que eu esteja devidamente logado
     E que o id do serviço catalogado seja 99999
     Quando eu consultar o serviço catalogado por id
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "CATALOG_SERVICE_NOT_FOUND"
 
   # === CADASTRO ===
@@ -69,7 +69,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
       | nome   | descricao   | basePrice   | neededSupplies   |
       | <nome> | <descricao> | <basePrice> | <neededSupplies> |
     Quando eu criar o serviço catalogado
-    Então a resposta deve ter status 201
+    Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
     E a resposta deve refletir o payload enviado
     Exemplos:
@@ -83,7 +83,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
       | nome   | descricao   | basePrice   | neededSupplies   |
       | <nome> | <descricao> | <basePrice> | <neededSupplies> |
     Quando eu criar o serviço catalogado
-    Então a resposta deve ter status 400
+    Então devo receber uma resposta com status "400"
     E com a mensagem de erro igual a "<reason>"
     Exemplos:
       | nome                 | descricao                    | basePrice | neededSupplies | reason                        |
@@ -99,7 +99,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
       | id | nome                 | descricao                    | basePrice | neededSupplies |
       | 1  | Alinhamento de Rodas | Alinhamento completo 4 rodas | -180.00   |                |
     Quando eu atualizar o serviço catalogado
-    Então a resposta deve ter status 200
+    Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado
 
   Esquema do Cenário: Atualização de serviço catalogado com dados inválidos
@@ -109,7 +109,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
       | id | nome   | descricao   | basePrice   | neededSupplies   |
       | 1  | <nome> | <descricao> | <basePrice> | <neededSupplies> |
     Quando eu atualizar o serviço catalogado
-    Então a resposta deve ter status 400
+    Então devo receber uma resposta com status "400"
     E com a mensagem de erro igual a "<reason>"
     Exemplos:
       | nome                 | descricao                    | basePrice | neededSupplies | reason                        |
@@ -123,7 +123,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
       | id | nome                   | descricao                    | basePrice | neededSupplies |
       | 2  | Troca de Óleo do Motor | Troca completa do óleo 5W-30 | 150.00    | SKU-9999,,1    |
     Quando eu atualizar o serviço catalogado
-    Então a resposta deve ter status 400
+    Então devo receber uma resposta com status "400"
     E com a mensagem de erro igual a "CATALOG_SERVICE_NOT_FOUND"
 
   Cenário: Atualização de serviço catalogado com quantidade de insumos inválida
@@ -133,7 +133,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
       | id | nome                   | descricao                    | basePrice | neededSupplies |
       | 2  | Troca de Óleo do Motor | Troca completa do óleo 5W-30 | 150.00    | SKU-002,,-1    |
     Quando eu atualizar o serviço catalogado
-    Então a resposta deve ter status 400
+    Então devo receber uma resposta com status "400"
     E com a mensagem de erro igual a "INVALID_SUPPLY_QUANTITY"
 
   Cenário: Atualização de serviço catalogado inexistente
@@ -151,11 +151,11 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     Dado que eu esteja devidamente logado
     E que o id do serviço catalogado seja 3
     Quando eu remover o serviço catalogado
-    Então a resposta deve ter status 202
+    Então devo receber uma resposta com status "202"
 
   Cenário: Exclusão de serviço catalogado inexistente
     Dado que eu esteja devidamente logado
     E que o id do serviço catalogado seja 99999
     Quando eu remover o serviço catalogado
-    Então a resposta deve ter status 404
+    Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "CATALOG_SERVICE_NOT_FOUND"
