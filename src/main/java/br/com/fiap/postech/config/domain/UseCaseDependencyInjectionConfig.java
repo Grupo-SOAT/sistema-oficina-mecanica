@@ -73,6 +73,9 @@ public class UseCaseDependencyInjectionConfig {
     @Bean
     public CatalogServicesUseCase catalogServicesUseCase (CatalogServicesPersistencePort persistencePort){
         return new CatalogServicesUseCase(persistencePort);
+    }
+
+    @Bean
     public UserUseCase userUseCase(UserPort userPort){
         return new UserUseCase(userPort);
     }
