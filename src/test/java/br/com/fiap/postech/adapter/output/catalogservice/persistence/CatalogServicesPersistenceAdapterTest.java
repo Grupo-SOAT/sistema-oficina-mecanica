@@ -1,0 +1,202 @@
+package br.com.fiap.postech.adapter.output.catalogservice.persistence;
+
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.CatalogServicesEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.NeededSupplyEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.repository.CatalogServicesRepository;
+import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
+import br.com.fiap.postech.adapter.output.supply.persistence.entity.SupplyEntity;
+import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class CatalogServicesPersistenceAdapterTest {
+    @Mock
+    private CatalogServicesRepository repository;
+
+    @InjectMocks
+    private CatalogServicesPersistenceAdapter adapter;
+
+    @Test
+    void should_scroll_without_name_filter_using_find_all_after_cursor() {
+        CatalogServicesEntity first = CatalogServicesEntity.builder().catalogServiceId(1L).name("A").build();
+        CatalogServicesEntity second = CatalogServicesEntity.builder().catalogServiceId(2L).name("B").build();
+        CatalogServicesEntity third = CatalogServicesEntity.builder().catalogServiceId(3L).name("C").build();
+
+        when(repository.findAllAfterCursor(anyLong(), any(Pageable.class)))
+                .thenReturn(List.of(first, second, third));
+
+        ScrollPage<CatalogServices> page = adapter.scroll(null, 2, "10");
+
+        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(repository).findAllAfterCursor(cursorCaptor.capture(), pageableCaptor.capture());
+        verify(repository, never()).findByNameAfterCursor(any(), anyLong(), any(Pageable.class));
+
+        assertThat(cursorCaptor.getValue()).isEqualTo(10L);
+        assertThat(pageableCaptor.getValue().getPageNumber()).isZero();
+        assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(3);
+
+        assertThat(page.data()).hasSize(2);
+        assertThat(page.isLast()).isFalse();
+        assertThat(page.cursor()).isEqualTo(second.toString());
+    }
+
+    @Test
+    void should_scroll_with_name_filter_using_find_by_name_after_cursor() {
+        CatalogServicesEntity only = CatalogServicesEntity.builder().catalogServiceId(1L).name("Servico").build();
+        when(repository.findByNameAfterCursor(eq("Servi"), anyLong(), any(Pageable.class)))
+                .thenReturn(List.of(only));
+
+        ScrollPage<CatalogServices> page = adapter.scroll("Servi", 2, "invalid-cursor");
+
+        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(repository).findByNameAfterCursor(eq("Servi"), cursorCaptor.capture(), any(Pageable.class));
+
+        assertThat(cursorCaptor.getValue()).isZero();
+        assertThat(page.data()).hasSize(1);
+        assertThat(page.isLast()).isTrue();
+        assertThat(page.cursor()).isNull();
+    }
+
+    @Test
+    void should_map_find_by_id() {
+        CatalogServicesEntity entity = CatalogServicesEntity.builder().catalogServiceId(20L).name("Servico").build();
+        when(repository.findWithSuppliesByCatalogServiceId(20L)).thenReturn(Optional.of(entity));
+
+        Optional<CatalogServices> found = adapter.findById(20L);
+
+        assertThat(found).containsSame(entity);
+    }
+
+    @Test
+    void should_map_find_by_name() {
+        CatalogServicesEntity entity = CatalogServicesEntity.builder().catalogServiceId(78L).name("Servico").supplies(List.of(NeededSupplyEntity.builder().servicesSuppliesId(1L).supplyAmount(300).build())).build();
+        when(repository.findByName("Servico")).thenReturn(Optional.of(entity));
+
+        Optional<CatalogServices> found = adapter.findByName("Servico");
+
+        assertThat(found).containsSame(entity);
+    }
+
+    @Test
+    void should_save_when_catalog_services_already_entity() {
+        CatalogServicesEntity entity = CatalogServicesEntity.builder().catalogServiceId(7L).name("Servico").supplies(List.of(NeededSupplyEntity.builder().servicesSuppliesId(1L).supplyAmount(300).build())).build();
+        when(repository.save(entity)).thenReturn(entity);
+
+        CatalogServices saved = adapter.save(entity);
+
+        assertThat(saved).isSameAs(entity);
+    }
+
+    @Test
+    void should_save_when_catalog_services_already_entity_supplies_null() {
+        CatalogServicesEntity entity = CatalogServicesEntity.builder().catalogServiceId(7L).name("Servico").supplies(null).build();
+        when(repository.save(entity)).thenReturn(entity);
+
+        CatalogServices saved = adapter.save(entity);
+
+        assertThat(saved).isSameAs(entity);
+    }
+
+    @Test
+    void should_save_when_catalog_services_is_not_entity() {
+        CatalogServices supply = new CatalogServicesPersistenceAdapterTest.TestCatalogServices(4L, "Servico", "Servico",  new BigDecimal("7.1"), new ArrayList<>());
+        CatalogServicesEntity expected = CatalogServicesEntity.builder()
+                .catalogServiceId(4L)
+                .name("SERVICO")
+                .description("Servico")
+                .basePrice(new BigDecimal("7.1"))
+                .supplies(new ArrayList<>())
+                .build();
+
+        when(repository.save(any(CatalogServicesEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        CatalogServices saved = adapter.save(supply);
+
+        assertThat(saved)
+                .isNotNull()
+                .isInstanceOf(CatalogServicesEntity.class)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void should_delegate_delete_by_id() {
+        adapter.deleteById(58L);
+        verify(repository).deleteById(58L);
+    }
+
+    @Test
+    void should_delegate_exists_by_id() {
+        when(repository.existsById(5L)).thenReturn(true);
+
+        boolean exists = adapter.existsById(5L);
+
+        assertThat(exists).isTrue();
+    }
+
+    private static final class TestCatalogServices implements CatalogServices {
+        private Long catalogServiceId;
+        private String name;
+        private String description;
+        private BigDecimal basePrice;
+        private List<NeededSupplyEntity> supplies;
+
+
+        private TestCatalogServices(Long catalogServiceId,
+                           String name,
+                           String description,
+                           BigDecimal basePrice, List<NeededSupplyEntity> supplies) {
+            this.catalogServiceId = catalogServiceId;
+            this.name = name;
+            this.description = description;
+            this.basePrice = basePrice;
+            this.supplies = supplies;
+        }
+        @Override
+        public Long getCatalogServiceId(){return catalogServiceId;}
+
+        @Override
+        public void setCatalogServiceId(Long catalogServiceId) {this.catalogServiceId = catalogServiceId;}
+
+        @Override
+        public String getName(){return name;}
+
+        @Override
+        public void setName(String name){this.name = name;}
+
+        @Override
+        public String getDescription(){return description;}
+
+        @Override
+        public void setDescription(String description){this.description = description;}
+
+        @Override
+        public BigDecimal getBasePrice(){return basePrice;}
+
+        @Override
+        public void setBasePrice(BigDecimal basePrice){this.basePrice = basePrice;}
+
+        @Override
+        public List<NeededSupplyEntity> getSupplies(){return supplies;}
+
+        @Override
+        public void setSupplies(List<NeededSupplyEntity> neededSupplies){this.supplies = supplies;}
+    }
+}
