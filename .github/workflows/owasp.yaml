@@ -149,7 +149,7 @@ jobs:
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
             ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+            zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap.yaml
           mv zap-report.html zap-report-admin.html
 
       - name: ZAP Scan - CHATBOT
@@ -159,7 +159,7 @@ jobs:
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+            zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap.yaml
           mv zap-report.html zap-report-chatbot.html
 
       - name: ZAP Scan - MECHANIC
@@ -169,7 +169,7 @@ jobs:
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
             ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+            zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap.yaml
           mv zap-report.html zap-report-mechanic.html
 
       - name: ZAP Scan - ATTENDANT
@@ -179,7 +179,7 @@ jobs:
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+            zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap.yaml
           mv zap-report.html zap-report-attendant.html
 
       - name: ZAP Scan - STOREKEEPER
@@ -189,7 +189,7 @@ jobs:
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
             ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+            zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap.yaml
           mv zap-report.html zap-report-storekeeper.html
 
       # =========================
