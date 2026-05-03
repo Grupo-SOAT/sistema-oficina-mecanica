@@ -163,6 +163,14 @@ jobs:
           docker logs app
           exit 1
 
+       # =========================
+      # 🧠 GET APP IP (FIX)
+      # =========================
+      - name: Get app IP
+        run: |
+          IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' app)
+          echo "APP_IP=$IP" >> $GITHUB_ENV
+
       # -------------------------
       # TOKENS
       # -------------------------
@@ -195,6 +203,7 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
+            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap.yaml
@@ -206,6 +215,7 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
+            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap.yaml
@@ -217,6 +227,7 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
+            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap.yaml
@@ -228,6 +239,7 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
+            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap.yaml
@@ -239,6 +251,7 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
+            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap.yaml
