@@ -22,6 +22,7 @@ public class SupplyEntity implements Supply {
     @Builder.Default
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "supply_id")
     private Long id = 0L;
 
     @Column(nullable = false, unique = true)
