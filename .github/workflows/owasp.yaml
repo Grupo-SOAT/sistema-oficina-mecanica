@@ -180,9 +180,6 @@ jobs:
       - name: Export tokens to GitHub ENV
         run: cat env-vars >> $GITHUB_ENV
 
-      - name: Setup workspace permissions
-        run: chmod -R 777 ${{ github.workspace }}
-
       - name: Validate OpenAPI endpoint
         run: |
           docker run --rm --network zap-network curlimages/curl \
