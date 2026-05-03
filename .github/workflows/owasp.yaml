@@ -148,6 +148,18 @@ jobs:
             -p 8080:8080 \
             my-app
 
+      - name: Wait for app
+        run: |
+          for i in {1..30}; do
+            docker run --rm --network zap-network curlimages/curl \
+              curl -s http://app:8080/actuator/health | grep UP && exit 0
+            sleep 3
+          done
+
+          echo "❌ App não subiu"
+          docker logs app
+          exit 1
+
       # -------------------------
       # TOKENS
       # -------------------------
@@ -157,10 +169,19 @@ jobs:
             --network zap-network \
             -v ${{ github.workspace }}:/app \
             -w /app \
-            bash bash scripts/owasp-zap-up-app-local.sh
+            alpine:3.19 \
+            sh -c "
+              apk add --no-cache curl jq bash >/dev/null &&
+              bash scripts/owasp-zap-up-app-local.sh
+            "
 
       - name: Setup workspace permissions
         run: chmod -R 777 ${{ github.workspace }}
+
+      - name: Validate OpenAPI endpoint
+        run: |
+          docker run --rm --network zap-network curlimages/curl \
+            curl -f http://app:8080/v3/api-docs || exit 1
 
       # =========================
       # 🕷️ ZAP
