@@ -44,7 +44,7 @@ jobs:
         run: mvn clean package -DskipTests
 
       # =========================
-      # 🔐 TRIVY (scanner principal)
+      # 🔐 TRIVY
       # =========================
       - name: Run Trivy (table report)
         uses: aquasecurity/trivy-action@0.35.0
@@ -75,7 +75,7 @@ jobs:
           path: trivy-report.json
 
       # =========================
-      # 🔐 OWASP (best effort)
+      # 🔐 OWASP Dependency Check
       # =========================
       - name: Run OWASP Dependency Check (try)
         continue-on-error: true
@@ -95,37 +95,105 @@ jobs:
         run: sudo apt-get install -y postgresql-client
 
       # =========================
-      # 🚀 SUBIR APP + TOKEN
+      # 🧑‍💻 Criar ADMIN direto no banco
       # =========================
-      - name: Start app and get JWT
-        run: bash scripts/owasp-zap-up-app-local.sh
-      
-      - name: Setup workspace permissions for ZAP
+      - name: Create admin user in Database
         run: |
-          chmod -R 777 ${{ github.workspace }}
-          echo "Permissões para OWASP ZAP configuradas no runner."
-
-      # =========================
-      # 🕷️ OWASP ZAP
-      # =========================
-      - name: Run OWASP ZAP Scan
-        uses: zaproxy/action-baseline@v0.10.0
-        continue-on-error: true
-        with:
-          target: 'http://localhost:8080'
-          cmd_options: '-a'
-          allow_issue_writing: false
+          psql -h localhost -U admin -d workshop <<EOF
+          INSERT INTO users (user_name, password, role)
+          VALUES (
+            'dummyAdmin',
+            '\$2a\$10\$7sQp0YH7Z0zF1sYhTn0M6O6cWb0K5qQ0Y8G6mV6l0nK8P9Qp5G9uS',
+            ARRAY['ADMIN']
+          );
+          EOF
         env:
-          ZAP_AUTH_HEADER: Authorization
-          ZAP_AUTH_HEADER_VALUE: Bearer ${{ env.ZAP_AUTH_TOKEN }}
-          ZAP_AUTH_HEADER_SITE: http://localhost:8080
+          PGPASSWORD: admin
 
-      - name: Debug - list generated files
-        run: ls -la
+      # =========================
+      # 🚀 Subir app + gerar tokens
+      # =========================
+      - name: Start app and get JWTs
+        run: bash scripts/owasp-zap-up-app-local.sh
 
-      - name: Upload ZAP Report
+      - name: Setup workspace permissions for ZAP
+        run: chmod -R 777 ${{ github.workspace }}
+
+      # =========================
+      # 🕷️ ZAP - MULTI ROLE SCANS
+      # =========================
+
+      # 🔴 ADMIN
+      - name: ZAP Scan - ADMIN
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+
+          mv zap-report.html zap-report-admin.html
+
+      # 🤖 CHATBOT
+      - name: ZAP Scan - CHATBOT
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+
+          mv zap-report.html zap-report-chatbot.html
+
+      # 🔧 MECHANIC
+      - name: ZAP Scan - MECHANIC
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+
+          mv zap-report.html zap-report-mechanic.html
+
+      # 🧾 ATTENDANT
+      - name: ZAP Scan - ATTENDANT
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+
+          mv zap-report.html zap-report-attendant.html
+
+      # 📦 STOREKEEPER
+      - name: ZAP Scan - STOREKEEPER
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+
+          mv zap-report.html zap-report-storekeeper.html
+
+      # =========================
+      # 📦 Upload relatórios
+      # =========================
+      - name: Upload ZAP Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: zap-report
-          path: report_html.html
+          name: zap-reports
+          path: |
+            zap-report-admin.html
+            zap-report-chatbot.html
+            zap-report-mechanic.html
+            zap-report-attendant.html
+            zap-report-storekeeper.html
