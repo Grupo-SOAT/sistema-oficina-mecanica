@@ -15,7 +15,8 @@
       "Bash(mvn test *)",
       "PowerShell(Get-Content *)",
       "PowerShell(Get-Process *)",
-      "PowerShell(Wait-Job *)"
+      "PowerShell(Wait-Job *)",
+      "Bash(mvn compile *)"
     ]
   }
 }
