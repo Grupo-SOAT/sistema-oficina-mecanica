@@ -47,7 +47,7 @@ class ServicesControllerTest {
 
         when(serviceUseCase.scroll(10L, null, null, 10, null)).thenReturn(page);
 
-        ResponseEntity<PaginatedServiceResponse> response = controller.listServices(10L, null, null, 10, null);
+        ResponseEntity<PaginatedServiceResponse> response = controller.listServices(10L, null, null, null, 10, null);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
@@ -65,7 +65,7 @@ class ServicesControllerTest {
 
         when(serviceUseCase.scroll(10L, null, "IN_PROGRESS", 10, null)).thenReturn(page);
 
-        ResponseEntity<PaginatedServiceResponse> response = controller.listServices(10L, null, ServiceStatus.IN_PROGRESS, 10, null);
+        ResponseEntity<PaginatedServiceResponse> response = controller.listServices(10L, null, null, ServiceStatus.IN_PROGRESS, 10, null);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }

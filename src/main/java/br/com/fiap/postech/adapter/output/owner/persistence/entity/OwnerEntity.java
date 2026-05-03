@@ -4,6 +4,8 @@ import br.com.fiap.postech.adapter.input.api.model.DocumentType;
 import br.com.fiap.postech.domain.owner.model.Owner;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,6 +35,7 @@ public class OwnerEntity implements Owner{
     @Column(nullable = false, unique = true)
     private String document;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 

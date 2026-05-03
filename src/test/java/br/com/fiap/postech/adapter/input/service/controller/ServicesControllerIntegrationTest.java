@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("test")
-@WithMockUser
+@WithMockUser(roles = {"MECHANIC"})
 class ServicesControllerIntegrationTest {
 
     @Autowired
@@ -171,12 +171,7 @@ class ServicesControllerIntegrationTest {
     @Test
     @WithMockUser(roles = {})
     void should_return_403_when_user_has_no_roles() throws Exception {
-        ScrollPage<Service> page = ScrollPage.<Service>builder()
-                .data(List.of()).cursor(null).isLast(true).pageSize(10).build();
-        when(serviceUseCase.scroll(eq(10L), any(), any(), any(), any()))
-                .thenThrow(new NoMatchingServicesException(10L));
-
         mockMvc.perform(get("/service-orders/10/services"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isForbidden());
     }
 }
