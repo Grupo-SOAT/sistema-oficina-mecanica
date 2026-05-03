@@ -34,8 +34,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Install jq + postgres client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq postgresql-client
 
       # =========================
       # 🧪 BUILD
@@ -77,7 +79,7 @@ jobs:
       # =========================
       # 🔐 OWASP Dependency Check
       # =========================
-      - name: Run OWASP Dependency Check (try)
+      - name: Run OWASP Dependency Check
         continue-on-error: true
         run: |
           mvn org.owasp:dependency-check-maven:check \
@@ -91,11 +93,20 @@ jobs:
           name: owasp-dependency-report
           path: target/dependency-check-report.*
 
-      - name: Install postgres client
-        run: sudo apt-get install -y postgresql-client
+      # =========================
+      # 🧱 Criar schema do banco
+      # =========================
+      - name: Check SQL file exists
+        run: ls -la docker-local/db-seed/
+
+      - name: Run database schema (DDL)
+        run: |
+          psql -h localhost -U admin -d workshop -f docker-local/db-seed/create-db.sql
+        env:
+          PGPASSWORD: admin
 
       # =========================
-      # 🧑‍💻 Criar ADMIN direto no banco
+      # 👑 Criar ADMIN
       # =========================
       - name: Create admin user in Database
         run: |
@@ -111,7 +122,7 @@ jobs:
           PGPASSWORD: admin
 
       # =========================
-      # 🚀 Subir app + gerar tokens
+      # 🚀 APP + TOKENS
       # =========================
       - name: Start app and get JWTs
         run: bash scripts/owasp-zap-up-app-local.sh
@@ -120,10 +131,9 @@ jobs:
         run: chmod -R 777 ${{ github.workspace }}
 
       # =========================
-      # 🕷️ ZAP - MULTI ROLE SCANS
+      # 🕷️ ZAP MULTI-ROLE
       # =========================
 
-      # 🔴 ADMIN
       - name: ZAP Scan - ADMIN
         continue-on-error: true
         run: |
@@ -132,10 +142,8 @@ jobs:
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-
           mv zap-report.html zap-report-admin.html
 
-      # 🤖 CHATBOT
       - name: ZAP Scan - CHATBOT
         continue-on-error: true
         run: |
@@ -144,10 +152,8 @@ jobs:
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-
           mv zap-report.html zap-report-chatbot.html
 
-      # 🔧 MECHANIC
       - name: ZAP Scan - MECHANIC
         continue-on-error: true
         run: |
@@ -156,10 +162,8 @@ jobs:
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-
           mv zap-report.html zap-report-mechanic.html
 
-      # 🧾 ATTENDANT
       - name: ZAP Scan - ATTENDANT
         continue-on-error: true
         run: |
@@ -168,10 +172,8 @@ jobs:
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-
           mv zap-report.html zap-report-attendant.html
 
-      # 📦 STOREKEEPER
       - name: ZAP Scan - STOREKEEPER
         continue-on-error: true
         run: |
@@ -180,11 +182,10 @@ jobs:
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-
           mv zap-report.html zap-report-storekeeper.html
 
       # =========================
-      # 📦 Upload relatórios
+      # 📦 Upload
       # =========================
       - name: Upload ZAP Reports
         if: always()
