@@ -43,6 +43,9 @@ ADMIN_RESPONSE=$(curl -s -X POST http://localhost:8080/auth/login \
     "password": "dummyAdminPassword"
   }')
 
+echo "ADMIN RESPONSE:"
+echo $ADMIN_RESPONSE
+
 ADMIN_TOKEN=$(echo $ADMIN_RESPONSE | jq -r '.token')
 
 if [ -z "$ADMIN_TOKEN" ] || [ "$ADMIN_TOKEN" == "null" ]; then

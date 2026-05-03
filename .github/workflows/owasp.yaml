@@ -105,17 +105,19 @@ jobs:
         env:
           PGPASSWORD: admin
       
-      - name: Generate BCrypt hash for admin password
-        id: bcrypt
+      - name: Generate BCrypt hash
         run: |
-          HASH=$(jshell <<EOF | tail -n 1
-          import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-          var encoder = new BCryptPasswordEncoder();
-          System.out.println(encoder.encode("dummyAdminPassword"));
-          EOF
-          )
+          echo 'public class BCryptGenerator {
+            public static void main(String[] args) {
+              org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder =
+                new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+              System.out.println(encoder.encode("dummyAdminPassword"));
+            }
+          }' > BCryptGenerator.java
 
-          echo "HASH=$HASH"
+          javac -cp target/*.jar BCryptGenerator.java
+          HASH=$(java -cp .:target/*.jar BCryptGenerator)
+
           echo "ADMIN_HASH=$HASH" >> $GITHUB_ENV
 
       # =========================
