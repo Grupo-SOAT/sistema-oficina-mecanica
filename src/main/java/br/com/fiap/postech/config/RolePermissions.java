@@ -140,7 +140,7 @@ public class RolePermissions {
 
     private static final List<String> STATIC_SEGMENTS = List.of(
             "users",
-            "clients",
+            "owners",
             "vehicles",
             "services",
             "supplies",
