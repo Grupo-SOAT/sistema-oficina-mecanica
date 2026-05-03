@@ -11,6 +11,8 @@ export SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/workshop"
 export SPRING_DATASOURCE_USERNAME="admin"
 export SPRING_DATASOURCE_PASSWORD="admin"
 
+export SPRING_PROFILES_ACTIVE=ci
+
 echo "⏱️ Aguardando PostgreSQL subir..."
 
 for i in {1..20}; do
@@ -22,6 +24,7 @@ for i in {1..20}; do
 done
 
 echo "🚀 Subindo aplicação..."
+echo "Active profile: $SPRING_PROFILES_ACTIVE"
 nohup java -jar target/*.jar > app.log 2>&1 &
 
 echo "⏱️ Aguardando aplicação subir..."
