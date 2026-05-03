@@ -2,9 +2,9 @@ env:
   contexts:
     - name: "app-context"
       urls:
-        - "http://localhost:8080"
+        - "http://host.docker.internal:8080"
       includePaths:
-        - "http://localhost:8080/.*"
+        - "http://host.docker.internal:8080/.*"
       authentication:
         method: "manual"
       sessionManagement:
@@ -17,8 +17,8 @@ env:
 jobs:
   - type: openapi
     parameters:
-      apiFile: "http://localhost:8080/v3/api-docs"
-      targetUrl: "http://localhost:8080"
+      apiFile: "http://host.docker.internal:8080/v3/api-docs"
+      targetUrl: "http://host.docker.internal:8080"
 
   - type: spider
     parameters:

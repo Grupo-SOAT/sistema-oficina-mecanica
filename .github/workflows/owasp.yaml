@@ -146,6 +146,7 @@ jobs:
         continue-on-error: true
         run: |
           docker run --network=host \
+            --add-host=host.docker.internal:host-gateway \
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
             ghcr.io/zaproxy/zaproxy:stable \
@@ -156,6 +157,7 @@ jobs:
         continue-on-error: true
         run: |
           docker run --network=host \
+            --add-host=host.docker.internal:host-gateway \
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
@@ -166,6 +168,7 @@ jobs:
         continue-on-error: true
         run: |
           docker run --network=host \
+            --add-host=host.docker.internal:host-gateway \
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
             ghcr.io/zaproxy/zaproxy:stable \
@@ -176,6 +179,7 @@ jobs:
         continue-on-error: true
         run: |
           docker run --network=host \
+            --add-host=host.docker.internal:host-gateway \
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
@@ -186,6 +190,7 @@ jobs:
         continue-on-error: true
         run: |
           docker run --network=host \
+            --add-host=host.docker.internal:host-gateway \
             -v ${{ github.workspace }}:/zap/wrk \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
             ghcr.io/zaproxy/zaproxy:stable \
