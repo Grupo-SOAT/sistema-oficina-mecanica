@@ -1,8 +1,8 @@
 -- =========================
--- CLIENTS
+-- OWNERS
 -- =========================
-CREATE TABLE IF NOT EXISTS clients (
-    client_id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS owners (
+    owner_id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     document VARCHAR(50),
     document_type VARCHAR(50),
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS service_orders (
     service_order_id SERIAL PRIMARY KEY,
     status VARCHAR(50),
 
-    client_id INT,
+    owner_id INT,
     vehicle_id INT,
 
     description TEXT,
@@ -61,13 +61,23 @@ CREATE TABLE IF NOT EXISTS service_orders (
     completed_by INT,
     delivered_by INT,
 
-    CONSTRAINT fk_so_client FOREIGN KEY (client_id) REFERENCES client(client_id),
-    CONSTRAINT fk_so_vehicle FOREIGN KEY (vehicle_id) REFERENCES vehicle(vehicle_id),
+    CONSTRAINT fk_so_owner FOREIGN KEY (owner_id)
+        REFERENCES owners(owner_id),
 
-    CONSTRAINT fk_so_created_by FOREIGN KEY (created_by) REFERENCES users(user_id),
-    CONSTRAINT fk_so_inspect_by FOREIGN KEY (inspect_by) REFERENCES users(user_id),
-    CONSTRAINT fk_so_completed_by FOREIGN KEY (completed_by) REFERENCES users(user_id),
-    CONSTRAINT fk_so_delivered_by FOREIGN KEY (delivered_by) REFERENCES users(user_id)
+    CONSTRAINT fk_so_vehicle FOREIGN KEY (vehicle_id)
+        REFERENCES vehicles(vehicle_id),
+
+    CONSTRAINT fk_so_created_by FOREIGN KEY (created_by)
+        REFERENCES users(user_id),
+
+    CONSTRAINT fk_so_inspect_by FOREIGN KEY (inspect_by)
+        REFERENCES users(user_id),
+
+    CONSTRAINT fk_so_completed_by FOREIGN KEY (completed_by)
+        REFERENCES users(user_id),
+
+    CONSTRAINT fk_so_delivered_by FOREIGN KEY (delivered_by)
+        REFERENCES users(user_id)
 );
 
 -- =========================
@@ -99,10 +109,10 @@ CREATE TABLE IF NOT EXISTS services (
     completed_at TIMESTAMP,
 
     CONSTRAINT fk_service_catalog FOREIGN KEY (catalog_service_id)
-        REFERENCES catalog_service(catalog_service_id),
+        REFERENCES catalog_services(catalog_service_id),
 
     CONSTRAINT fk_service_order FOREIGN KEY (service_order_id)
-        REFERENCES service_order(service_order_id)
+        REFERENCES service_orders(service_order_id)
 );
 
 -- =========================
@@ -131,7 +141,7 @@ CREATE TABLE IF NOT EXISTS supplies (
     available_quantity INT,
 
     CONSTRAINT fk_supply_supplier FOREIGN KEY (supplied_by)
-        REFERENCES supplier(supplier_id)
+        REFERENCES suppliers(supplier_id)
 );
 
 -- =========================
@@ -144,10 +154,10 @@ CREATE TABLE IF NOT EXISTS service_supplies (
     supply_amount INT,
 
     CONSTRAINT fk_ss_catalog FOREIGN KEY (catalog_service_id)
-        REFERENCES catalog_service(catalog_service_id),
+        REFERENCES catalog_services(catalog_service_id),
 
     CONSTRAINT fk_ss_supply FOREIGN KEY (supply_id)
-        REFERENCES supply(supply_id)
+        REFERENCES supplies(supply_id)
 );
 
 -- =========================
@@ -160,7 +170,7 @@ CREATE TABLE IF NOT EXISTS service_outside_supplies (
     description TEXT,
 
     CONSTRAINT fk_sos_catalog FOREIGN KEY (catalog_service_id)
-        REFERENCES catalog_service(catalog_service_id)
+        REFERENCES catalog_services(catalog_service_id)
 );
 
 -- =========================
@@ -170,7 +180,7 @@ CREATE TABLE IF NOT EXISTS purchase_orders (
     purchase_order_id SERIAL PRIMARY KEY,
     supply_id INT,
     status VARCHAR(50),
-    stimated_amount NUMERIC(10,2),
+    estimated_amount NUMERIC(10,2),
     quoted_unit_price NUMERIC(10,2),
     requested_quantity INT,
     created_at TIMESTAMP,
@@ -181,5 +191,5 @@ CREATE TABLE IF NOT EXISTS purchase_orders (
     completed_at TIMESTAMP,
 
     CONSTRAINT fk_po_supply FOREIGN KEY (supply_id)
-        REFERENCES supply(supply_id)
+        REFERENCES supplies(supply_id)
 );
