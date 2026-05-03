@@ -22,13 +22,13 @@ public class RolePermissions {
             Map.entry("DELETE_/users/:id", List.of("ROLE_ADMIN")),
 
             // =========================
-            // CLIENTS
+            // OWNERS
             // =========================
-            Map.entry("GET_/clients", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
-            Map.entry("POST_/clients", List.of("ROLE_ADMIN", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
-            Map.entry("GET_/clients/:id", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
-            Map.entry("PATCH_/clients/:id", List.of("ROLE_ADMIN", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
-            Map.entry("DELETE_/clients/:id", List.of("ROLE_ADMIN", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("GET_/owners", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("POST_/owners", List.of("ROLE_ADMIN", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("GET_/owners/:id", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("PATCH_/owners/:id", List.of("ROLE_ADMIN", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("DELETE_/owners/:id", List.of("ROLE_ADMIN", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
 
             // =========================
             // VEHICLES
@@ -140,7 +140,7 @@ public class RolePermissions {
 
     private static final List<String> STATIC_SEGMENTS = List.of(
             "users",
-            "clients",
+            "owners",
             "vehicles",
             "services",
             "supplies",
