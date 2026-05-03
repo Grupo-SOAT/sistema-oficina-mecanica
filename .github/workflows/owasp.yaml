@@ -107,16 +107,9 @@ jobs:
       
       - name: Generate BCrypt hash
         run: |
-          echo 'public class BCryptGenerator {
-            public static void main(String[] args) {
-              org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder =
-                new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
-              System.out.println(encoder.encode("dummyAdminPassword"));
-            }
-          }' > BCryptGenerator.java
+          sudo apt-get install -y apache2-utils
 
-          javac -cp target/*.jar BCryptGenerator.java
-          HASH=$(java -cp .:target/*.jar BCryptGenerator)
+          HASH=$(htpasswd -bnBC 10 "" dummyAdminPassword | tr -d ':\n')
 
           echo "ADMIN_HASH=$HASH" >> $GITHUB_ENV
 
