@@ -24,6 +24,7 @@ public class VehicleEntity implements Vehicle {
     @Builder.Default
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "vehicle_id")
     private Long id = 0L;
 
     @Column(name = "owner_id", nullable = false)
