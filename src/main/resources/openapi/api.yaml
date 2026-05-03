@@ -20,7 +20,7 @@ tags:
     description: Login e autenticação (usuários + chatbot)
   - name: Users
     description: Gerenciamento de usuários (admin)
-  - name: Clients
+  - name: Owners
     description: Gerenciamento de clientes
   - name: Vehicles
     description: Gerenciamento de veículos
@@ -70,10 +70,10 @@ paths:
   /users/{id}/reset-password:
     $ref: './endpoints/users_reset-password.yaml'
 
-  /clients:
-    $ref: './endpoints/clients.yaml'
-  /clients/{id}:
-    $ref: './endpoints/clients_id.yaml'
+  /owners:
+    $ref: './endpoints/owners.yaml'
+  /owners/{id}:
+    $ref: './endpoints/owners_id.yaml'
 
   /vehicles:
     $ref: './endpoints/vehicles.yaml'
@@ -113,8 +113,10 @@ paths:
   /service-orders/{id}/budget:
     $ref: './endpoints/service-orders_budget_decision.yaml'
 
-  /reports/services/{id}/average-time:
+  /reports/catalog/services/{id}/average-time:
     $ref: './endpoints/reports_service_average_time.yaml'
+  /reports/catalog/services/average-time:
+    $ref: './endpoints/reports_all_services_average_time.yaml'
   /reports/service-orders/{id}/budget:
     $ref: './endpoints/reports_service-order_budget.yaml'
   /reports/purchase-order/{id}:

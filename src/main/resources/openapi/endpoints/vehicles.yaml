@@ -6,10 +6,6 @@ get:
     - SessionToken: [ ]
   parameters:
     - in: query
-      name: id
-      description: Id do veículo
-      schema: { type: integer, format: int64 }
-    - in: query
       name: licensePlate
       description: Placa do veículo
       schema: { type: string }

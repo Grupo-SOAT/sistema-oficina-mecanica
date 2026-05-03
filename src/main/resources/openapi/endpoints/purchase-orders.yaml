@@ -88,9 +88,3 @@ post:
         application/json:
           schema:
             $ref: '../schemas/ErrorResponse.yaml'
-    '409':
-      description: Conflito
-      content:
-        application/json:
-          schema:
-            $ref: '../schemas/ErrorResponse.yaml'

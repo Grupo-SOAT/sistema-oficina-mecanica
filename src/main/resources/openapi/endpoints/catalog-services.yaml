@@ -4,6 +4,23 @@ get:
   operationId: listCatalogServices
   security:
     - SessionToken: [ ]
+  parameters:
+    - in: query
+      name: id
+      description: ID do Serviço
+      schema: { type: integer, format: int64 }
+    - in: query
+      name: name
+      description: Início do nome do Serviço
+      schema: { type: string }
+    - in: query
+      name: pageSize
+      description: Tamanho da página
+      schema: { type: integer, default: 10 }
+    - in: query
+      name: cursor
+      description: Cursor da paginação (obtido através da página anterior)
+      schema: { type: string }
   responses:
     '200':
       description: Lista de serviços
@@ -63,10 +80,3 @@ post:
         application/json:
           schema:
             $ref: '../schemas/ErrorResponse.yaml'
-    '409':
-      description: Conflito
-      content:
-        application/json:
-          schema:
-            $ref: '../schemas/ErrorResponse.yaml'
-

@@ -1,0 +1,200 @@
+name: Relatorio OWASP | Trivy | ZAP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  security-analysis:
+    name: Security Scan (Trivy + OWASP + ZAP)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: workshop
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: admin
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U admin"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Install jq + postgres client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq postgresql-client
+
+      # =========================
+      # 🧪 BUILD
+      # =========================
+      - name: Build application
+        run: mvn clean package -DskipTests
+
+      # =========================
+      # 🔐 TRIVY
+      # =========================
+      - name: Run Trivy (table report)
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          vuln-type: 'library'
+          ignore-unfixed: true
+          exit-code: '0'
+
+      - name: Run Trivy (JSON report)
+        uses: aquasecurity/trivy-action@0.35.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'json'
+          output: 'trivy-report.json'
+          vuln-type: 'library'
+          ignore-unfixed: true
+          exit-code: '0'
+
+      - name: Upload Trivy Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: trivy-report.json
+
+      # =========================
+      # 🔐 OWASP Dependency Check
+      # =========================
+      - name: Run OWASP Dependency Check
+        continue-on-error: true
+        run: |
+          mvn org.owasp:dependency-check-maven:check \
+            -DfailOnError=false \
+            -Dformats=HTML,JSON
+
+      - name: Upload OWASP Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: owasp-dependency-report
+          path: target/dependency-check-report.*
+
+      # =========================
+      # 🧱 Criar schema do banco
+      # =========================
+      - name: Check SQL file exists
+        run: ls -la docker-local/db-seed/
+
+      - name: Run database schema (DDL)
+        run: |
+          psql -h localhost -U admin -d workshop -f docker-local/db-seed/create-db.sql
+        env:
+          PGPASSWORD: admin
+
+      # =========================
+      # 👑 Criar ADMIN
+      # =========================
+      - name: Create admin user in Database
+        run: |
+          psql -h localhost -U admin -d workshop <<EOF
+          INSERT INTO users (user_name, password, role)
+          VALUES (
+            'dummyAdmin',
+            '\$2a\$10\$7sQp0YH7Z0zF1sYhTn0M6O6cWb0K5qQ0Y8G6mV6l0nK8P9Qp5G9uS',
+            ARRAY['ADMIN']
+          );
+          EOF
+        env:
+          PGPASSWORD: admin
+
+      # =========================
+      # 🚀 APP + TOKENS
+      # =========================
+      - name: Start app and get JWTs
+        run: bash scripts/owasp-zap-up-app-local.sh
+
+      - name: Setup workspace permissions for ZAP
+        run: chmod -R 777 ${{ github.workspace }}
+
+      # =========================
+      # 🕷️ ZAP MULTI-ROLE
+      # =========================
+
+      - name: ZAP Scan - ADMIN
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+          mv zap-report.html zap-report-admin.html
+
+      - name: ZAP Scan - CHATBOT
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+          mv zap-report.html zap-report-chatbot.html
+
+      - name: ZAP Scan - MECHANIC
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+          mv zap-report.html zap-report-mechanic.html
+
+      - name: ZAP Scan - ATTENDANT
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+          mv zap-report.html zap-report-attendant.html
+
+      - name: ZAP Scan - STOREKEEPER
+        continue-on-error: true
+        run: |
+          docker run --network=host \
+            -v ${{ github.workspace }}:/zap/wrk \
+            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
+          mv zap-report.html zap-report-storekeeper.html
+
+      # =========================
+      # 📦 Upload
+      # =========================
+      - name: Upload ZAP Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-reports
+          path: |
+            zap-report-admin.html
+            zap-report-chatbot.html
+            zap-report-mechanic.html
+            zap-report-attendant.html
+            zap-report-storekeeper.html

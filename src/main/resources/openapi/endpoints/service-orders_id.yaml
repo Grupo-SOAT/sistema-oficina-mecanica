@@ -83,12 +83,6 @@ patch:
         application/json:
           schema:
             $ref: '../schemas/ErrorResponse.yaml'
-    '409':
-      description: Conflito
-      content:
-        application/json:
-          schema:
-            $ref: '../schemas/ErrorResponse.yaml'
 
 delete:
   tags: [ Service Orders ]
