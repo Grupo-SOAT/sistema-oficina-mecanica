@@ -1,6 +1,6 @@
-package br.com.fiap.postech.adapter.output.catalogService.persistence.repository;
+package br.com.fiap.postech.adapter.output.catalogservice.persistence.repository;
 
-import br.com.fiap.postech.adapter.output.catalogService.persistence.entity.CatalogServicesEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.CatalogServicesEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

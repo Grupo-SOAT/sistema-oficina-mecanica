@@ -2,10 +2,14 @@ package br.com.fiap.postech.adapter.input.catalogservice.controller;
 
 import br.com.fiap.postech.adapter.input.api.model.*;
 import br.com.fiap.postech.adapter.input.catalogservice.mapper.CatalogServicesMapper;
-import br.com.fiap.postech.domain.catalogServices.usecase.CatalogServicesUseCase;
+import br.com.fiap.postech.domain.catalogservices.exception.CatalogServicesNotFoundException;
+import br.com.fiap.postech.domain.catalogservices.exception.DuplicatedCatalogServicesException;
+import br.com.fiap.postech.domain.catalogservices.exception.NoMatchingCatalogServiceException;
+import br.com.fiap.postech.domain.catalogservices.usecase.CatalogServicesUseCase;
 import br.com.fiap.postech.port.api.CatalogServicesApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 
@@ -54,6 +58,25 @@ public class CatalogServicesController implements CatalogServicesApi {
         final var responseBody = CatalogServicesMapper.toApiData(catalogService);
 
         return ResponseEntity.ok(responseBody);
+    }
+
+    @ExceptionHandler(NoMatchingCatalogServiceException.class)
+    public ResponseEntity<ErrorResponse> handleNoMatchingCatalogServices() {
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(CatalogServicesNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(CatalogServicesNotFoundException exception) {
+        final var status = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), exception.reason.name(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicatedCatalogServicesException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicated(DuplicatedCatalogServicesException exception) {
+        final var status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), exception.reason.name(), exception.getMessage()));
     }
 
 }

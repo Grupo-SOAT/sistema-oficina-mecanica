@@ -1,11 +1,11 @@
-package br.com.fiap.postech.adapter.output.catalogService.persistence;
+package br.com.fiap.postech.adapter.output.catalogservice.persistence;
 
-import br.com.fiap.postech.adapter.output.catalogService.persistence.entity.CatalogServicesEntity;
-import br.com.fiap.postech.adapter.output.catalogService.persistence.entity.NeededSupplyEntity;
-import br.com.fiap.postech.adapter.output.catalogService.persistence.repository.CatalogServicesRepository;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.CatalogServicesEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.NeededSupplyEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.repository.CatalogServicesRepository;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.Scroller;
-import br.com.fiap.postech.domain.catalogServices.model.CatalogServices;
+import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,6 @@
-package br.com.fiap.postech.domain.catalogServices.exception;
+package br.com.fiap.postech.domain.catalogservices.exception;
 
-import br.com.fiap.postech.domain.catalogServices.exception.reason.CatalogServicesExceptionReason;
-import br.com.fiap.postech.domain.supply.exception.reason.SupplyExceptionReason;
+import br.com.fiap.postech.domain.catalogservices.exception.reason.CatalogServicesExceptionReason;
 
 public class CatalogServicesNotFoundException extends RuntimeException {
     public CatalogServicesExceptionReason reason = CatalogServicesExceptionReason.CATALOG_SERVICES_NOT_FOUND;

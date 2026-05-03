@@ -1,8 +1,7 @@
 package br.com.fiap.postech.port.persistence.catalogService;
 
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
-import br.com.fiap.postech.domain.catalogServices.model.CatalogServices;
-import br.com.fiap.postech.domain.supply.model.Supply;
+import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
 
 import java.util.Optional;
 

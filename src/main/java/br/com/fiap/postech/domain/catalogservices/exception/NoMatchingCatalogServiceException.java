@@ -1,4 +1,4 @@
-package br.com.fiap.postech.domain.catalogServices.exception;
+package br.com.fiap.postech.domain.catalogservices.exception;
 
 public class NoMatchingCatalogServiceException extends RuntimeException {
     public NoMatchingCatalogServiceException(String name) {

@@ -1,4 +1,4 @@
-package br.com.fiap.postech.domain.catalogServices.exception.reason;
+package br.com.fiap.postech.domain.catalogservices.exception.reason;
 
 public enum CatalogServicesExceptionReason {
     CATALOG_SERVICES_NOT_FOUND,

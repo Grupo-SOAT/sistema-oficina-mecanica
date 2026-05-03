@@ -1,9 +1,7 @@
-package br.com.fiap.postech.adapter.output.catalogService.persistence.entity;
+package br.com.fiap.postech.adapter.output.catalogservice.persistence.entity;
 
 import br.com.fiap.postech.adapter.output.supply.persistence.entity.SupplyEntity;
-import br.com.fiap.postech.domain.catalogServices.model.CatalogServices;
-import br.com.fiap.postech.domain.catalogServices.model.NeededSupply;
-import br.com.fiap.postech.domain.supply.model.Supply;
+import br.com.fiap.postech.domain.catalogservices.model.NeededSupply;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

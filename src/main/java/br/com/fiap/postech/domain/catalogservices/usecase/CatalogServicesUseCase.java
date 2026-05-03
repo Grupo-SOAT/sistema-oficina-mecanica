@@ -1,11 +1,11 @@
-package br.com.fiap.postech.domain.catalogServices.usecase;
+package br.com.fiap.postech.domain.catalogservices.usecase;
 
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
-import br.com.fiap.postech.domain.catalogServices.exception.CatalogServicesNotFoundException;
-import br.com.fiap.postech.domain.catalogServices.exception.DuplicatedCatalogServicesException;
-import br.com.fiap.postech.domain.catalogServices.exception.NoMatchingCatalogServiceException;
-import br.com.fiap.postech.domain.catalogServices.model.CatalogServices;
-import br.com.fiap.postech.domain.supply.exception.SupplyNotFoundException;
+import br.com.fiap.postech.domain.catalogservices.exception.CatalogServicesNotFoundException;
+import br.com.fiap.postech.domain.catalogservices.exception.DuplicatedCatalogServicesException;
+import br.com.fiap.postech.domain.catalogservices.exception.NoMatchingCatalogServiceException;
+import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
+import br.com.fiap.postech.domain.supply.exception.DuplicatedSupplyException;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
 
 public class CatalogServicesUseCase {
@@ -30,6 +30,9 @@ public class CatalogServicesUseCase {
     }
 
     public CatalogServices create(CatalogServices catalogServices) {
+        persistencePort.findByName(catalogServices.getName()).ifPresent(s -> {
+            throw new DuplicatedCatalogServicesException(catalogServices.getName());
+        });
         return persistencePort.save(catalogServices);
     }
 

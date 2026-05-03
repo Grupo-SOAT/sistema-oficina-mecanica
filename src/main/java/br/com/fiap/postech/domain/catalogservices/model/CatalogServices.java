@@ -1,6 +1,6 @@
-package br.com.fiap.postech.domain.catalogServices.model;
+package br.com.fiap.postech.domain.catalogservices.model;
 
-import br.com.fiap.postech.adapter.output.catalogService.persistence.entity.NeededSupplyEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.NeededSupplyEntity;
 
 import java.math.BigDecimal;
 import java.util.List;

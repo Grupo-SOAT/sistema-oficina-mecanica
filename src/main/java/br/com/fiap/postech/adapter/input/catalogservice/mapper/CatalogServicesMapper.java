@@ -1,12 +1,12 @@
 package br.com.fiap.postech.adapter.input.catalogservice.mapper;
 
 import br.com.fiap.postech.adapter.input.api.model.*;
-import br.com.fiap.postech.adapter.output.catalogService.persistence.entity.CatalogServicesEntity;
-import br.com.fiap.postech.adapter.output.catalogService.persistence.entity.NeededSupplyEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.CatalogServicesEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.NeededSupplyEntity;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.supply.persistence.entity.SupplyEntity;
-import br.com.fiap.postech.domain.catalogServices.model.CatalogServices;
-import br.com.fiap.postech.domain.catalogServices.model.NeededSupply;
+import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
+import br.com.fiap.postech.domain.catalogservices.model.NeededSupply;
 import br.com.fiap.postech.domain.supply.model.Supply;
 import org.jspecify.annotations.NonNull;
 
