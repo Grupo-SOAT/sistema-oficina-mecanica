@@ -33,7 +33,7 @@ public class CatalogServicesEntity implements CatalogServices {
     @Column(name = "base_price", nullable = false)
     private BigDecimal basePrice;
 
-    @OneToMany(mappedBy = "catalogservices", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "catalogServices", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NeededSupplyEntity> supplies = new ArrayList<>();
 
 }
