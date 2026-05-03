@@ -8,21 +8,6 @@ jobs:
     name: Security Scan (Trivy + OWASP + ZAP)
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: workshop
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: admin
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U admin"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,10 +19,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Install jq + postgres client
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq postgresql-client
+          sudo apt-get install -y jq apache2-utils
 
       # =========================
       # 🧪 BUILD
@@ -94,31 +79,49 @@ jobs:
           path: target/dependency-check-report.*
 
       # =========================
-      # 🧱 Criar schema do banco
+      # 🐳 INFRA (DOCKER)
       # =========================
-      - name: Check SQL file exists
-        run: ls -la docker-local/db-seed/
+      - name: Create docker network
+        run: docker network create zap-network
 
-      - name: Run database schema (DDL)
+      # -------------------------
+      # PostgreSQL
+      # -------------------------
+      - name: Run Postgres container
         run: |
-          psql -h localhost -U admin -d workshop -f docker-local/db-seed/create-db.sql
-        env:
-          PGPASSWORD: admin
-      
+          docker run -d \
+            --name postgres \
+            --network zap-network \
+            -e POSTGRES_DB=workshop \
+            -e POSTGRES_USER=admin \
+            -e POSTGRES_PASSWORD=admin \
+            postgres:16-alpine
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..20}; do
+            docker exec postgres pg_isready -U admin && break
+            sleep 3
+          done
+
+      # -------------------------
+      # Hash do ADMIN (ANTES do insert)
+      # -------------------------
       - name: Generate BCrypt hash
         run: |
-          sudo apt-get install -y apache2-utils
-
           HASH=$(htpasswd -bnBC 10 "" dummyAdminPassword | tr -d ':\n')
-
           echo "ADMIN_HASH=$HASH" >> $GITHUB_ENV
 
-      # =========================
-      # 👑 Criar ADMIN
-      # =========================
-      - name: Create admin user in Database
+      # -------------------------
+      # Schema + ADMIN
+      # -------------------------
+      - name: Run DB schema
         run: |
-          psql -h localhost -U admin -d workshop <<EOF
+          docker exec -i postgres psql -U admin -d workshop < docker-local/db-seed/create-db.sql
+
+      - name: Create admin user
+        run: |
+          docker exec -i postgres psql -U admin -d workshop <<EOF
           INSERT INTO users (user_name, password, role)
           VALUES (
             'dummyAdmin',
@@ -126,42 +129,41 @@ jobs:
             ARRAY['ADMIN']
           );
           EOF
-        env:
-          PGPASSWORD: admin
 
-      # =========================
-      # 🚀 APP + TOKENS
-      # =========================
-      - name: Start app and get JWTs
-        run: bash scripts/owasp-zap-up-app-local.sh
+      # -------------------------
+      # APP
+      # -------------------------
+      - name: Build app image
+        run: docker build -t my-app .
 
-      - name: Setup workspace permissions for ZAP
-        run: chmod -R 777 ${{ github.workspace }}
-      
-      - name: Create docker network
-        run: docker network create zap-network
-      
       - name: Run app container
         run: |
-          docker build -t my-app .
-          
           docker run -d \
             --name app \
             --network zap-network \
             -e SPRING_PROFILES_ACTIVE=ci \
-            -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/workshop \
+            -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/workshop \
             -e SPRING_DATASOURCE_USERNAME=admin \
             -e SPRING_DATASOURCE_PASSWORD=admin \
             -p 8080:8080 \
             my-app
 
-      - name: Test connectivity
+      # -------------------------
+      # TOKENS
+      # -------------------------
+      - name: Generate tokens
         run: |
-          docker run --rm --network zap-network curlimages/curl \
-            curl -v http://app:8080/v3/api-docs
+          docker run --rm \
+            --network zap-network \
+            -v ${{ github.workspace }}:/app \
+            -w /app \
+            bash bash scripts/owasp-zap-up-app-local.sh
+
+      - name: Setup workspace permissions
+        run: chmod -R 777 ${{ github.workspace }}
 
       # =========================
-      # 🕷️ ZAP MULTI-ROLE
+      # 🕷️ ZAP
       # =========================
 
       - name: ZAP Scan - ADMIN
@@ -220,7 +222,7 @@ jobs:
           mv zap-report.html zap-report-storekeeper.html
 
       # =========================
-      # 📦 Upload
+      # 📦 UPLOAD
       # =========================
       - name: Upload ZAP Reports
         if: always()
