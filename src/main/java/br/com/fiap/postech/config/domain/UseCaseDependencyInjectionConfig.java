@@ -1,5 +1,8 @@
 package br.com.fiap.postech.config.domain;
 
+import br.com.fiap.postech.domain.catalogservices.usecase.CatalogServicesUseCase;
+import br.com.fiap.postech.domain.supply.usecase.SupplyUseCase;
+import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
 import br.com.fiap.postech.domain.owner.usecase.OwnerUseCase;
 import br.com.fiap.postech.domain.service.usecase.ServiceUseCase;
 import br.com.fiap.postech.domain.supply.usecase.SupplyUseCase;
@@ -72,6 +75,11 @@ public class UseCaseDependencyInjectionConfig {
     @Bean
     public SupplyUseCase supplyUseCase(SupplyPersistencePort persistencePort) {
         return new SupplyUseCase(persistencePort);
+    }
+
+    @Bean
+    public CatalogServicesUseCase catalogServicesUseCase (CatalogServicesPersistencePort persistencePort){
+        return new CatalogServicesUseCase(persistencePort);
     }
 
     @Bean

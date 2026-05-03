@@ -104,6 +104,19 @@ jobs:
           psql -h localhost -U admin -d workshop -f docker-local/db-seed/create-db.sql
         env:
           PGPASSWORD: admin
+      
+      - name: Generate BCrypt hash for admin password
+        id: bcrypt
+        run: |
+          HASH=$(jshell <<EOF | tail -n 1
+          import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+          var encoder = new BCryptPasswordEncoder();
+          System.out.println(encoder.encode("dummyAdminPassword"));
+          EOF
+          )
+
+          echo "HASH=$HASH"
+          echo "ADMIN_HASH=$HASH" >> $GITHUB_ENV
 
       # =========================
       # 👑 Criar ADMIN
@@ -114,7 +127,7 @@ jobs:
           INSERT INTO users (user_name, password, role)
           VALUES (
             'dummyAdmin',
-            '\$2a\$10\$7sQp0YH7Z0zF1sYhTn0M6O6cWb0K5qQ0Y8G6mV6l0nK8P9Qp5G9uS',
+            '${ADMIN_HASH}',
             ARRAY['ADMIN']
           );
           EOF
