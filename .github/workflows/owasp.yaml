@@ -145,6 +145,9 @@ jobs:
             -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/workshop \
             -e SPRING_DATASOURCE_USERNAME=admin \
             -e SPRING_DATASOURCE_PASSWORD=admin \
+            -e DEFAULT_USER_PASSWORD=dummypassword \
+            -e JWT_SECRET=12345678901234567890123456789012 \
+            -e API_KEY_CHATBOT=dummy-api-key \
             -p 8080:8080 \
             my-app
 
