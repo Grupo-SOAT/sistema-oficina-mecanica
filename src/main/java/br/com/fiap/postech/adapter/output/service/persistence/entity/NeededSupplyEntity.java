@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Embeddable
 public class NeededSupplyEntity {
-    private String sku;
+    private Integer idSupply;
     private String note;
     private Integer quantity;
 }

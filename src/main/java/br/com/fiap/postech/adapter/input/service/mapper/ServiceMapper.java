@@ -37,7 +37,7 @@ public class ServiceMapper {
         if (data.getNeededSupplies() != null) {
             entity.setNeededSupplies(data.getNeededSupplies().stream()
                     .map(n -> NeededSupply.builder()
-                            .sku(n.getSku())
+                            .idSupply(n.getIdSupply())
                             .note(n.getNote())
                             .quantity(n.getQuantity())
                             .build())
@@ -69,7 +69,7 @@ public class ServiceMapper {
         if (neededSupplies != null && !neededSupplies.isEmpty()) {
             data.setNeededSupplies(neededSupplies.stream()
                     .map(n -> new NeededSupplyData()
-                            .sku(n.getSku())
+                            .idSupply(n.getIdSupply())
                             .note(n.getNote())
                             .quantity(n.getQuantity()))
                     .toList());

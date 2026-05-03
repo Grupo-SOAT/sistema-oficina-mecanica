@@ -21,17 +21,17 @@ class ServiceEntityTest {
                 .build();
 
         entity.setNeededSupplies(List.of(
-                NeededSupply.builder().sku("SKU-001").note("urgent").quantity(2).build(),
-                NeededSupply.builder().sku("SKU-002").note(null).quantity(1).build()
+                NeededSupply.builder().idSupply(1).note("urgent").quantity(2).build(),
+                NeededSupply.builder().idSupply(2).note(null).quantity(1).build()
         ));
 
         List<NeededSupply> supplies = entity.getNeededSupplies();
 
         assertThat(supplies).hasSize(2);
-        assertThat(supplies.get(0).getSku()).isEqualTo("SKU-001");
+        assertThat(supplies.get(0).getIdSupply()).isEqualTo(1);
         assertThat(supplies.get(0).getNote()).isEqualTo("urgent");
         assertThat(supplies.get(0).getQuantity()).isEqualTo(2);
-        assertThat(supplies.get(1).getSku()).isEqualTo("SKU-002");
+        assertThat(supplies.get(1).getIdSupply()).isEqualTo(2);
         assertThat(supplies.get(1).getNote()).isNull();
     }
 

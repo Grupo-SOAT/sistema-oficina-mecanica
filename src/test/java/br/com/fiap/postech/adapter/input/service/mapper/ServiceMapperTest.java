@@ -54,7 +54,7 @@ class ServiceMapperTest {
                 .price(new BigDecimal("100.00")).status("AWAITING_APPROVAL").build();
 
         entity.setNeededSupplies(List.of(
-                NeededSupply.builder().sku("SKU-001").note("urgent").quantity(2).build()
+                NeededSupply.builder().idSupply(1).note("urgent").quantity(2).build()
         ));
 
         ServiceData result = ServiceMapper.toApiData(entity);
@@ -65,7 +65,7 @@ class ServiceMapperTest {
         assertThat(result.getPrice()).isEqualByComparingTo(new BigDecimal("100.00"));
         assertThat(result.getStatus()).isEqualTo(ServiceStatus.AWAITING_APPROVAL);
         assertThat(result.getNeededSupplies()).hasSize(1);
-        assertThat(result.getNeededSupplies().get(0).getSku()).isEqualTo("SKU-001");
+        assertThat(result.getNeededSupplies().get(0).getIdSupply()).isEqualTo(1);
     }
 
     @Test
@@ -104,7 +104,7 @@ class ServiceMapperTest {
     @Test
     void should_map_needed_supplies_from_api_data() {
         NeededSupplyData supplyData = new NeededSupplyData()
-                .sku("SKU-002").note("check stock").quantity(3);
+                .idSupply(2).note("check stock").quantity(3);
 
         ServiceData data = new ServiceData()
                 .id(1L).catalogServiceId(5L).price(new BigDecimal("100.00"))
@@ -113,7 +113,7 @@ class ServiceMapperTest {
         Service result = ServiceMapper.fromApiData(data);
 
         assertThat(result.getNeededSupplies()).hasSize(1);
-        assertThat(result.getNeededSupplies().get(0).getSku()).isEqualTo("SKU-002");
+        assertThat(result.getNeededSupplies().get(0).getIdSupply()).isEqualTo(2);
         assertThat(result.getNeededSupplies().get(0).getQuantity()).isEqualTo(3);
     }
 }

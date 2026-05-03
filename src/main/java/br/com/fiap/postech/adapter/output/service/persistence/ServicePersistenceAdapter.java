@@ -69,7 +69,7 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
                 ? new ArrayList<>()
                 : service.getNeededSupplies().stream()
                         .map(n -> NeededSupplyEntity.builder()
-                                .sku(n.getSku())
+                                .idSupply(n.getIdSupply())
                                 .note(n.getNote())
                                 .quantity(n.getQuantity())
                                 .build())

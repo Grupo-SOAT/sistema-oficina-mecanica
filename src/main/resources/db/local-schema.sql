@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS services
 CREATE TABLE IF NOT EXISTS service_needed_supplies
 (
     service_id BIGINT,
-    sku        VARCHAR(100),
+    id_supply  INTEGER,
     note       VARCHAR(500),
     quantity   INTEGER
 );

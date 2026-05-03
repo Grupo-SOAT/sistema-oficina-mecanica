@@ -87,7 +87,7 @@ public class ServiceEntity implements Service {
     public List<NeededSupply> getNeededSupplies() {
         return neededSupplyEntities.stream()
                 .map(n -> NeededSupply.builder()
-                        .sku(n.getSku())
+                        .idSupply(n.getIdSupply())
                         .note(n.getNote())
                         .quantity(n.getQuantity())
                         .build())
@@ -100,7 +100,7 @@ public class ServiceEntity implements Service {
                 ? new ArrayList<>()
                 : supplies.stream()
                         .map(n -> NeededSupplyEntity.builder()
-                                .sku(n.getSku())
+                                .idSupply(n.getIdSupply())
                                 .note(n.getNote())
                                 .quantity(n.getQuantity())
                                 .build())
