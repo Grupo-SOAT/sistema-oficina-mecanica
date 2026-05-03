@@ -177,6 +177,8 @@ jobs:
               apk add --no-cache curl jq bash >/dev/null &&
               bash scripts/owasp-zap-up-app-local.sh
             "
+      - name: Export tokens to GitHub ENV
+        run: cat env-vars >> $GITHUB_ENV
 
       - name: Setup workspace permissions
         run: chmod -R 777 ${{ github.workspace }}
