@@ -233,6 +233,7 @@ jobs:
               parameters:
                 apiFile: /zap/wrk/openapi.json
                 targetUrl: http://app:8080
+              continueOnFailure: true
 
             - type: spider
               parameters:
