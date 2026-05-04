@@ -207,9 +207,9 @@ jobs:
             contexts:
               - name: "app-context"
                 urls:
-                  - "http://${APP_IP}:8080"
+                  - "http://${{ env.APP_IP }}:8080"
                 includePaths:
-                  - "http://${APP_IP}:8080/.*"
+                  - "http://${{ env.APP_IP }}:8080/.*"
                 authentication:
                   method: "manual"
                 sessionManagement:
@@ -217,13 +217,13 @@ jobs:
                 users:
                   - name: "admin"
                     credentials:
-                      Authorization: "Bearer ${ZAP_TOKEN_ADMIN}"
+                      Authorization: "Bearer ${{ env.ZAP_TOKEN_ADMIN }}"
 
           jobs:
             - type: openapi
               parameters:
-                apiFile: http://${APP_IP}:8080/v3/api-docs
-                targetUrl: http://${APP_IP}:8080
+                apiFile: http://${{ env.APP_IP }}:8080/v3/api-docs
+                targetUrl: http://${{ env.APP_IP }}:8080
 
             - type: spider
               parameters:
