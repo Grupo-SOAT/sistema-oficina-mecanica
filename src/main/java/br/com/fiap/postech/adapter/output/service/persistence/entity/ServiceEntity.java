@@ -99,12 +99,12 @@ public class ServiceEntity implements Service {
         this.neededSupplyEntities = supplies == null
                 ? new ArrayList<>()
                 : supplies.stream()
-                        .map(n -> NeededSupplyEntity.builder()
-                                .idSupply(n.getIdSupply())
-                                .note(n.getNote())
-                                .quantity(n.getQuantity())
-                                .build())
-                        .collect(Collectors.toCollection(ArrayList::new));
+                .map(n -> NeededSupplyEntity.builder()
+                        .idSupply(n.getIdSupply())
+                        .note(n.getNote())
+                        .quantity(n.getQuantity())
+                        .build())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

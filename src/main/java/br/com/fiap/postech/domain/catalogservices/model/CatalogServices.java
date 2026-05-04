@@ -6,9 +6,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface CatalogServices {
-    Long getCatalogServiceId();
+    Long getId();
 
-    void setCatalogServiceId(Long catalogServiceId);
+    void setId(Long catalogServiceId);
 
     String getName();
 

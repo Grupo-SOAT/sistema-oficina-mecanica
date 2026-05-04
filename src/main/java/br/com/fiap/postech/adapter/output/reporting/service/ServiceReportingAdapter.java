@@ -1,7 +1,7 @@
-package br.com.fiap.postech.adapter.output.reporting.catalogservice;
+package br.com.fiap.postech.adapter.output.reporting.service;
 
-import br.com.fiap.postech.domain.reporting.model.CatalogServiceCalculatedAverageTime;
-import br.com.fiap.postech.port.reporting.catalogservice.CatalogServiceReportingPort;
+import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
+import br.com.fiap.postech.port.reporting.catalogservice.ServiceReportingPort;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class CatalogServiceReportingAdapter implements CatalogServiceReportingPort {
+public class ServiceReportingAdapter implements ServiceReportingPort {
     private static final String BASE_URL_PROP = "baseUrl";
     private static final String REPORT_GENERATED_AT_PROP = "reportGeneratedAt";
     private static final String LOCALHOST = "http://localhost";
@@ -36,7 +36,7 @@ public class CatalogServiceReportingAdapter implements CatalogServiceReportingPo
     private static final String HOUR_INDICATOR = "H";
 
     private static final Map<String, String> TEMPLATE_BY_CLASS_NAME = Map.of(
-            CatalogServiceCalculatedAverageTime.class.getSimpleName(), "catalog-service-average-time-report.html"
+            ServiceCalculatedAverageTime.class.getSimpleName(), "catalog-service-average-time-report.html"
     );
 
     private static final String CSV_SEPARATOR = ";";
@@ -75,7 +75,7 @@ public class CatalogServiceReportingAdapter implements CatalogServiceReportingPo
                 .concat(HOUR_INDICATOR);
     }
 
-    private Map<String, Object> toTemplateVariables(CatalogServiceCalculatedAverageTime input) {
+    private Map<String, Object> toTemplateVariables(ServiceCalculatedAverageTime input) {
         final var variables = new LinkedHashMap<String, Object>();
         variables.put("id", input.id());
         variables.put("name", input.name());
@@ -110,14 +110,14 @@ public class CatalogServiceReportingAdapter implements CatalogServiceReportingPo
     }
 
     @Override
-    public byte[] writePDF(CatalogServiceCalculatedAverageTime input) {
+    public byte[] writePDF(ServiceCalculatedAverageTime input) {
         return this.writePDF(
                 toTemplateVariables(input),
                 TEMPLATE_BY_CLASS_NAME.get(input.getClass().getSimpleName())
         );
     }
 
-    private String writeCSVLine(CatalogServiceCalculatedAverageTime item) {
+    private String writeCSVLine(ServiceCalculatedAverageTime item) {
         return item.id() + CSV_SEPARATOR +
                 item.name() + CSV_SEPARATOR +
                 item.totalCreated() + CSV_SEPARATOR +
@@ -129,7 +129,7 @@ public class CatalogServiceReportingAdapter implements CatalogServiceReportingPo
     }
 
     @Override
-    public String writeCSV(List<CatalogServiceCalculatedAverageTime> items) {
+    public String writeCSV(List<ServiceCalculatedAverageTime> items) {
         var csv = CSV_HEADER + CSV_LINE_BREAK;
 
         csv += items.stream()

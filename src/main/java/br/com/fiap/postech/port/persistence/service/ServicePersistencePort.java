@@ -1,8 +1,10 @@
 package br.com.fiap.postech.port.persistence.service;
 
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
+import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.service.model.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ServicePersistencePort {
@@ -10,4 +12,8 @@ public interface ServicePersistencePort {
     Optional<Service> findByIdAndServiceOrderId(Long id, Long serviceOrderId);
     Service save(Service service);
     void deleteById(Long id);
+    ServiceCalculatedAverageTime calculateAverageTime(Long id);
+    List<ServiceCalculatedAverageTime> calculateAverageTime();
 }
+
+
