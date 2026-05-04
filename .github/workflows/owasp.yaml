@@ -269,7 +269,7 @@ jobs:
         run: |
             docker run \
               --network zap-network \
-              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -v ${{ github.workspace }}:/zap/wrk \
               -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
               ghcr.io/zaproxy/zaproxy:stable \
               zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap-final.yaml
@@ -282,7 +282,7 @@ jobs:
         run: |
             docker run \
               --network zap-network \
-              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -v ${{ github.workspace }}:/zap/wrk \
               -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
               ghcr.io/zaproxy/zaproxy:stable \
               zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap-final.yaml
@@ -295,7 +295,7 @@ jobs:
         run: |
             docker run \
               --network zap-network \
-              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -v ${{ github.workspace }}:/zap/wrk \
               -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
               ghcr.io/zaproxy/zaproxy:stable \
               zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap-final.yaml
@@ -308,7 +308,7 @@ jobs:
         run: |
             docker run \
               --network zap-network \
-              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -v ${{ github.workspace }}:/zap/wrk \
               -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
               ghcr.io/zaproxy/zaproxy:stable \
               zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap-final.yaml
@@ -321,7 +321,7 @@ jobs:
         run: |
             docker run \
               --network zap-network \
-              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -v ${{ github.workspace }}:/zap/wrk \
               -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
               ghcr.io/zaproxy/zaproxy:stable \
               zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap-final.yaml
