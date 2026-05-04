@@ -248,73 +248,86 @@ jobs:
             - type: report
               parameters:
                 template: "traditional-html"
-                reportDir: "/zap/wrk"
+                reportDir: "/zap/wrk/zap-reports"
                 reportFile: "zap-report.html"
           EOF
       
       - name: Debug ZAP config
         run: cat zap/zap-final.yaml
 
-      # =========================
-      # 🕷️ ZAP
-      # =========================
+      - name: Prepare report folder
+        run: |
+          mkdir -p zap-reports
+          chmod -R 777 zap-reports
+
+        # =========================
+        # 🕷️ ZAP
+        # =========================
 
       - name: ZAP Scan - ADMIN
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap-final.yaml
-          cp zap-report.html zap-report-admin.html || cp /zap/wrk/zap-report.html zap-report-admin.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-admin.html || true
+
 
       - name: ZAP Scan - CHATBOT
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap-final.yaml
-          cp zap-report.html zap-report-chatbot.html || cp /zap/wrk/zap-report.html zap-report-chatbot.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-chatbot.html || true
+
 
       - name: ZAP Scan - MECHANIC
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap-final.yaml
-          cp zap-report.html zap-report-mechanic.html || cp /zap/wrk/zap-report.html zap-report-mechanic.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-mechanic.html || true
+
 
       - name: ZAP Scan - ATTENDANT
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap-final.yaml
-          cp zap-report.html zap-report-attendant.html || cp /zap/wrk/zap-report.html zap-report-attendant.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-attendant.html || true
+
 
       - name: ZAP Scan - STOREKEEPER
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap-final.yaml
-          cp zap-report.html zap-report-storekeeper.html || cp /zap/wrk/zap-report.html zap-report-storekeeper.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}/zap-reports:/zap/wrk/zap-reports \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap-final.yaml
 
-      # =========================
+            cp zap-reports/zap-report.html zap-report-storekeeper.html || true
+            
       # 📦 UPLOAD
       # =========================
       - name: Upload ZAP Reports
