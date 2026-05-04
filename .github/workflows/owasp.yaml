@@ -145,8 +145,31 @@ jobs:
             -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/workshop \
             -e SPRING_DATASOURCE_USERNAME=admin \
             -e SPRING_DATASOURCE_PASSWORD=admin \
+            -e DEFAULT_USER_PASSWORD=dummypassword \
+            -e JWT_SECRET=12345678901234567890123456789012 \
+            -e API_KEY_CHATBOT=dummy-api-key \
             -p 8080:8080 \
             my-app
+
+      - name: Wait for app
+        run: |
+          for i in {1..30}; do
+            docker run --rm --network zap-network curlimages/curl \
+              curl -s http://app:8080/actuator/health | grep UP && exit 0
+            sleep 3
+          done
+
+          echo "❌ App não subiu"
+          docker logs app
+          exit 1
+
+       # =========================
+      # 🧠 GET APP IP (FIX)
+      # =========================
+      - name: Get app IP
+        run: |
+          IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' app)
+          echo "APP_IP=$IP" >> $GITHUB_ENV
 
       # -------------------------
       # TOKENS
@@ -157,71 +180,155 @@ jobs:
             --network zap-network \
             -v ${{ github.workspace }}:/app \
             -w /app \
-            bash bash scripts/owasp-zap-up-app-local.sh
+            alpine:3.19 \
+            sh -c "
+              apk add --no-cache curl jq bash >/dev/null &&
+              bash scripts/owasp-zap-up-app-local.sh
+            "
+      - name: Export tokens to GitHub ENV
+        run: cat env-vars >> $GITHUB_ENV
 
-      - name: Setup workspace permissions
-        run: chmod -R 777 ${{ github.workspace }}
+      - name: Validate OpenAPI endpoint
+        run: |
+          docker run --rm --network zap-network curlimages/curl \
+            curl -f http://app:8080/v3/api-docs || exit 1
+      
+      - name: Download OpenAPI
+        run: |
+          docker run --rm \
+            --network zap-network \
+            -u 0 \
+            -v ${{ github.workspace }}:/zap/wrk \
+            curlimages/curl \
+            sh -c "curl http://app:8080/v3/api-docs -o /zap/wrk/openapi.json"
 
       # =========================
-      # 🕷️ ZAP
+      # 🧠 PREPARA ZAP (FIX IP)
       # =========================
+
+      - name: Create zap folder
+        run: mkdir -p zap
+
+      - name: Generate ZAP config dynamically
+        run: |
+          cat <<EOF > zap/zap-final.yaml
+          env:
+            contexts:
+              - name: "app-context"
+                urls:
+                  - "http://app:8080"
+                includePaths:
+                  - "http://app:8080/.*"
+                authentication:
+                  method: "manual"
+                sessionManagement:
+                  method: "headers"
+                users:
+                  - name: "admin"
+                    credentials:
+                      Authorization: "Bearer ${{ env.ZAP_TOKEN_ADMIN }}"
+
+          jobs:
+            - type: openapi
+              parameters:
+                apiFile: /zap/wrk/openapi.json
+                targetUrl: http://app:8080
+              continueOnFailure: true
+
+            - type: spider
+              parameters:
+                context: "app-context"
+                user: "admin"
+                url: "http://app:8080/v3/api-docs"
+
+            - type: activeScan
+              parameters:
+                context: "app-context"
+                user: "admin"
+
+            - type: report
+              parameters:
+                template: "traditional-html"
+                reportDir: "/zap/wrk/zap-reports"
+                reportFile: "zap-report.html"
+          EOF
+      
+      - name: Debug ZAP config
+        run: cat zap/zap-final.yaml
+
+      - name: Prepare report folder
+        run: |
+          mkdir -p zap-reports
+          chmod -R 777 zap-reports
+
+        # =========================
+        # 🕷️ ZAP
+        # =========================
 
       - name: ZAP Scan - ADMIN
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-admin.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-admin.html || true
+
 
       - name: ZAP Scan - CHATBOT
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-chatbot.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-chatbot.html || true
+
 
       - name: ZAP Scan - MECHANIC
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-mechanic.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-mechanic.html || true
+
 
       - name: ZAP Scan - ATTENDANT
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-attendant.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-attendant.html || true
+
 
       - name: ZAP Scan - STOREKEEPER
         continue-on-error: true
         run: |
-          docker run \
-            --network zap-network \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-storekeeper.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap-final.yaml
 
-      # =========================
+            cp zap-reports/zap-report.html zap-report-storekeeper.html || true
+            
       # 📦 UPLOAD
       # =========================
       - name: Upload ZAP Reports

@@ -67,11 +67,11 @@ for ROLE in "${ROLES[@]}"; do
   fi
 
   ENV_NAME="ZAP_TOKEN_${ROLE}"
-  echo "$ENV_NAME=$USER_TOKEN" >> $GITHUB_ENV
+  echo "$ENV_NAME=$USER_TOKEN" >> /app/env-vars
 
   echo "✅ Token $ROLE gerado"
 done
 
-echo "ZAP_TOKEN_ADMIN=$ADMIN_TOKEN" >> $GITHUB_ENV
+echo "ZAP_TOKEN_ADMIN=$ADMIN_TOKEN" >> /app/env-vars
 
 echo "🎯 Tokens gerados com sucesso"
