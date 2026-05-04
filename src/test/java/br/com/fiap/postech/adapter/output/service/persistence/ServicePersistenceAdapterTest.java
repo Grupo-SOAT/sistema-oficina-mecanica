@@ -1,8 +1,11 @@
 package br.com.fiap.postech.adapter.output.service.persistence;
 
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.CatalogServicesEntity;
+import br.com.fiap.postech.adapter.output.catalogservice.persistence.repository.CatalogServicesRepository;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.service.persistence.entity.ServiceEntity;
 import br.com.fiap.postech.adapter.output.service.persistence.repository.ServiceRepository;
+import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.service.model.Service;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,13 +16,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,6 +35,9 @@ class ServicePersistenceAdapterTest {
 
     @Mock
     private ServiceRepository repository;
+
+    @Mock
+    private CatalogServicesRepository catalogServicesRepository;
 
     @InjectMocks
     private ServicePersistenceAdapter adapter;
@@ -140,4 +150,142 @@ class ServicePersistenceAdapterTest {
 
         verify(repository).deleteById(5L);
     }
+
+    @Test
+    void should_return_null_when_calculate_average_time_by_id_and_no_services() {
+        when(repository.findByCatalogServiceId(7L)).thenReturn(List.of());
+
+        ServiceCalculatedAverageTime result = adapter.calculateAverageTime(7L);
+
+        assertThat(result).isNull();
+        verify(catalogServicesRepository, never()).findAllById(any());
+    }
+
+    @Test
+    void should_calculate_average_time_by_id() {
+        ServiceEntity completed = serviceEntity(
+                1L,
+                7L,
+                LocalDateTime.parse("2026-01-01T08:00"),
+                LocalDateTime.parse("2026-01-01T09:00"),
+                LocalDateTime.parse("2026-01-01T10:00"),
+                LocalDateTime.parse("2026-01-01T12:00")
+        );
+        ServiceEntity pending = serviceEntity(
+                2L,
+                7L,
+                LocalDateTime.parse("2026-01-01T10:00"),
+                null,
+                null,
+                null
+        );
+
+        when(repository.findByCatalogServiceId(7L)).thenReturn(List.of(completed, pending));
+        when(catalogServicesRepository.findAllById(List.of(7L))).thenReturn(List.of(
+                CatalogServicesEntity.builder().id(7L).name("Troca de oleo").build()
+        ));
+
+        ServiceCalculatedAverageTime result = adapter.calculateAverageTime(7L);
+
+        assertThat(result).isNotNull();
+        assertThat(result.id()).isEqualTo(7L);
+        assertThat(result.name()).isEqualTo("Troca de oleo");
+        assertThat(result.totalCreated()).isEqualTo(2L);
+        assertThat(result.totalCompleted()).isEqualTo(1L);
+        assertThat(result.averageTimeBetweenCreateAndComplete()).isEqualTo(4.0);
+        assertThat(result.averageTimeBetweenStartAndComplete()).isEqualTo(2.0);
+        assertThat(result.averageTimeBetweenApproveAndComplete()).isEqualTo(3.0);
+        assertThat(result.averageTimeAwaitingBudgetApproval()).isEqualTo(1.0);
+    }
+
+    @Test
+    void should_calculate_average_time_grouped_by_catalog_service_id() {
+        ServiceEntity catalogOneFirst = serviceEntity(
+                11L,
+                1L,
+                LocalDateTime.parse("2026-01-01T08:00"),
+                LocalDateTime.parse("2026-01-01T09:00"),
+                LocalDateTime.parse("2026-01-01T10:00"),
+                LocalDateTime.parse("2026-01-01T12:00")
+        );
+        ServiceEntity catalogOneSecond = serviceEntity(
+                12L,
+                1L,
+                LocalDateTime.parse("2026-01-01T10:00"),
+                LocalDateTime.parse("2026-01-01T11:00"),
+                LocalDateTime.parse("2026-01-01T12:00"),
+                LocalDateTime.parse("2026-01-01T14:00")
+        );
+        ServiceEntity catalogTwoCompleted = serviceEntity(
+                21L,
+                2L,
+                LocalDateTime.parse("2026-01-02T08:00"),
+                LocalDateTime.parse("2026-01-02T10:00"),
+                LocalDateTime.parse("2026-01-02T11:00"),
+                LocalDateTime.parse("2026-01-02T15:00")
+        );
+        ServiceEntity catalogTwoPending = serviceEntity(
+                22L,
+                2L,
+                LocalDateTime.parse("2026-01-02T09:00"),
+                null,
+                null,
+                null
+        );
+
+        when(repository.findAll()).thenReturn(List.of(catalogTwoCompleted, catalogOneFirst, catalogTwoPending, catalogOneSecond));
+        when(catalogServicesRepository.findAllById(any())).thenReturn(List.of(
+                CatalogServicesEntity.builder().id(1L).name("Revisao").build()
+        ));
+
+        List<ServiceCalculatedAverageTime> result = adapter.calculateAverageTime();
+
+        assertThat(result).hasSize(2);
+
+        Map<Long, ServiceCalculatedAverageTime> resultById = new HashMap<>();
+        result.forEach(item -> resultById.put(item.id(), item));
+
+        ServiceCalculatedAverageTime catalogOne = resultById.get(1L);
+        assertThat(catalogOne).isNotNull();
+        assertThat(catalogOne.name()).isEqualTo("Revisao");
+        assertThat(catalogOne.totalCreated()).isEqualTo(2L);
+        assertThat(catalogOne.totalCompleted()).isEqualTo(2L);
+        assertThat(catalogOne.averageTimeBetweenCreateAndComplete()).isEqualTo(4.0);
+        assertThat(catalogOne.averageTimeBetweenStartAndComplete()).isEqualTo(2.0);
+        assertThat(catalogOne.averageTimeBetweenApproveAndComplete()).isEqualTo(3.0);
+        assertThat(catalogOne.averageTimeAwaitingBudgetApproval()).isEqualTo(1.0);
+
+        ServiceCalculatedAverageTime catalogTwo = resultById.get(2L);
+        assertThat(catalogTwo).isNotNull();
+        assertThat(catalogTwo.name()).isEmpty();
+        assertThat(catalogTwo.totalCreated()).isEqualTo(2L);
+        assertThat(catalogTwo.totalCompleted()).isEqualTo(1L);
+        assertThat(catalogTwo.averageTimeBetweenCreateAndComplete()).isEqualTo(7.0);
+        assertThat(catalogTwo.averageTimeBetweenStartAndComplete()).isEqualTo(4.0);
+        assertThat(catalogTwo.averageTimeBetweenApproveAndComplete()).isEqualTo(5.0);
+        assertThat(catalogTwo.averageTimeAwaitingBudgetApproval()).isEqualTo(2.0);
+    }
+
+    private ServiceEntity serviceEntity(
+            Long id,
+            Long catalogServiceId,
+            LocalDateTime createdAt,
+            LocalDateTime approvedAt,
+            LocalDateTime startedAt,
+            LocalDateTime completedAt
+    ) {
+        return ServiceEntity.builder()
+                .id(id)
+                .serviceOrderId(10L)
+                .catalogServiceId(catalogServiceId)
+                .price(new BigDecimal("100.00"))
+                .status("COMPLETED")
+                .createdAt(createdAt)
+                .updatedAt(createdAt)
+                .approvedAt(approvedAt)
+                .startedAt(startedAt)
+                .completedAt(completedAt)
+                .build();
+    }
+
 }
