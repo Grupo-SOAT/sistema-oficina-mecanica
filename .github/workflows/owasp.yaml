@@ -210,44 +210,44 @@ jobs:
       - name: Generate ZAP config dynamically
         run: |
           cat <<EOF > zap/zap-final.yaml
-env:
-  contexts:
-    - name: "app-context"
-      urls:
-        - "http://app:8080"
-      includePaths:
-        - "http://app:8080/.*"
-      authentication:
-        method: "manual"
-      sessionManagement:
-        method: "headers"
-      users:
-        - name: "admin"
-          credentials:
-            Authorization: "Bearer ${{ env.ZAP_TOKEN_ADMIN }}"
+          env:
+            contexts:
+              - name: "app-context"
+                urls:
+                  - "http://app:8080"
+                includePaths:
+                  - "http://app:8080/.*"
+                authentication:
+                  method: "manual"
+                sessionManagement:
+                  method: "headers"
+                users:
+                  - name: "admin"
+                    credentials:
+                      Authorization: "Bearer ${{ env.ZAP_TOKEN_ADMIN }}"
 
-jobs:
-  - type: openapi
-    parameters:
-      apiFile: /zap/wrk/openapi.json
-      targetUrl: http://app:8080
+          jobs:
+            - type: openapi
+              parameters:
+                apiFile: /zap/wrk/openapi.json
+                targetUrl: http://app:8080
 
-  - type: spider
-    parameters:
-      context: "app-context"
-      user: "admin"
+            - type: spider
+              parameters:
+                context: "app-context"
+                user: "admin"
 
-  - type: activeScan
-    parameters:
-      context: "app-context"
-      user: "admin"
+            - type: activeScan
+              parameters:
+                context: "app-context"
+                user: "admin"
 
-  - type: report
-    parameters:
-      template: "traditional-html"
-      reportDir: "/zap/wrk"
-      reportFile: "zap-report.html"
-EOF
+            - type: report
+              parameters:
+                template: "traditional-html"
+                reportDir: "/zap/wrk"
+                reportFile: "zap-report.html"
+          EOF
       
       - name: Debug ZAP config
         run: cat zap/zap-final.yaml
