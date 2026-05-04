@@ -195,10 +195,12 @@ jobs:
       
       - name: Download OpenAPI
         run: |
-          docker run --rm --network zap-network \
+          docker run --rm \
+            --network zap-network \
+            -u 0 \
             -v ${{ github.workspace }}:/zap/wrk \
             curlimages/curl \
-            curl http://app:8080/v3/api-docs -o /zap/wrk/openapi.json
+            sh -c "curl http://app:8080/v3/api-docs -o /zap/wrk/openapi.json"
 
       # =========================
       # 🧠 PREPARA ZAP (FIX IP)
