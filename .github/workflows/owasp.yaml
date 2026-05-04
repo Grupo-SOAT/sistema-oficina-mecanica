@@ -192,6 +192,13 @@ jobs:
         run: |
           docker run --rm --network zap-network curlimages/curl \
             curl -f http://app:8080/v3/api-docs || exit 1
+      
+      - name: Download OpenAPI
+        run: |
+          docker run --rm --network zap-network \
+            -v ${{ github.workspace }}:/zap/wrk \
+            curlimages/curl \
+            curl http://app:8080/v3/api-docs -o /zap/wrk/openapi.json
 
       # =========================
       # 🧠 PREPARA ZAP (FIX IP)
@@ -203,44 +210,47 @@ jobs:
       - name: Generate ZAP config dynamically
         run: |
           cat <<EOF > zap/zap-final.yaml
-          env:
-            contexts:
-              - name: "app-context"
-                urls:
-                  - "http://${{ env.APP_IP }}:8080"
-                includePaths:
-                  - "http://${{ env.APP_IP }}:8080/.*"
-                authentication:
-                  method: "manual"
-                sessionManagement:
-                  method: "headers"
-                users:
-                  - name: "admin"
-                    credentials:
-                      Authorization: "Bearer ${{ env.ZAP_TOKEN_ADMIN }}"
+env:
+  contexts:
+    - name: "app-context"
+      urls:
+        - "http://app:8080"
+      includePaths:
+        - "http://app:8080/.*"
+      authentication:
+        method: "manual"
+      sessionManagement:
+        method: "headers"
+      users:
+        - name: "admin"
+          credentials:
+            Authorization: "Bearer ${{ env.ZAP_TOKEN_ADMIN }}"
 
-          jobs:
-            - type: openapi
-              parameters:
-                apiFile: http://${{ env.APP_IP }}:8080/v3/api-docs
-                targetUrl: http://${{ env.APP_IP }}:8080
+jobs:
+  - type: openapi
+    parameters:
+      apiFile: /zap/wrk/openapi.json
+      targetUrl: http://app:8080
 
-            - type: spider
-              parameters:
-                context: "app-context"
-                user: "admin"
+  - type: spider
+    parameters:
+      context: "app-context"
+      user: "admin"
 
-            - type: activeScan
-              parameters:
-                context: "app-context"
-                user: "admin"
+  - type: activeScan
+    parameters:
+      context: "app-context"
+      user: "admin"
 
-            - type: report
-              parameters:
-                template: "traditional-html"
-                reportDir: "/zap/wrk"
-                reportFile: "zap-report.html"
-          EOF
+  - type: report
+    parameters:
+      template: "traditional-html"
+      reportDir: "/zap/wrk"
+      reportFile: "zap-report.html"
+EOF
+      
+      - name: Debug ZAP config
+        run: cat zap/zap-final.yaml
 
       # =========================
       # 🕷️ ZAP
@@ -252,11 +262,10 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
-            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap-final.yaml
-          mv zap-report.html zap-report-admin.html
+          cp zap-report.html zap-report-admin.html || cp /zap/wrk/zap-report.html zap-report-admin.html
 
       - name: ZAP Scan - CHATBOT
         continue-on-error: true
@@ -264,11 +273,10 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
-            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap-final.yaml
-          mv zap-report.html zap-report-chatbot.html
+          cp zap-report.html zap-report-chatbot.html || cp /zap/wrk/zap-report.html zap-report-chatbot.html
 
       - name: ZAP Scan - MECHANIC
         continue-on-error: true
@@ -276,11 +284,10 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
-            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap-final.yaml
-          mv zap-report.html zap-report-mechanic.html
+          cp zap-report.html zap-report-mechanic.html || cp /zap/wrk/zap-report.html zap-report-mechanic.html
 
       - name: ZAP Scan - ATTENDANT
         continue-on-error: true
@@ -288,11 +295,10 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
-            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap-final.yaml
-          mv zap-report.html zap-report-attendant.html
+          cp zap-report.html zap-report-attendant.html || cp /zap/wrk/zap-report.html zap-report-attendant.html
 
       - name: ZAP Scan - STOREKEEPER
         continue-on-error: true
@@ -300,11 +306,10 @@ jobs:
           docker run \
             --network zap-network \
             -v ${{ github.workspace }}:/zap/wrk \
-            -e APP_IP=${{ env.APP_IP }} \
             -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
             ghcr.io/zaproxy/zaproxy:stable \
             zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap-final.yaml
-          mv zap-report.html zap-report-storekeeper.html
+          cp zap-report.html zap-report-storekeeper.html || cp /zap/wrk/zap-report.html zap-report-storekeeper.html
 
       # =========================
       # 📦 UPLOAD
