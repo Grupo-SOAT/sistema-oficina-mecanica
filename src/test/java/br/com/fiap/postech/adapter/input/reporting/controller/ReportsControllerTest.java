@@ -1,8 +1,11 @@
 package br.com.fiap.postech.adapter.input.reporting.controller;
 
+import br.com.fiap.postech.adapter.input.api.model.ErrorResponse;
+import br.com.fiap.postech.domain.reporting.exception.ReportingServiceNotFoundException;
 import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.reporting.usecase.ServiceReportingUseCase;
 import br.com.fiap.postech.port.reporting.catalogservice.ServiceReportingPort;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -12,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -82,6 +86,27 @@ class ReportsControllerTest {
 
         verify(serviceReportingUseCase).calculateAverageTime();
         verify(serviceReportingPort).writeCSV(calculatedData);
+    }
+
+    @Test
+    void should_return_no_content_when_no_matching_services() {
+        ResponseEntity<Void> response = controller.handleNoMatchingServices();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getBody()).isNull();
+    }
+
+    @Test
+    void should_return_not_found_with_error_response_when_service_not_found() {
+        ReportingServiceNotFoundException exception = new ReportingServiceNotFoundException(99L);
+
+        ResponseEntity<ErrorResponse> response = controller.handleNotFound(exception);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getBody().getReason()).isEqualTo(exception.reason.name());
+        assertThat(response.getBody().getMessage()).isEqualTo(exception.getMessage());
     }
 
     private static Stream<Arguments> singleServiceAverageTimeScenarios() {
