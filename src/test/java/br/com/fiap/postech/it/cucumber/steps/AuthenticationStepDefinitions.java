@@ -149,7 +149,9 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
 
     @Quando("acesso o endpoint {string} {string}")
     public void accessEndpoint(String method, String endpoint) {
-        String url = endpoint.replace(":serviceId", "1").replace(":id", "1");
+        String url = endpoint
+                .replace(":serviceId", "1")
+                .replace(":id", context.getCatalogServiceId() != null ? context.getCatalogServiceId().toString() : "1");
         try {
             MockHttpServletRequestBuilder request = withRoleAuth(
                     buildRequest(method, url)

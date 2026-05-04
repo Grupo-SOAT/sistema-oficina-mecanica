@@ -41,7 +41,7 @@ public class CatalogServicesUseCaseTest {
     @Test
     void should_delegate_scroll_to_persistence() {
         ScrollPage<CatalogServices> expected = ScrollPage.<CatalogServices>builder()
-                .data(List.of(CatalogServicesEntity.builder().catalogServiceId(1L).name("Servico").build()))
+                .data(List.of(CatalogServicesEntity.builder().id(1L).name("Servico").build()))
                 .isLast(false)
                 .cursor("1")
                 .pageSize(10)
@@ -70,7 +70,7 @@ public class CatalogServicesUseCaseTest {
 
     @Test
     void should_return_catalog_services_when_found_by_id() {
-        CatalogServicesEntity catalogServices = CatalogServicesEntity.builder().catalogServiceId(1L).name("Servico").build();
+        CatalogServicesEntity catalogServices = CatalogServicesEntity.builder().id(1L).name("Servico").build();
         when(persistencePort.findById(1L)).thenReturn(Optional.of(catalogServices));
 
         CatalogServices found = useCase.getById(1L);
@@ -81,7 +81,7 @@ public class CatalogServicesUseCaseTest {
     @Test
     void should_return_catalog_services_with_supplies_when_found_by_id() {
         CatalogServicesEntity catalogServices = CatalogServicesEntity.builder()
-                .catalogServiceId(1L)
+                .id(1L)
                 .name("Servico")
                 .supplies(List.of(NeededSupplyEntity.builder()
                         .servicesSuppliesId(1L)

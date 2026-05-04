@@ -1,8 +1,8 @@
 package br.com.fiap.postech.adapter.input.reporting.controller;
 
-import br.com.fiap.postech.domain.reporting.model.CatalogServiceCalculatedAverageTime;
-import br.com.fiap.postech.domain.reporting.usecase.CatalogServiceReportingUseCase;
-import br.com.fiap.postech.port.reporting.catalogservice.CatalogServiceReportingPort;
+import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
+import br.com.fiap.postech.domain.reporting.usecase.ServiceReportingUseCase;
+import br.com.fiap.postech.port.reporting.catalogservice.ServiceReportingPort;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -25,10 +25,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ReportsControllerTest {
     @Mock
-    private CatalogServiceReportingUseCase catalogServiceReportingUseCase;
+    private ServiceReportingUseCase serviceReportingUseCase;
 
     @Mock
-    private CatalogServiceReportingPort catalogServiceReportingPort;
+    private ServiceReportingPort serviceReportingPort;
 
     @InjectMocks
     private ReportsController controller;
@@ -37,11 +37,11 @@ class ReportsControllerTest {
     @MethodSource("singleServiceAverageTimeScenarios")
     void should_return_pdf_resource_when_get_service_average_time(
             Long serviceId,
-            CatalogServiceCalculatedAverageTime calculatedData,
+            ServiceCalculatedAverageTime calculatedData,
             byte[] pdfBytes
     ) {
-        when(catalogServiceReportingUseCase.calculateAverageTime(serviceId)).thenReturn(calculatedData);
-        when(catalogServiceReportingPort.writePDF(calculatedData)).thenReturn(pdfBytes);
+        when(serviceReportingUseCase.calculateAverageTime(serviceId)).thenReturn(calculatedData);
+        when(serviceReportingPort.writePDF(calculatedData)).thenReturn(pdfBytes);
 
         ResponseEntity<Resource> result = controller.getServiceAverageTime(serviceId);
         ResponseEntity<Resource> expectedResult = ResponseEntity.ok(new ByteArrayResource(pdfBytes));
@@ -55,18 +55,18 @@ class ReportsControllerTest {
                 .startsWith("attachment; filename=\"service-" + serviceId + "-average-time")
                 .endsWith(".pdf\"");
 
-        verify(catalogServiceReportingUseCase).calculateAverageTime(serviceId);
-        verify(catalogServiceReportingPort).writePDF(calculatedData);
+        verify(serviceReportingUseCase).calculateAverageTime(serviceId);
+        verify(serviceReportingPort).writePDF(calculatedData);
     }
 
     @ParameterizedTest
     @MethodSource("allServicesAverageTimeScenarios")
     void should_return_csv_when_get_all_services_average_time(
-            List<CatalogServiceCalculatedAverageTime> calculatedData,
+            List<ServiceCalculatedAverageTime> calculatedData,
             String csv
     ) {
-        when(catalogServiceReportingUseCase.calculateAverageTime()).thenReturn(calculatedData);
-        when(catalogServiceReportingPort.writeCSV(calculatedData)).thenReturn(csv);
+        when(serviceReportingUseCase.calculateAverageTime()).thenReturn(calculatedData);
+        when(serviceReportingPort.writeCSV(calculatedData)).thenReturn(csv);
 
         ResponseEntity<String> result = controller.getAllServicesAverageTime();
         ResponseEntity<String> expectedResult = ResponseEntity.ok(csv);
@@ -80,15 +80,15 @@ class ReportsControllerTest {
                 .startsWith("attachment; filename=\"services-average-time_")
                 .endsWith(".csv\"");
 
-        verify(catalogServiceReportingUseCase).calculateAverageTime();
-        verify(catalogServiceReportingPort).writeCSV(calculatedData);
+        verify(serviceReportingUseCase).calculateAverageTime();
+        verify(serviceReportingPort).writeCSV(calculatedData);
     }
 
     private static Stream<Arguments> singleServiceAverageTimeScenarios() {
         return Stream.of(
                 Arguments.of(
                         1L,
-                        CatalogServiceCalculatedAverageTime.builder()
+                        ServiceCalculatedAverageTime.builder()
                                 .id(1L)
                                 .name("Troca de oleo")
                                 .totalCreated(10L)
@@ -102,7 +102,7 @@ class ReportsControllerTest {
                 ),
                 Arguments.of(
                         77L,
-                        CatalogServiceCalculatedAverageTime.builder()
+                        ServiceCalculatedAverageTime.builder()
                                 .id(77L)
                                 .name("Alinhamento")
                                 .totalCreated(10L)
@@ -121,7 +121,7 @@ class ReportsControllerTest {
         return Stream.of(
                 Arguments.of(
                         List.of(
-                                CatalogServiceCalculatedAverageTime.builder()
+                                ServiceCalculatedAverageTime.builder()
                                         .id(5L)
                                         .name("Freio")
                                         .totalCreated(10L)
@@ -131,12 +131,12 @@ class ReportsControllerTest {
                 ),
                 Arguments.of(
                         List.of(
-                                CatalogServiceCalculatedAverageTime.builder()
+                                ServiceCalculatedAverageTime.builder()
                                         .id(2L)
                                         .name("Suspensao")
                                         .totalCreated(10L)
                                         .build(),
-                                CatalogServiceCalculatedAverageTime.builder()
+                                ServiceCalculatedAverageTime.builder()
                                         .id(3L)
                                         .name("Pintura")
                                         .totalCreated(10L)

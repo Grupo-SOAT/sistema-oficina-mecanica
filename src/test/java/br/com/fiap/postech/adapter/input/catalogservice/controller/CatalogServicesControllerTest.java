@@ -49,7 +49,7 @@ public class CatalogServicesControllerTest {
                 .isLast(true);
         when(catalogServicesUseCase.scroll("Pneu", 10, "0")).thenReturn(emptyPage);
 
-        ResponseEntity<PaginatedCatalogServiceResponse> response = controller.listCatalogServices(Long.valueOf(2),"Pneu", 10, "0");
+        ResponseEntity<PaginatedCatalogServiceResponse> response = controller.listCatalogServices(Long.valueOf(2), "Pneu", 10, "0");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
@@ -72,7 +72,7 @@ public class CatalogServicesControllerTest {
                 build());
 
         CatalogServices one = CatalogServicesEntity.builder()
-                .catalogServiceId(1L).name("Troca de Pneus").description("Troca dos 4 pneus de um carro")
+                .id(1L).name("Troca de Pneus").description("Troca dos 4 pneus de um carro")
                 .basePrice(BigDecimal.valueOf(234.6)).supplies(neededSupplyEntitiesOne)
                 .build();
 
@@ -80,7 +80,7 @@ public class CatalogServicesControllerTest {
         neededSupplyEntitiesTwo.add(NeededSupplyEntity.builder().servicesSuppliesId(2L).supplyAmount(10).supply(SupplyEntity.builder().id(2L).name("Roda").build()).build());
 
         CatalogServices two = CatalogServicesEntity.builder()
-                .catalogServiceId(2L).name("Troca de rodas").description("Troca das 4 rodas de um carro")
+                .id(2L).name("Troca de rodas").description("Troca das 4 rodas de um carro")
                 .basePrice(BigDecimal.valueOf(5000.6)).supplies(neededSupplyEntitiesTwo)
                 .build();
 
@@ -131,7 +131,7 @@ public class CatalogServicesControllerTest {
         neededSupplyEntitiesOne.add(NeededSupplyEntity.builder().servicesSuppliesId(1L).supplyAmount(100).supply(SupplyEntity.builder().id(1L).name("Pneu").unitPrice(BigDecimal.valueOf(1080)).build()).build());
 
         CatalogServices catalogServices = CatalogServicesEntity.builder()
-                .catalogServiceId(1L).name("Troca de Pneus").description("Troca dos 4 pneus de um carro")
+                .id(1L).name("Troca de Pneus").description("Troca dos 4 pneus de um carro")
                 .basePrice(BigDecimal.valueOf(234.6)).supplies(neededSupplyEntitiesOne)
                 .build();
 
@@ -177,7 +177,7 @@ public class CatalogServicesControllerTest {
                         .build()).build());
 
         CatalogServices created = CatalogServicesEntity.builder()
-                .catalogServiceId(1L).name("Pintura").description("Pintura do veiculo")
+                .id(1L).name("Pintura").description("Pintura do veiculo")
                 .basePrice(BigDecimal.valueOf(250.90)).supplies(neededSupplyEntitiesOne)
                 .build();
 
@@ -224,7 +224,7 @@ public class CatalogServicesControllerTest {
                         .build()).build());
 
         CatalogServices updated = CatalogServicesEntity.builder()
-                .catalogServiceId(1L).name("Pintura").description("Pintura do veiculo")
+                .id(1L).name("Pintura").description("Pintura do veiculo")
                 .basePrice(BigDecimal.valueOf(250.90)).supplies(neededSupplyEntitiesOne)
                 .build();
 

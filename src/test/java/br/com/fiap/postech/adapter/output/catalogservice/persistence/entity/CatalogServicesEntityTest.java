@@ -30,7 +30,7 @@ public class CatalogServicesEntityTest {
                 .supplies(neededSupplyEntities)
                 .build();
 
-        assertThat(entity.getCatalogServiceId()).isEqualTo(0L);
+        assertThat(entity.getId()).isEqualTo(0L);
         assertThat(entity).isInstanceOf(CatalogServicesEntity.class);
     }
 }

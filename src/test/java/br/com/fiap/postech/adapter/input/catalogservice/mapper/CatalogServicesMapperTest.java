@@ -29,7 +29,7 @@ public class CatalogServicesMapperTest {
                 build());
 
         CatalogServices first = CatalogServicesEntity.builder()
-                .catalogServiceId(1L)
+                .id(1L)
                 .name("Pintura")
                 .description("Pintura do veiculo")
                 .basePrice(new BigDecimal("890.90"))
@@ -48,7 +48,7 @@ public class CatalogServicesMapperTest {
                 build());
 
         CatalogServices second = CatalogServicesEntity.builder()
-                .catalogServiceId(2L)
+                .id(2L)
                 .name("Troca de oleo")
                 .description("Troca de oleo do motor")
                 .basePrice(new BigDecimal("300.90"))
@@ -118,7 +118,7 @@ public class CatalogServicesMapperTest {
                 build());
 
         CatalogServicesEntity expected = CatalogServicesEntity.builder()
-                .catalogServiceId(1L)
+                .id(1L)
                 .name("Pintura")
                 .description("Pintura do veiculo")
                 .basePrice(new BigDecimal("890.9"))
@@ -130,7 +130,7 @@ public class CatalogServicesMapperTest {
         assertThat(mapped)
                 .isNotNull()
                 .usingRecursiveComparison()
-                .ignoringFields("supplies", "catalogServiceId")
+                .ignoringFields("supplies", "id")
                 .isEqualTo(expected);
     }
 
@@ -157,7 +157,7 @@ public class CatalogServicesMapperTest {
                 build());
 
         CatalogServicesEntity expected = CatalogServicesEntity.builder()
-                .catalogServiceId(1L)
+                .id(1L)
                 .name("Troca de Pneus")
                 .description("Troca dos 4 pneus de um carro")
                 .basePrice(new BigDecimal("234.6"))
@@ -187,7 +187,7 @@ public class CatalogServicesMapperTest {
                 build());
 
         CatalogServices catalogServices = CatalogServicesEntity.builder()
-                .catalogServiceId(1L)
+                .id(1L)
                 .name("Pintura")
                 .description("Pintura do veiculo")
                 .basePrice(new BigDecimal("890.90"))
