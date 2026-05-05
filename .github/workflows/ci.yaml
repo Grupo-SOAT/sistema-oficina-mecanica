@@ -24,7 +24,7 @@ jobs:
           cache: maven
 
       - name: Run mvn generate sources
-        run: mvn generate-sources
+        run: mvn clean generate-sources
       
       - name: Compile Code
         run: |
