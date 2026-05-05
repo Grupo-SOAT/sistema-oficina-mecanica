@@ -8,21 +8,6 @@ jobs:
     name: Security Scan (Trivy + OWASP + ZAP)
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: workshop
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: admin
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U admin"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,10 +19,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Install jq + postgres client
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq postgresql-client
+          sudo apt-get install -y jq apache2-utils
 
       # =========================
       # 🧪 BUILD
@@ -94,36 +79,49 @@ jobs:
           path: target/dependency-check-report.*
 
       # =========================
-      # 🧱 Criar schema do banco
+      # 🐳 INFRA (DOCKER)
       # =========================
-      - name: Check SQL file exists
-        run: ls -la docker-local/db-seed/
+      - name: Create docker network
+        run: docker network create zap-network
 
-      - name: Run database schema (DDL)
+      # -------------------------
+      # PostgreSQL
+      # -------------------------
+      - name: Run Postgres container
         run: |
-          psql -h localhost -U admin -d workshop -f docker-local/db-seed/create-db.sql
-        env:
-          PGPASSWORD: admin
-      
-      - name: Generate BCrypt hash for admin password
-        id: bcrypt
-        run: |
-          HASH=$(jshell <<EOF | tail -n 1
-          import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-          var encoder = new BCryptPasswordEncoder();
-          System.out.println(encoder.encode("dummyAdminPassword"));
-          EOF
-          )
+          docker run -d \
+            --name postgres \
+            --network zap-network \
+            -e POSTGRES_DB=workshop \
+            -e POSTGRES_USER=admin \
+            -e POSTGRES_PASSWORD=admin \
+            postgres:16-alpine
 
-          echo "HASH=$HASH"
+      - name: Wait for Postgres
+        run: |
+          for i in {1..20}; do
+            docker exec postgres pg_isready -U admin && break
+            sleep 3
+          done
+
+      # -------------------------
+      # Hash do ADMIN (ANTES do insert)
+      # -------------------------
+      - name: Generate BCrypt hash
+        run: |
+          HASH=$(htpasswd -bnBC 10 "" dummyAdminPassword | tr -d ':\n')
           echo "ADMIN_HASH=$HASH" >> $GITHUB_ENV
 
-      # =========================
-      # 👑 Criar ADMIN
-      # =========================
-      - name: Create admin user in Database
+      # -------------------------
+      # Schema + ADMIN
+      # -------------------------
+      - name: Run DB schema
         run: |
-          psql -h localhost -U admin -d workshop <<EOF
+          docker exec -i postgres psql -U admin -d workshop < docker-local/db-seed/create-db.sql
+
+      - name: Create admin user
+        run: |
+          docker exec -i postgres psql -U admin -d workshop <<EOF
           INSERT INTO users (user_name, password, role)
           VALUES (
             'dummyAdmin',
@@ -131,74 +129,207 @@ jobs:
             ARRAY['ADMIN']
           );
           EOF
-        env:
-          PGPASSWORD: admin
+
+      # -------------------------
+      # APP
+      # -------------------------
+      - name: Build app image
+        run: docker build -t my-app .
+
+      - name: Run app container
+        run: |
+          docker run -d \
+            --name app \
+            --network zap-network \
+            -e SPRING_PROFILES_ACTIVE=ci \
+            -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/workshop \
+            -e SPRING_DATASOURCE_USERNAME=admin \
+            -e SPRING_DATASOURCE_PASSWORD=admin \
+            -e DEFAULT_USER_PASSWORD=dummypassword \
+            -e JWT_SECRET=12345678901234567890123456789012 \
+            -e API_KEY_CHATBOT=dummy-api-key \
+            -p 8080:8080 \
+            my-app
+
+      - name: Wait for app
+        run: |
+          for i in {1..30}; do
+            docker run --rm --network zap-network curlimages/curl \
+              curl -s http://app:8080/actuator/health | grep UP && exit 0
+            sleep 3
+          done
+
+          echo "❌ App não subiu"
+          docker logs app
+          exit 1
+
+       # =========================
+      # 🧠 GET APP IP (FIX)
+      # =========================
+      - name: Get app IP
+        run: |
+          IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' app)
+          echo "APP_IP=$IP" >> $GITHUB_ENV
+
+      # -------------------------
+      # TOKENS
+      # -------------------------
+      - name: Generate tokens
+        run: |
+          docker run --rm \
+            --network zap-network \
+            -v ${{ github.workspace }}:/app \
+            -w /app \
+            alpine:3.19 \
+            sh -c "
+              apk add --no-cache curl jq bash >/dev/null &&
+              bash scripts/owasp-zap-up-app-local.sh
+            "
+      - name: Export tokens to GitHub ENV
+        run: cat env-vars >> $GITHUB_ENV
+
+      - name: Validate OpenAPI endpoint
+        run: |
+          docker run --rm --network zap-network curlimages/curl \
+            curl -f http://app:8080/v3/api-docs || exit 1
+      
+      - name: Download OpenAPI
+        run: |
+          docker run --rm \
+            --network zap-network \
+            -u 0 \
+            -v ${{ github.workspace }}:/zap/wrk \
+            curlimages/curl \
+            sh -c "curl http://app:8080/v3/api-docs -o /zap/wrk/openapi.json"
 
       # =========================
-      # 🚀 APP + TOKENS
+      # 🧠 PREPARA ZAP (FIX IP)
       # =========================
-      - name: Start app and get JWTs
-        run: bash scripts/owasp-zap-up-app-local.sh
 
-      - name: Setup workspace permissions for ZAP
-        run: chmod -R 777 ${{ github.workspace }}
+      - name: Create zap folder
+        run: mkdir -p zap
 
-      # =========================
-      # 🕷️ ZAP MULTI-ROLE
-      # =========================
+      - name: Generate ZAP config dynamically
+        run: |
+          cat <<EOF > zap/zap-final.yaml
+          env:
+            contexts:
+              - name: "app-context"
+                urls:
+                  - "http://app:8080"
+                includePaths:
+                  - "http://app:8080/.*"
+                authentication:
+                  method: "manual"
+                sessionManagement:
+                  method: "headers"
+                users:
+                  - name: "admin"
+                    credentials:
+                      Authorization: "Bearer ${{ env.ZAP_TOKEN_ADMIN }}"
+
+          jobs:
+            - type: openapi
+              parameters:
+                apiFile: /zap/wrk/openapi.json
+                targetUrl: http://app:8080
+              continueOnFailure: true
+
+            - type: spider
+              parameters:
+                context: "app-context"
+                user: "admin"
+                url: "http://app:8080/v3/api-docs"
+
+            - type: activeScan
+              parameters:
+                context: "app-context"
+                user: "admin"
+
+            - type: report
+              parameters:
+                template: "traditional-html"
+                reportDir: "/zap/wrk/zap-reports"
+                reportFile: "zap-report.html"
+          EOF
+      
+      - name: Debug ZAP config
+        run: cat zap/zap-final.yaml
+
+      - name: Prepare report folder
+        run: |
+          mkdir -p zap-reports
+          chmod -R 777 zap-reports
+
+        # =========================
+        # 🕷️ ZAP
+        # =========================
 
       - name: ZAP Scan - ADMIN
         continue-on-error: true
         run: |
-          docker run --network=host \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-admin.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ADMIN }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8090 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-admin.html || true
+
 
       - name: ZAP Scan - CHATBOT
         continue-on-error: true
         run: |
-          docker run --network=host \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-chatbot.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_CHATBOT }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8091 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-chatbot.html || true
+
 
       - name: ZAP Scan - MECHANIC
         continue-on-error: true
         run: |
-          docker run --network=host \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-mechanic.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_MECHANIC }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8092 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-mechanic.html || true
+
 
       - name: ZAP Scan - ATTENDANT
         continue-on-error: true
         run: |
-          docker run --network=host \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-attendant.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_ATTENDANT }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8093 -autorun /zap/wrk/zap/zap-final.yaml
+
+            cp zap-reports/zap-report.html zap-report-attendant.html || true
+
 
       - name: ZAP Scan - STOREKEEPER
         continue-on-error: true
         run: |
-          docker run --network=host \
-            -v ${{ github.workspace }}:/zap/wrk \
-            -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
-            ghcr.io/zaproxy/zaproxy:stable \
-            zap.sh -cmd -autorun /zap/wrk/zap/zap.yaml
-          mv zap-report.html zap-report-storekeeper.html
+            docker run \
+              --network zap-network \
+              -v ${{ github.workspace }}:/zap/wrk \
+              -e ZAP_TOKEN_ADMIN="${{ env.ZAP_TOKEN_STOREKEEPER }}" \
+              ghcr.io/zaproxy/zaproxy:stable \
+              zap.sh -cmd -port 8094 -autorun /zap/wrk/zap/zap-final.yaml
 
-      # =========================
-      # 📦 Upload
+            cp zap-reports/zap-report.html zap-report-storekeeper.html || true
+            
+      # 📦 UPLOAD
       # =========================
       - name: Upload ZAP Reports
         if: always()
