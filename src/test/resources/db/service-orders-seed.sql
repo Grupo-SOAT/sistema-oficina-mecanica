@@ -15,11 +15,11 @@ DELETE
 FROM vehicles
 WHERE id > 0;
 DELETE
-FROM clients
+FROM owners
 WHERE id > 0;
 
 -- Reset sequences
-ALTER TABLE clients
+ALTER TABLE owners
     ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE vehicles
     ALTER COLUMN id RESTART WITH 1;
@@ -29,11 +29,11 @@ ALTER TABLE service_orders
     ALTER COLUMN id RESTART WITH 1;
 
 -- Clientes
-INSERT INTO clients (id, cpf, name, email, phone, created_at, updated_at)
-VALUES (1, '12345678901', 'João Silva', 'joao@email.com', '11987654321', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO owners (id, document, document_type, name, email, phone, created_at, updated_at)
+VALUES (1, '12345678901', 'CPF', 'João Silva', 'joao@email.com', '11987654321', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO clients (id, cpf, name, email, phone, created_at, updated_at)
-VALUES (2, '98765432100', 'Maria Souza', 'maria@email.com', '11999998888', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO owners (id, document, document_type, name, email, phone, created_at, updated_at)
+VALUES (2, '98765432100', 'CPF', 'Maria Souza', 'maria@email.com', '11999998888', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Veículos
 INSERT INTO vehicles (id, owner_id, client_id, license_plate, plate, brand, model, vehicle_year, vin, color, fuel_type,
@@ -66,7 +66,7 @@ VALUES (2, 2, 2, 'Alinhamento e revisão', 200.00, 'APPROVED', CURRENT_TIMESTAMP
         '2024-01-02 11:00:00'::timestamp);
 
 -- Reajustar sequência
-ALTER TABLE clients
+ALTER TABLE owners
     ALTER COLUMN id RESTART WITH 3;
 ALTER TABLE vehicles
     ALTER COLUMN id RESTART WITH 3;

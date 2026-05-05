@@ -28,44 +28,6 @@ import java.util.stream.LongStream;
 @Configuration
 public class UseCaseDependencyInjectionConfig {
     @Bean
-    @ConditionalOnBooleanProperty(name = "config.api.mock.reports.average-time.enabled")
-    public ServiceReportingUseCase catalogServiceReportingUseCaseMock() {
-        class Mock implements ServiceReportingUseCase {
-            private long randomTotalizer() {
-                return ThreadLocalRandom.current().nextLong(0, 1001);
-            }
-
-            private double randomHours() {
-                return ThreadLocalRandom.current().nextDouble(1.0, 72.0);
-            }
-
-            @Override
-            public ServiceCalculatedAverageTime calculateAverageTime(Long catalogServiceId) {
-                return ServiceCalculatedAverageTime.builder()
-                        .id(catalogServiceId)
-                        .name("Serviço Mockado")
-                        .totalCreated(randomTotalizer())
-                        .totalCompleted(randomTotalizer())
-                        .averageTimeBetweenCreateAndComplete(randomHours())
-                        .averageTimeBetweenStartAndComplete(randomHours())
-                        .averageTimeBetweenApproveAndComplete(randomHours())
-                        .averageTimeAwaitingBudgetApproval(randomHours())
-                        .build();
-            }
-
-            @Override
-            public List<ServiceCalculatedAverageTime> calculateAverageTime() {
-                return LongStream.rangeClosed(1, 100)
-                        .mapToObj(this::calculateAverageTime)
-                        .toList();
-            }
-        }
-
-        return new Mock();
-    }
-
-    @Bean
-    @ConditionalOnBooleanProperty(name = "config.api.mock.reports.average-time.enabled", havingValue = false, matchIfMissing = true)
     public ServiceReportingUseCase catalogServiceReportingUseCase(ServicePersistencePort persistencePort) {
         return new ServiceReportingUseCaseImpl(persistencePort);
     }

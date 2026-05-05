@@ -1,5 +1,5 @@
 # language: pt
-@clients
+@owners
 Funcionalidade: Gerenciamento de Clientes
   Como um administrador da oficina
   Quero gerenciar clientes

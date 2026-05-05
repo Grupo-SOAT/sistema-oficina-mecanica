@@ -217,7 +217,7 @@ public class CatalogServicesPersistenceAdapterTest {
 
         @Override
         public void setSupplies(List<NeededSupplyEntity> neededSupplies) {
-            this.supplies = supplies;
+            this.supplies = neededSupplies;
         }
     }
 }

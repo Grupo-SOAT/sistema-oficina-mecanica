@@ -89,6 +89,7 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
         Map<Long, String> serviceNamesById = loadCatalogNamesById(new ArrayList<>(servicesByCatalogId.keySet()));
 
         return servicesByCatalogId.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
                 .map(entry -> toCalculatedAverageTime(entry.getKey(), entry.getValue(), serviceNamesById))
                 .collect(Collectors.toList());
     }

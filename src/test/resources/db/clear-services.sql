@@ -12,7 +12,7 @@ DELETE
 FROM vehicles
 WHERE id > 0;
 DELETE
-FROM clients
+FROM owners
 WHERE id > 0;
 
 -- Reset sequences
@@ -22,5 +22,5 @@ ALTER TABLE service_orders
     ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE vehicles
     ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE clients
+ALTER TABLE owners
     ALTER COLUMN id RESTART WITH 1;

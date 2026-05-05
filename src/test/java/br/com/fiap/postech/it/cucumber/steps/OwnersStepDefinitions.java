@@ -6,12 +6,12 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 
-public class ClientsStepDefinitions extends FeatureStepSupport {
+public class OwnersStepDefinitions extends FeatureStepSupport {
     private Long clientId;
 
     @Before
     public void initialize() {
-        initializeFeature("clients");
+        initializeFeature("owners");
         clientId = null;
     }
 
@@ -38,27 +38,27 @@ public class ClientsStepDefinitions extends FeatureStepSupport {
 
     @Quando("eu listar os clientes")
     public void listClients() {
-        executeRequest("GET", "/clients", null, paginationParams());
+        executeRequest("GET", "/owners", null, paginationParams());
     }
 
     @Quando("eu consultar o cliente por id")
     public void getClientById() {
-        executeRequest("GET", "/clients/" + clientId, null, null);
+        executeRequest("GET", "/owners/" + clientId, null, null);
     }
 
     @Quando("eu criar o cliente")
     public void createClient() {
-        executeRequest("POST", "/clients", context.getRequestBody(), null);
+        executeRequest("POST", "/owners", context.getRequestBody(), null);
     }
 
     @Quando("eu atualizar o cliente")
     public void updateClient() {
-        executeRequest("PATCH", "/clients/" + clientId, context.getRequestBody(), null);
+        executeRequest("PATCH", "/owners/" + clientId, context.getRequestBody(), null);
     }
 
     @Quando("eu remover o cliente")
     public void deleteClient() {
-        executeRequest("DELETE", "/clients/" + clientId, null, null);
+        executeRequest("DELETE", "/owners/" + clientId, null, null);
     }
 
     @Então("a resposta deve conter no maximo {int} clientes")
