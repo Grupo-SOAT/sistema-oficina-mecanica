@@ -41,6 +41,7 @@ public class ServiceEntity implements Service {
     @Builder.Default
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "service_id")
     private Long id = 0L;
 
     @Column(name = "service_order_id", nullable = false)
