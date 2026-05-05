@@ -12,20 +12,20 @@ import java.util.Optional;
 
 public interface CatalogServicesRepository extends JpaRepository<CatalogServicesEntity, Long> {
     @EntityGraph(attributePaths = "supplies")
-    Optional<CatalogServicesEntity> findWithSuppliesByCatalogServiceId(Long id);
+    Optional<CatalogServicesEntity> findWithSuppliesById(Long id);
 
     @EntityGraph(attributePaths = "supplies")
     Optional<CatalogServicesEntity> findByName(String name);
 
     @EntityGraph(attributePaths = "supplies")
-    @Query("SELECT s FROM CatalogServicesEntity s WHERE s.catalogServiceId > :cursor ORDER BY s.catalogServiceId ASC")
+    @Query("SELECT s FROM CatalogServicesEntity s WHERE s.id > :cursor ORDER BY s.id ASC")
     List<CatalogServicesEntity> findAllAfterCursor(
             @Param("cursor") Long cursor,
             Pageable pageable
     );
 
     @EntityGraph(attributePaths = "supplies")
-    @Query("SELECT s FROM CatalogServicesEntity s WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%')) AND s.catalogServiceId > :cursor ORDER BY s.catalogServiceId ASC")
+    @Query("SELECT s FROM CatalogServicesEntity s WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%')) AND s.id > :cursor ORDER BY s.id ASC")
     List<CatalogServicesEntity> findByNameAfterCursor(
             @Param("name") String name,
             @Param("cursor") Long cursor,

@@ -58,8 +58,6 @@ paths:
     $ref: './endpoints/auth_login.yaml'
   /auth/chatbot:
     $ref: './endpoints/auth_chatbot.yaml'
-  /auth/me:
-    $ref: './endpoints/auth_me.yaml'
   /auth/change-password:
     $ref: './endpoints/auth_change-password.yaml'
 
@@ -90,15 +88,15 @@ paths:
   /supplies/{id}:
     $ref: './endpoints/supplies_id.yaml'
 
-  /suppliers:
-    $ref: './endpoints/suppliers.yaml'
-  /suppliers/{id}:
-    $ref: './endpoints/suppliers_id.yaml'
+#  /suppliers:
+#    $ref: './endpoints/suppliers.yaml'
+#  /suppliers/{id}:
+#    $ref: './endpoints/suppliers_id.yaml'
 
-  /purchase-orders:
-    $ref: './endpoints/purchase-orders.yaml'
-  /purchase-orders/{id}:
-    $ref: './endpoints/purchase-orders_id.yaml'
+#  /purchase-orders:
+#    $ref: './endpoints/purchase-orders.yaml'
+#  /purchase-orders/{id}:
+#    $ref: './endpoints/purchase-orders_id.yaml'
 
   /service-orders:
     $ref: './endpoints/service-orders.yaml'
@@ -117,7 +115,7 @@ paths:
     $ref: './endpoints/reports_service_average_time.yaml'
   /reports/catalog/services/average-time:
     $ref: './endpoints/reports_all_services_average_time.yaml'
-  /reports/service-orders/{id}/budget:
-    $ref: './endpoints/reports_service-order_budget.yaml'
-  /reports/purchase-order/{id}:
-    $ref: './endpoints/reports_purchase-order.yaml'
+#  /reports/service-orders/{id}/budget:
+#    $ref: './endpoints/reports_service-order_budget.yaml'
+#  /reports/purchase-order/{id}:
+#    $ref: './endpoints/reports_purchase-order.yaml'

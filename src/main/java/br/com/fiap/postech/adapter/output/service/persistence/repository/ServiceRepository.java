@@ -44,4 +44,6 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
             @Param("cursor") Long cursor,
             Pageable pageable
     );
+
+    List<ServiceEntity> findByCatalogServiceId(Long catalogServiceId);
 }

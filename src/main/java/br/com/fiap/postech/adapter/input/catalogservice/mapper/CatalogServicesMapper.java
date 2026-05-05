@@ -25,7 +25,7 @@ public class CatalogServicesMapper {
 
     public static CatalogServices fromApiData(@NonNull CatalogServiceData data) {
         return CatalogServicesEntity.builder()
-                .catalogServiceId(data.getId())
+                .id(data.getId())
                 .name(data.getName())
                 .description(data.getDescription())
                 .basePrice(data.getBasePrice())
@@ -35,7 +35,7 @@ public class CatalogServicesMapper {
 
     public static CatalogServiceData toApiData(@NonNull CatalogServices catalogServices) {
         return new CatalogServiceData()
-                .id(catalogServices.getCatalogServiceId())
+                .id(catalogServices.getId())
                 .name(catalogServices.getName())
                 .description(catalogServices.getDescription())
                 .basePrice(catalogServices.getBasePrice())

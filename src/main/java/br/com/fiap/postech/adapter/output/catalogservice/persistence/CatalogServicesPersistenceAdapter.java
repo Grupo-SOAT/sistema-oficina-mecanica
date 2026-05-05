@@ -41,7 +41,7 @@ public class CatalogServicesPersistenceAdapter implements CatalogServicesPersist
             entity = catalogServicesEntity;
         } else {
             entity = new CatalogServicesEntity();
-            entity.setCatalogServiceId(catalogServices.getCatalogServiceId());
+            entity.setId(catalogServices.getId());
             entity.setName(catalogServices.getName().toUpperCase());
             entity.setDescription(catalogServices.getDescription());
             entity.setBasePrice(catalogServices.getBasePrice());
@@ -71,6 +71,6 @@ public class CatalogServicesPersistenceAdapter implements CatalogServicesPersist
 
     @Override
     public Optional<CatalogServices> findById(Long id) {
-        return repository.findWithSuppliesByCatalogServiceId(id).map(item -> (CatalogServices) item);
+        return repository.findWithSuppliesById(id).map(item -> (CatalogServices) item);
     }
 }

@@ -31,6 +31,7 @@ public class CucumberTestContext {
     private String requestBody;
     private String lastResponseContentType;
     private String lastResponseContentDisposition;
+    private Long catalogServiceId;
 
     public static synchronized CucumberTestContext getInstance() {
         return INSTANCE;
@@ -52,6 +53,7 @@ public class CucumberTestContext {
         this.requestBody = null;
         this.lastResponseContentType = null;
         this.lastResponseContentDisposition = null;
+        this.catalogServiceId = null;
     }
 
     public void setLastResponseBody(String rawBody) {

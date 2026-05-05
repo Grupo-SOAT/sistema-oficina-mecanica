@@ -1,6 +1,6 @@
-package br.com.fiap.postech.adapter.output.reporting.catalogservice;
+package br.com.fiap.postech.adapter.output.reporting.service;
 
-import br.com.fiap.postech.domain.reporting.model.CatalogServiceCalculatedAverageTime;
+import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,11 +45,11 @@ class CatalogServiceReportingAdapterTest {
     private WebServer webServer;
 
     @InjectMocks
-    private CatalogServiceReportingAdapter adapter;
+    private ServiceReportingAdapter adapter;
 
     @ParameterizedTest
     @MethodSource("writeCSVScenarios")
-    void should_write_csv_with_expected_format(List<CatalogServiceCalculatedAverageTime> items, String expectedResult) {
+    void should_write_csv_with_expected_format(List<ServiceCalculatedAverageTime> items, String expectedResult) {
         String result = adapter.writeCSV(items);
 
         assertThat(result).isEqualTo(expectedResult);
@@ -57,7 +57,7 @@ class CatalogServiceReportingAdapterTest {
 
     @Test
     void should_write_pdf_from_catalog_service_average_time_template() {
-        CatalogServiceCalculatedAverageTime input = CatalogServiceCalculatedAverageTime.builder()
+        ServiceCalculatedAverageTime input = ServiceCalculatedAverageTime.builder()
                 .id(1L)
                 .name("Alinhamento")
                 .totalCreated(10L)
@@ -96,7 +96,7 @@ class CatalogServiceReportingAdapterTest {
 
     @Test
     void should_write_pdf_with_localhost_base_url_when_web_server_context_is_unavailable() {
-        CatalogServiceCalculatedAverageTime input = CatalogServiceCalculatedAverageTime.builder()
+        ServiceCalculatedAverageTime input = ServiceCalculatedAverageTime.builder()
                 .id(2L)
                 .name("Balanceamento")
                 .totalCreated(10L)
@@ -118,7 +118,7 @@ class CatalogServiceReportingAdapterTest {
     }
 
     private static Stream<Arguments> writeCSVScenarios() {
-        final var mock1 = CatalogServiceCalculatedAverageTime.builder()
+        final var mock1 = ServiceCalculatedAverageTime.builder()
                 .id(7L)
                 .name("Freio")
                 .totalCreated(10L)
@@ -128,7 +128,7 @@ class CatalogServiceReportingAdapterTest {
                 .averageTimeBetweenApproveAndComplete(2.55)
                 .averageTimeAwaitingBudgetApproval(1.07)
                 .build();
-        final var mock2 = CatalogServiceCalculatedAverageTime.builder()
+        final var mock2 = ServiceCalculatedAverageTime.builder()
                 .id(9L)
                 .name("Pintura")
                 .totalCreated(10L)

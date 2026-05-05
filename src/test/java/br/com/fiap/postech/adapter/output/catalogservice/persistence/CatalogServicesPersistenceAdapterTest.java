@@ -4,7 +4,6 @@ import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.Cata
 import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.NeededSupplyEntity;
 import br.com.fiap.postech.adapter.output.catalogservice.persistence.repository.CatalogServicesRepository;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
-import br.com.fiap.postech.adapter.output.supply.persistence.entity.SupplyEntity;
 import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,9 +33,9 @@ public class CatalogServicesPersistenceAdapterTest {
 
     @Test
     void should_scroll_without_name_filter_using_find_all_after_cursor() {
-        CatalogServicesEntity first = CatalogServicesEntity.builder().catalogServiceId(1L).name("A").build();
-        CatalogServicesEntity second = CatalogServicesEntity.builder().catalogServiceId(2L).name("B").build();
-        CatalogServicesEntity third = CatalogServicesEntity.builder().catalogServiceId(3L).name("C").build();
+        CatalogServicesEntity first = CatalogServicesEntity.builder().id(1L).name("A").build();
+        CatalogServicesEntity second = CatalogServicesEntity.builder().id(2L).name("B").build();
+        CatalogServicesEntity third = CatalogServicesEntity.builder().id(3L).name("C").build();
 
         when(repository.findAllAfterCursor(anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(first, second, third));
@@ -59,7 +58,7 @@ public class CatalogServicesPersistenceAdapterTest {
 
     @Test
     void should_scroll_with_name_filter_using_find_by_name_after_cursor() {
-        CatalogServicesEntity only = CatalogServicesEntity.builder().catalogServiceId(1L).name("Servico").build();
+        CatalogServicesEntity only = CatalogServicesEntity.builder().id(1L).name("Servico").build();
         when(repository.findByNameAfterCursor(eq("Servi"), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(only));
 
@@ -76,8 +75,8 @@ public class CatalogServicesPersistenceAdapterTest {
 
     @Test
     void should_map_find_by_id() {
-        CatalogServicesEntity entity = CatalogServicesEntity.builder().catalogServiceId(20L).name("Servico").build();
-        when(repository.findWithSuppliesByCatalogServiceId(20L)).thenReturn(Optional.of(entity));
+        CatalogServicesEntity entity = CatalogServicesEntity.builder().id(20L).name("Servico").build();
+        when(repository.findWithSuppliesById(20L)).thenReturn(Optional.of(entity));
 
         Optional<CatalogServices> found = adapter.findById(20L);
 
@@ -86,7 +85,7 @@ public class CatalogServicesPersistenceAdapterTest {
 
     @Test
     void should_map_find_by_name() {
-        CatalogServicesEntity entity = CatalogServicesEntity.builder().catalogServiceId(78L).name("Servico").supplies(List.of(NeededSupplyEntity.builder().servicesSuppliesId(1L).supplyAmount(300).build())).build();
+        CatalogServicesEntity entity = CatalogServicesEntity.builder().id(78L).name("Servico").supplies(List.of(NeededSupplyEntity.builder().servicesSuppliesId(1L).supplyAmount(300).build())).build();
         when(repository.findByName("Servico")).thenReturn(Optional.of(entity));
 
         Optional<CatalogServices> found = adapter.findByName("Servico");
@@ -96,7 +95,7 @@ public class CatalogServicesPersistenceAdapterTest {
 
     @Test
     void should_save_when_catalog_services_already_entity() {
-        CatalogServicesEntity entity = CatalogServicesEntity.builder().catalogServiceId(7L).name("Servico").supplies(List.of(NeededSupplyEntity.builder().servicesSuppliesId(1L).supplyAmount(300).build())).build();
+        CatalogServicesEntity entity = CatalogServicesEntity.builder().id(7L).name("Servico").supplies(List.of(NeededSupplyEntity.builder().servicesSuppliesId(1L).supplyAmount(300).build())).build();
         when(repository.save(entity)).thenReturn(entity);
 
         CatalogServices saved = adapter.save(entity);
@@ -106,7 +105,7 @@ public class CatalogServicesPersistenceAdapterTest {
 
     @Test
     void should_save_when_catalog_services_already_entity_supplies_null() {
-        CatalogServicesEntity entity = CatalogServicesEntity.builder().catalogServiceId(7L).name("Servico").supplies(null).build();
+        CatalogServicesEntity entity = CatalogServicesEntity.builder().id(7L).name("Servico").supplies(null).build();
         when(repository.save(entity)).thenReturn(entity);
 
         CatalogServices saved = adapter.save(entity);
@@ -116,9 +115,9 @@ public class CatalogServicesPersistenceAdapterTest {
 
     @Test
     void should_save_when_catalog_services_is_not_entity() {
-        CatalogServices supply = new CatalogServicesPersistenceAdapterTest.TestCatalogServices(4L, "Servico", "Servico",  new BigDecimal("7.1"), new ArrayList<>());
+        CatalogServices supply = new CatalogServicesPersistenceAdapterTest.TestCatalogServices(4L, "Servico", "Servico", new BigDecimal("7.1"), new ArrayList<>());
         CatalogServicesEntity expected = CatalogServicesEntity.builder()
-                .catalogServiceId(4L)
+                .id(4L)
                 .name("SERVICO")
                 .description("Servico")
                 .basePrice(new BigDecimal("7.1"))
@@ -152,51 +151,73 @@ public class CatalogServicesPersistenceAdapterTest {
     }
 
     private static final class TestCatalogServices implements CatalogServices {
-        private Long catalogServiceId;
+        private Long id;
         private String name;
         private String description;
         private BigDecimal basePrice;
         private List<NeededSupplyEntity> supplies;
 
-
-        private TestCatalogServices(Long catalogServiceId,
-                           String name,
-                           String description,
-                           BigDecimal basePrice, List<NeededSupplyEntity> supplies) {
-            this.catalogServiceId = catalogServiceId;
+        private TestCatalogServices(
+                Long id,
+                String name,
+                String description,
+                BigDecimal basePrice, List<NeededSupplyEntity> supplies
+        ) {
+            this.id = id;
             this.name = name;
             this.description = description;
             this.basePrice = basePrice;
             this.supplies = supplies;
         }
-        @Override
-        public Long getCatalogServiceId(){return catalogServiceId;}
 
         @Override
-        public void setCatalogServiceId(Long catalogServiceId) {this.catalogServiceId = catalogServiceId;}
+        public Long getId() {
+            return id;
+        }
 
         @Override
-        public String getName(){return name;}
+        public void setId(Long id) {
+            this.id = id;
+        }
 
         @Override
-        public void setName(String name){this.name = name;}
+        public String getName() {
+            return name;
+        }
 
         @Override
-        public String getDescription(){return description;}
+        public void setName(String name) {
+            this.name = name;
+        }
 
         @Override
-        public void setDescription(String description){this.description = description;}
+        public String getDescription() {
+            return description;
+        }
 
         @Override
-        public BigDecimal getBasePrice(){return basePrice;}
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
         @Override
-        public void setBasePrice(BigDecimal basePrice){this.basePrice = basePrice;}
+        public BigDecimal getBasePrice() {
+            return basePrice;
+        }
 
         @Override
-        public List<NeededSupplyEntity> getSupplies(){return supplies;}
+        public void setBasePrice(BigDecimal basePrice) {
+            this.basePrice = basePrice;
+        }
 
         @Override
-        public void setSupplies(List<NeededSupplyEntity> neededSupplies){this.supplies = supplies;}
+        public List<NeededSupplyEntity> getSupplies() {
+            return supplies;
+        }
+
+        @Override
+        public void setSupplies(List<NeededSupplyEntity> neededSupplies) {
+            this.supplies = neededSupplies;
+        }
     }
 }

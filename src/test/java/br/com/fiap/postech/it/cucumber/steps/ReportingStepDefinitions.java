@@ -1,19 +1,61 @@
 package br.com.fiap.postech.it.cucumber.steps;
 
+import io.cucumber.java.Before;
+import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.E;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.web.context.WebApplicationContext;
 
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 public class ReportingStepDefinitions extends BaseStepDefinition {
     private static final Pattern ISO_LOCAL_DATE_TIME_IN_FILENAME = Pattern.compile(
             "(\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2})"
     );
+
+    @Autowired
+    private WebApplicationContext webContext;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Before("@reporting")
+    public void initialize() {
+        context.reset();
+        resetReportingData();
+        mockMvc = webAppContextSetup(webContext)
+                .apply(springSecurity())
+                .build();
+    }
+
+    private void resetReportingData() {
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(new ClassPathResource("db/reporting-seed.sql"));
+        populator.execute(dataSource);
+    }
+
+    @Dado("que o id do serviço seja {long}")
+    public void setCatalogServiceId(Long id) {
+        context.setCatalogServiceId(id);
+    }
+
+    @Dado("que nenhum serviço esteja cadastrado")
+    public void clearAllServices() {
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(new ClassPathResource("db/clear-services.sql"));
+        populator.execute(dataSource);
+    }
+
+    // accessEndpoint() já é definido globalmente em AuthenticationStepDefinitions
 
     @E("o content-type da resposta deve ser {string}")
     public void shouldHaveExpectedContentType(String expectedContentType) {
@@ -55,4 +97,5 @@ public class ReportingStepDefinitions extends BaseStepDefinition {
                 "Timestamp do arquivo está no futuro: " + exportedAt
         );
     }
+
 }

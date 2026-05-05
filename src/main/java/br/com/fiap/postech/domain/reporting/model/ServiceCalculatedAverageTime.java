@@ -3,7 +3,7 @@ package br.com.fiap.postech.domain.reporting.model;
 import lombok.Builder;
 
 @Builder
-public record CatalogServiceCalculatedAverageTime(
+public record ServiceCalculatedAverageTime(
         Long id,
         String name,
         Long totalCreated,
@@ -14,3 +14,4 @@ public record CatalogServiceCalculatedAverageTime(
         Double averageTimeAwaitingBudgetApproval
 ) {
 }
+

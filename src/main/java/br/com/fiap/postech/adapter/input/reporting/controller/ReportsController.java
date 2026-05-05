@@ -1,14 +1,19 @@
 package br.com.fiap.postech.adapter.input.reporting.controller;
 
+import br.com.fiap.postech.adapter.input.api.model.ErrorResponse;
 import br.com.fiap.postech.adapter.input.reporting.model.ReportType;
-import br.com.fiap.postech.domain.reporting.usecase.CatalogServiceReportingUseCase;
+import br.com.fiap.postech.domain.reporting.exception.ReportingNoMatchingServiceException;
+import br.com.fiap.postech.domain.reporting.exception.ReportingServiceNotFoundException;
+import br.com.fiap.postech.domain.reporting.usecase.ServiceReportingUseCase;
 import br.com.fiap.postech.port.api.ReportsApi;
-import br.com.fiap.postech.port.reporting.catalogservice.CatalogServiceReportingPort;
+import br.com.fiap.postech.port.reporting.catalogservice.ServiceReportingPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -21,13 +26,13 @@ public class ReportsController implements ReportsApi {
     private static final String SINGLE_SERVICE_FILENAME_BASE_FORMAT = "service-%d-average-time_%s";
     private static final String ALL_SERVICES_FILENAME_BASE_FORMAT = "services-average-time_%s";
 
-    private final CatalogServiceReportingUseCase catalogServiceReportingUseCase;
-    private final CatalogServiceReportingPort catalogServiceReportingPort;
+    private final ServiceReportingUseCase serviceReportingUseCase;
+    private final ServiceReportingPort serviceReportingPort;
 
     @Override
     public ResponseEntity<Resource> getServiceAverageTime(Long id) {
-        final var data = catalogServiceReportingUseCase.calculateAverageTime(id);
-        final var bytes = catalogServiceReportingPort.writePDF(data);
+        final var data = serviceReportingUseCase.calculateAverageTime(id);
+        final var bytes = serviceReportingPort.writePDF(data);
         final var pdf = new ByteArrayResource(bytes);
         final var baseName = String.format(SINGLE_SERVICE_FILENAME_BASE_FORMAT, id, getTimestamp());
 
@@ -36,8 +41,8 @@ public class ReportsController implements ReportsApi {
 
     @Override
     public ResponseEntity<String> getAllServicesAverageTime() {
-        final var data = catalogServiceReportingUseCase.calculateAverageTime();
-        final var csv = catalogServiceReportingPort.writeCSV(data);
+        final var data = serviceReportingUseCase.calculateAverageTime();
+        final var csv = serviceReportingPort.writeCSV(data);
         final var baseName = String.format(ALL_SERVICES_FILENAME_BASE_FORMAT, getTimestamp());
 
         return buildReportResponse(csv, baseName, ReportType.CSV);
@@ -58,7 +63,15 @@ public class ReportsController implements ReportsApi {
         return LocalDateTime.now().format(FILENAME_TIMESTAMP_FORMATTER);
     }
 
-    // TODO: implementar exception handler de NOT_FOUND
+    @ExceptionHandler(ReportingNoMatchingServiceException.class)
+    public ResponseEntity<Void> handleNoMatchingServices() {
+        return ResponseEntity.noContent().build();
+    }
 
-    // TODO: implementar exception handler de NO_CONTENT
+    @ExceptionHandler(ReportingServiceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(ReportingServiceNotFoundException exception) {
+        final var httpStatus = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
+    }
 }
