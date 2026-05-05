@@ -24,7 +24,7 @@ public class CatalogServicesEntity implements CatalogServices {
     @Builder.Default
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "catalog_service_id")
     private Long id = 0L;
 
     @Column(nullable = false)
