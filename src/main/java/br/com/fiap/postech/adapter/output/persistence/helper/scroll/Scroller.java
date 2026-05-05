@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 public class Scroller {
-    private static final int DEFAULT_CURSOR = 0;
+    private static final long DEFAULT_CURSOR = 0;
     private static final int FIRST_PAGE = 0;
     private static final int EXTRA_CURSOR_ITEM = 1;
 
@@ -30,11 +30,11 @@ public class Scroller {
     public static <T> ScrollPage<T> scroll(
             String cursor,
             Integer pageSize,
-            BiFunction<Long, Pageable, List<T>> scroll
+            BiFunction<Long, Pageable, List<T>> query
     ) {
         final var parsedCursor = parseCursor(cursor);
         final var pageable = createPageable(pageSize);
-        final var result = scroll.apply(parsedCursor, pageable);
+        final var result = query.apply(parsedCursor, pageable);
 
         if (result == null || result.isEmpty()) {
             return ScrollPage.<T>builder()

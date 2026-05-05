@@ -1,0 +1,1099 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------< br.com.fiap.postech:mechanic-workshop-system >------------
+[INFO] Building Sistema Integrado de Gestão de Oficina Mecânica 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.5:run (default-cli) > test-compile @ mechanic-workshop-system >>>
+[INFO] 
+[INFO] --- openapi-generator:7.15.0:generate (generate-openapi) @ mechanic-workshop-system ---
+[INFO] Generating with dryRun=false
+[INFO] OpenAPI Generator: spring (server)
+[INFO] Generator 'spring' is considered stable.
+[INFO] ----------------------------------
+[INFO] Environment variable JAVA_POST_PROCESS_FILE not defined so the Java code may not be properly formatted. To define it, try 'export JAVA_POST_PROCESS_FILE="/usr/local/bin/clang-format -i"' (Linux/Mac)
+[INFO] NOTE: To enable file post-processing, 'enablePostProcessFile' must be set to `true` (--enable-post-process-file for CLI).
+[INFO] Invoker Package Name, originally not set, is now derived from api package name: br.com.fiap.postech.port
+[INFO] Processing operation authenticate
+[INFO] Processing operation authenticatedWithApiKey
+[INFO] Processing operation getCurrentUser
+[INFO] Processing operation changePassword
+[INFO] Processing operation listUsers
+[INFO] Processing operation createUser
+[INFO] Processing operation getUserById
+[INFO] Processing operation deleteUser
+[INFO] Processing operation updateUser
+[INFO] Processing operation resetPassword
+[INFO] Processing operation listClients
+[INFO] Processing operation createClient
+[INFO] Processing operation getClientById
+[INFO] Processing operation deleteClient
+[INFO] Processing operation updateClient
+[INFO] Processing operation listVehicles
+[INFO] Processing operation createVehicle
+[INFO] Processing operation getVehicleById
+[INFO] Processing operation deleteVehicle
+[INFO] Processing operation updateVehicle
+[INFO] Processing operation listCatalogServices
+[INFO] Processing operation createCatalogService
+[INFO] Processing operation getCatalogServiceById
+[INFO] Processing operation deleteCatalogService
+[INFO] Processing operation updateCatalogService
+[INFO] Processing operation listSupplies
+[INFO] Processing operation createSupply
+[INFO] Processing operation getSupplyById
+[INFO] Processing operation deleteSupply
+[INFO] Processing operation updateSupply
+[INFO] Processing operation listSuppliers
+[INFO] Processing operation createSupplier
+[INFO] Processing operation getSupplierById
+[INFO] Processing operation deleteSupplier
+[INFO] Processing operation updateSupplier
+[INFO] Processing operation listPurchaseOrders
+[INFO] Processing operation createPurchaseOrder
+[INFO] Processing operation getPurchaseOrderById
+[INFO] Processing operation deletePurchaseOrder
+[INFO] Processing operation updatePurchaseOrder
+[INFO] Processing operation listServiceOrders
+[INFO] Processing operation createServiceOrder
+[INFO] Processing operation getServiceOrderById
+[INFO] Processing operation deleteServiceOrder
+[INFO] Processing operation updateServiceOrder
+[INFO] Processing operation listServices
+[INFO] Processing operation includeService
+[INFO] Processing operation getServiceById
+[INFO] Processing operation deleteService
+[INFO] Processing operation updateService
+[INFO] Processing operation registerProgress
+[INFO] Processing operation registerClientDecision
+[INFO] Processing operation getServiceAverageTime
+[INFO] Processing operation getServiceOrderBudget
+[INFO] Processing operation getPurchaseOrder
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[WARNING] Unknown `format` decimal detected for type `number`. Defaulting to `number`
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\BudgetDecision.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\BudgetDecisionRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\CatalogServiceData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\CatalogServiceRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ChangePasswordRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ClientData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ClientRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\DocumentType.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ErrorResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\LoginRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\NeededSupplyData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\OneTimePassword.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedCatalogServiceResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedClientResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedPurchaseOrderResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedServiceOrderResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedServiceResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedSupplierResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedSupplyResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedUserResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PaginatedVehicleResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PurchaseOrderData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PurchaseOrderRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PurchaseOrderStatus.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\PurchaseSupplyData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\Role.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ServiceData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ServiceOrderAction.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ServiceOrderActionRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ServiceOrderData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ServiceOrderRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ServiceOrderStatus.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ServiceRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\ServiceStatus.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\SupplierData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\SupplierRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\SupplyData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\SupplyRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\TokenResponse.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\UserData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\UserRequest.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\VehicleData.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\adapter\input\api\model\VehicleRequest.java
+[WARNING] No application/json content media type found in response. Response examples can currently only be generated for application/json media type.
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\AuthenticationApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\CatalogServicesApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\ClientsApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\PurchaseOrdersApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\ReportsApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\ServiceOrdersApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\ServicesApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\SuppliersApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\SuppliesApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\UsersApi.java
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\VehiclesApi.java
+[INFO] Skipping generation of Webhooks.
+[INFO] 'host' (OAS 2.0) or 'servers' (OAS 3.0) not defined in the spec. Default to [http://localhost] for server URL [http://localhost/api/v1]
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\pom.xml
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\README.md
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\br\com\fiap\postech\port\api\ApiUtil.java
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\src\main\java\org\openapitools\configuration\EnumConverterConfiguration.java
+[INFO] Skipped C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\.openapi-generator-ignore (Skipped by supportingFiles options supplied by user.)
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\.openapi-generator\VERSION
+[INFO] writing file C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\generated-sources\openapi\.openapi-generator\FILES
+############################################################################################
+# Thanks for using OpenAPI Generator.                                                      #
+# We appreciate your support! Please consider donation to help us maintain this project.   #
+# https://opencollective.com/openapi_generator/donate                                      #
+############################################################################################
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mechanic-workshop-system ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 73 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mechanic-workshop-system ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mechanic-workshop-system ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mechanic-workshop-system ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 11 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] <<< spring-boot:4.0.5:run (default-cli) < test-compile @ mechanic-workshop-system <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.5:run (default-cli) @ mechanic-workshop-system ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T21:07:01.776-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T21:07:01.782-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T21:07:01.855-03:00  INFO 13560 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-02T21:07:01.855-03:00  INFO 13560 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-02T21:07:02.958-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T21:07:03.031-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 1 JPA repository interface.
+2026-05-02T21:07:03.809-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T21:07:03.826-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T21:07:03.827-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T21:07:03.873-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2015 ms
+2026-05-02T21:07:04.081-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T21:07:04.157-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-05-02T21:07:04.716-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T21:07:04.756-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-02T21:07:05.015-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@52484a8a
+2026-05-02T21:07:05.018-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-02T21:07:05.080-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T21:07:05.115-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T21:07:06.253-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T21:07:06.349-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T21:07:06.527-03:00  INFO 13560 --- [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-02T21:07:07.497-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T21:07:07.573-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: a00b7a94-1adc-41f9-ba36-b4d8fb3f49a6
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T21:07:07.582-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T21:07:08.015-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T21:07:08.251-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T21:07:08.257-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 7.122 seconds (process running for 7.918)
+2026-05-02T21:09:07.132-03:00  INFO 13560 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-02T21:09:07.133-03:00  INFO 13560 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-02T21:09:07.136-03:00  INFO 13560 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-05-02T21:27:49.194-03:00  INFO 13560 --- [nio-8080-exec-9] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1224 ms
+2026-05-02T21:31:59.184-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 12 class path changes (0 additions, 0 deletions, 12 modifications)
+2026-05-02T21:31:59.370-03:00  INFO 13560 --- [       Thread-1] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T21:31:59.380-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T21:31:59.396-03:00  INFO 13560 --- [       Thread-1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T21:31:59.404-03:00  INFO 13560 --- [       Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-05-02T21:31:59.408-03:00  INFO 13560 --- [       Thread-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T21:31:59.649-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T21:31:59.651-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T21:32:00.273-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T21:32:00.309-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 1 JPA repository interface.
+2026-05-02T21:32:00.715-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T21:32:00.718-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T21:32:00.720-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T21:32:00.754-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1098 ms
+2026-05-02T21:32:00.912-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T21:32:01.037-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T21:32:01.042-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-05-02T21:32:01.201-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@7e92171e
+2026-05-02T21:32:01.201-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-05-02T21:32:01.214-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T21:32:01.227-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T21:32:01.367-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T21:32:01.418-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T21:32:01.445-03:00  WARN 13560 --- [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'authenticationController': Lookup method resolution failed
+2026-05-02T21:32:01.446-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T21:32:01.447-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2026-05-02T21:32:01.566-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2026-05-02T21:32:01.568-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-05-02T21:32:01.701-03:00  INFO 13560 --- [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-05-02T21:32:01.744-03:00 ERROR 13560 --- [  restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'authenticationController': Lookup method resolution failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.checkLookupMethods(AutowiredAnnotationBeanPostProcessor.java:482) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:352) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors(AbstractAutowireCapableBeanFactory.java:1321) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1218) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:565) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1218) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1184) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1121) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:994) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-4.0.5.jar:4.0.5]
+	at br.com.fiap.postech.MechanicalWorkshopSystem.main(MechanicalWorkshopSystem.java:12) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:52) ~[spring-boot-devtools-4.0.5.jar:4.0.5]
+Caused by: java.lang.IllegalStateException: Failed to introspect Class [br.com.fiap.postech.adapter.input.controller.AuthenticationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@59fa16f1]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:483) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.util.ReflectionUtils.doWithLocalMethods(ReflectionUtils.java:320) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.checkLookupMethods(AutowiredAnnotationBeanPostProcessor.java:460) ~[spring-beans-7.0.6.jar:7.0.6]
+	... 24 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: br/com/fiap/postech/adapter/input/api/model/LoginRequest
+	at java.base/java.lang.Class.getDeclaredMethods0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3580) ~[na:na]
+	at java.base/java.lang.Class.privateGetPublicMethods(Class.java:3605) ~[na:na]
+	at java.base/java.lang.Class.getMethods(Class.java:2187) ~[na:na]
+	at org.springframework.util.ReflectionUtils.findDefaultMethodsOnInterfaces(ReflectionUtils.java:492) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:466) ~[spring-core-7.0.6.jar:7.0.6]
+	... 26 common frames omitted
+Caused by: java.lang.ClassNotFoundException: br.com.fiap.postech.adapter.input.api.model.LoginRequest
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:536) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:515) ~[na:na]
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:123) ~[spring-boot-devtools-4.0.5.jar:4.0.5]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526) ~[na:na]
+	... 32 common frames omitted
+
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T21:32:03.460-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T21:32:03.464-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T21:32:04.887-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T21:32:04.958-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 58 ms. Found 1 JPA repository interface.
+2026-05-02T21:32:05.276-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T21:32:05.279-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T21:32:05.279-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T21:32:05.312-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1843 ms
+2026-05-02T21:32:05.523-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T21:32:05.654-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T21:32:05.656-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-05-02T21:32:05.759-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@bfb9877
+2026-05-02T21:32:05.759-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-05-02T21:32:05.770-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T21:32:05.782-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T21:32:05.880-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T21:32:05.934-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T21:32:05.962-03:00  WARN 13560 --- [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'authenticationController': Lookup method resolution failed
+2026-05-02T21:32:05.963-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T21:32:05.965-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
+2026-05-02T21:32:05.994-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+2026-05-02T21:32:05.995-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-05-02T21:32:06.001-03:00  INFO 13560 --- [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-05-02T21:32:06.005-03:00 ERROR 13560 --- [  restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'authenticationController': Lookup method resolution failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.checkLookupMethods(AutowiredAnnotationBeanPostProcessor.java:482) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:352) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors(AbstractAutowireCapableBeanFactory.java:1321) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1218) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:565) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1218) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1184) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1121) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:994) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-4.0.5.jar:4.0.5]
+	at br.com.fiap.postech.MechanicalWorkshopSystem.main(MechanicalWorkshopSystem.java:12) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:52) ~[spring-boot-devtools-4.0.5.jar:4.0.5]
+Caused by: java.lang.IllegalStateException: Failed to introspect Class [br.com.fiap.postech.adapter.input.controller.AuthenticationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@165219]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:483) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.util.ReflectionUtils.doWithLocalMethods(ReflectionUtils.java:320) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.checkLookupMethods(AutowiredAnnotationBeanPostProcessor.java:460) ~[spring-beans-7.0.6.jar:7.0.6]
+	... 24 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: LoginRequest
+	at java.base/java.lang.Class.getDeclaredMethods0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3580) ~[na:na]
+	at java.base/java.lang.Class.privateGetPublicMethods(Class.java:3605) ~[na:na]
+	at java.base/java.lang.Class.getMethods(Class.java:2187) ~[na:na]
+	at org.springframework.util.ReflectionUtils.findDefaultMethodsOnInterfaces(ReflectionUtils.java:492) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:466) ~[spring-core-7.0.6.jar:7.0.6]
+	... 26 common frames omitted
+Caused by: java.lang.ClassNotFoundException: LoginRequest
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:536) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:515) ~[na:na]
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:123) ~[spring-boot-devtools-4.0.5.jar:4.0.5]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526) ~[na:na]
+	... 32 common frames omitted
+
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T21:32:08.398-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T21:32:08.398-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T21:32:08.817-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T21:32:08.851-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 1 JPA repository interface.
+2026-05-02T21:32:09.030-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T21:32:09.032-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T21:32:09.032-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T21:32:09.050-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 649 ms
+2026-05-02T21:32:09.119-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T21:32:09.153-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T21:32:09.154-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Starting...
+2026-05-02T21:32:09.309-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-4 - Added connection org.postgresql.jdbc.PgConnection@25ef480
+2026-05-02T21:32:09.329-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Start completed.
+2026-05-02T21:32:09.341-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T21:32:09.351-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T21:32:09.444-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T21:32:09.485-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T21:32:09.678-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T21:32:09.714-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 26c8fe76-e960-4d5c-b687-67beb9c5d471
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T21:32:09.715-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T21:32:09.852-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T21:32:09.924-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T21:32:09.926-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 1.568 seconds (process running for 1509.587)
+2026-05-02T21:32:09.929-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-05-02T23:34:11.088-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 47 class path changes (0 additions, 0 deletions, 47 modifications)
+2026-05-02T23:34:11.103-03:00  INFO 13560 --- [       Thread-5] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T23:34:11.110-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T23:34:11.120-03:00  INFO 13560 --- [       Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:34:11.121-03:00  INFO 13560 --- [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Shutdown initiated...
+2026-05-02T23:34:11.149-03:00  INFO 13560 --- [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:34:11.696-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:34:11.697-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:34:14.194-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:34:14.427-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 221 ms. Found 1 JPA repository interface.
+2026-05-02T23:34:15.337-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:34:15.346-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:34:15.347-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:34:15.400-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 3685 ms
+2026-05-02T23:34:15.741-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:34:15.883-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:34:15.887-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Starting...
+2026-05-02T23:34:16.029-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-5 - Added connection org.postgresql.jdbc.PgConnection@781527e4
+2026-05-02T23:34:16.030-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Start completed.
+2026-05-02T23:34:16.046-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:34:16.056-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:34:16.500-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:34:16.552-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:34:17.166-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T23:34:17.281-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 208e6a9d-1029-4bf6-825b-493a45b2b444
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T23:34:17.284-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T23:34:17.684-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T23:34:17.849-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T23:34:17.855-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 6.485 seconds (process running for 8837.516)
+2026-05-02T23:34:17.858-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-05-02T23:34:21.824-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 96 class path changes (0 additions, 0 deletions, 96 modifications)
+2026-05-02T23:34:21.827-03:00  INFO 13560 --- [      Thread-15] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T23:34:21.833-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T23:34:21.837-03:00  INFO 13560 --- [      Thread-15] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:34:21.840-03:00  INFO 13560 --- [      Thread-15] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Shutdown initiated...
+2026-05-02T23:34:21.842-03:00  INFO 13560 --- [      Thread-15] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:34:22.013-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:34:22.013-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:34:22.375-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:34:22.408-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 1 JPA repository interface.
+2026-05-02T23:34:22.578-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:34:22.579-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:34:22.580-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:34:22.610-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 592 ms
+2026-05-02T23:34:22.697-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:34:22.748-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:34:22.750-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Starting...
+2026-05-02T23:34:22.826-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-6 - Added connection org.postgresql.jdbc.PgConnection@79dd295e
+2026-05-02T23:34:22.827-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Start completed.
+2026-05-02T23:34:22.837-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:34:22.846-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:34:22.959-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:34:23.011-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:34:23.451-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T23:34:23.504-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: abaab1a8-004c-40bb-85e8-50a72f53760c
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T23:34:23.507-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T23:34:23.726-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T23:34:23.805-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T23:34:23.809-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 1.836 seconds (process running for 8843.469)
+2026-05-02T23:34:23.809-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-05-02T23:35:26.327-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 72 class path changes (0 additions, 0 deletions, 72 modifications)
+2026-05-02T23:35:26.331-03:00  INFO 13560 --- [      Thread-19] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T23:35:26.352-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T23:35:26.360-03:00  INFO 13560 --- [      Thread-19] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:35:26.362-03:00  INFO 13560 --- [      Thread-19] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown initiated...
+2026-05-02T23:35:26.375-03:00  INFO 13560 --- [      Thread-19] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:35:26.549-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:35:26.549-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:35:27.160-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:35:27.200-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 1 JPA repository interface.
+2026-05-02T23:35:27.441-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:35:27.442-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:35:27.443-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:35:27.468-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 916 ms
+2026-05-02T23:35:27.551-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:35:27.605-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:35:27.607-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Starting...
+2026-05-02T23:35:27.693-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-7 - Added connection org.postgresql.jdbc.PgConnection@37164fe8
+2026-05-02T23:35:27.694-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Start completed.
+2026-05-02T23:35:27.704-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:35:27.715-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:35:27.840-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:35:27.889-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:35:27.917-03:00  WARN 13560 --- [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'authenticationController': Lookup method resolution failed
+2026-05-02T23:35:27.918-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:35:27.918-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown initiated...
+2026-05-02T23:35:27.947-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown completed.
+2026-05-02T23:35:27.948-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-05-02T23:35:27.953-03:00  INFO 13560 --- [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-05-02T23:35:27.958-03:00 ERROR 13560 --- [  restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'authenticationController': Lookup method resolution failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.checkLookupMethods(AutowiredAnnotationBeanPostProcessor.java:482) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:352) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors(AbstractAutowireCapableBeanFactory.java:1321) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1218) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:565) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1218) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1184) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1121) ~[spring-beans-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:994) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:621) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-4.0.5.jar:4.0.5]
+	at br.com.fiap.postech.MechanicalWorkshopSystem.main(MechanicalWorkshopSystem.java:12) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:52) ~[spring-boot-devtools-4.0.5.jar:4.0.5]
+Caused by: java.lang.IllegalStateException: Failed to introspect Class [br.com.fiap.postech.adapter.input.controller.AuthenticationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@be57708]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:483) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.util.ReflectionUtils.doWithLocalMethods(ReflectionUtils.java:320) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.checkLookupMethods(AutowiredAnnotationBeanPostProcessor.java:460) ~[spring-beans-7.0.6.jar:7.0.6]
+	... 24 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: br/com/fiap/postech/adapter/input/api/model/LoginRequest
+	at java.base/java.lang.Class.getDeclaredMethods0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3580) ~[na:na]
+	at java.base/java.lang.Class.privateGetPublicMethods(Class.java:3605) ~[na:na]
+	at java.base/java.lang.Class.getMethods(Class.java:2187) ~[na:na]
+	at org.springframework.util.ReflectionUtils.findDefaultMethodsOnInterfaces(ReflectionUtils.java:492) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:466) ~[spring-core-7.0.6.jar:7.0.6]
+	... 26 common frames omitted
+Caused by: java.lang.ClassNotFoundException: br.com.fiap.postech.adapter.input.api.model.LoginRequest
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:536) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:515) ~[na:na]
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:123) ~[spring-boot-devtools-4.0.5.jar:4.0.5]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526) ~[na:na]
+	... 32 common frames omitted
+
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:35:29.474-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:35:29.475-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:35:29.779-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:35:29.801-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 20 ms. Found 1 JPA repository interface.
+2026-05-02T23:35:29.916-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:35:29.916-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:35:29.916-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:35:29.935-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 458 ms
+2026-05-02T23:35:29.991-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:35:30.028-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:35:30.029-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Starting...
+2026-05-02T23:35:30.096-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-8 - Added connection org.postgresql.jdbc.PgConnection@186d11d0
+2026-05-02T23:35:30.096-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Start completed.
+2026-05-02T23:35:30.106-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:35:30.114-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:35:30.191-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:35:30.234-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:35:30.417-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T23:35:30.456-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 1293ba6a-1500-4a7c-bdc2-5c3e01eaa841
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T23:35:30.458-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T23:35:30.605-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T23:35:30.679-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T23:35:30.683-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 1.247 seconds (process running for 8910.343)
+2026-05-02T23:35:30.684-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-05-02T23:35:33.143-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 96 class path changes (0 additions, 0 deletions, 96 modifications)
+2026-05-02T23:35:33.145-03:00  INFO 13560 --- [      Thread-23] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T23:35:33.149-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T23:35:33.151-03:00  INFO 13560 --- [      Thread-23] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:35:33.151-03:00  INFO 13560 --- [      Thread-23] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Shutdown initiated...
+2026-05-02T23:35:33.153-03:00  INFO 13560 --- [      Thread-23] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:35:33.268-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:35:33.268-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:35:33.509-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:35:33.533-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 22 ms. Found 1 JPA repository interface.
+2026-05-02T23:35:33.650-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:35:33.651-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:35:33.652-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:35:33.667-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 397 ms
+2026-05-02T23:35:33.723-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:35:33.756-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:35:33.758-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-9 - Starting...
+2026-05-02T23:35:33.813-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-9 - Added connection org.postgresql.jdbc.PgConnection@25afd559
+2026-05-02T23:35:33.813-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-9 - Start completed.
+2026-05-02T23:35:33.821-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:35:33.829-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:35:33.900-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:35:33.943-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:35:34.123-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T23:35:34.159-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: d02ed88e-56a3-4ad6-a628-06ac9fc04d7e
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T23:35:34.159-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T23:35:34.305-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T23:35:34.371-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T23:35:34.375-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 1.128 seconds (process running for 8914.036)
+2026-05-02T23:35:34.377-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-05-02T23:36:52.799-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 74 class path changes (0 additions, 0 deletions, 74 modifications)
+2026-05-02T23:36:52.801-03:00  INFO 13560 --- [      Thread-30] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T23:36:52.804-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T23:36:52.806-03:00  INFO 13560 --- [      Thread-30] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:36:52.807-03:00  INFO 13560 --- [      Thread-30] com.zaxxer.hikari.HikariDataSource       : HikariPool-9 - Shutdown initiated...
+2026-05-02T23:36:52.809-03:00  INFO 13560 --- [      Thread-30] com.zaxxer.hikari.HikariDataSource       : HikariPool-9 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:36:52.926-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:36:52.927-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:36:52.957-03:00  WARN 13560 --- [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: I/O failure while processing configuration class [br.com.fiap.postech.adapter.input.controller.AuthenticationController]
+2026-05-02T23:36:52.961-03:00 ERROR 13560 --- [  restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanDefinitionStoreException: I/O failure while processing configuration class [br.com.fiap.postech.adapter.input.controller.AuthenticationController]
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:288) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:220) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:355) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:283) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:206) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:174) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:452) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:316) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:795) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:603) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:756) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:445) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1365) ~[spring-boot-4.0.5.jar:4.0.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-4.0.5.jar:4.0.5]
+	at br.com.fiap.postech.MechanicalWorkshopSystem.main(MechanicalWorkshopSystem.java:12) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:52) ~[spring-boot-devtools-4.0.5.jar:4.0.5]
+Caused by: java.io.FileNotFoundException: class path resource [br/com/fiap/postech/port/api/AuthenticationApi.class] cannot be opened because it does not exist
+	at org.springframework.core.io.ClassPathResource.getInputStream(ClassPathResource.java:212) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.core.type.classreading.SimpleMetadataReader.getClassReader(SimpleMetadataReader.java:54) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.core.type.classreading.SimpleMetadataReader.<init>(SimpleMetadataReader.java:48) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.core.type.classreading.SimpleMetadataReaderFactory.getMetadataReader(SimpleMetadataReaderFactory.java:62) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.core.type.classreading.CachingMetadataReaderFactory.getMetadataReader(CachingMetadataReaderFactory.java:127) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.core.type.classreading.AbstractMetadataReaderFactory.getMetadataReader(AbstractMetadataReaderFactory.java:62) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.core.type.classreading.CachingMetadataReaderFactory.getMetadataReader(CachingMetadataReaderFactory.java:40) ~[spring-core-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.asSourceClass(ConfigurationClassParser.java:728) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser$SourceClass.getInterfaces(ConfigurationClassParser.java:1074) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.collectImports(ConfigurationClassParser.java:566) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.getImports(ConfigurationClassParser.java:541) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass(ConfigurationClassParser.java:362) ~[spring-context-7.0.6.jar:7.0.6]
+	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:283) ~[spring-context-7.0.6.jar:7.0.6]
+	... 21 common frames omitted
+
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:36:54.894-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:36:54.894-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:36:55.131-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:36:55.152-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 1 JPA repository interface.
+2026-05-02T23:36:55.318-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:36:55.320-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:36:55.321-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:36:55.343-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 447 ms
+2026-05-02T23:36:55.431-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:36:55.486-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:36:55.488-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-10 - Starting...
+2026-05-02T23:36:55.545-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-10 - Added connection org.postgresql.jdbc.PgConnection@3142dec
+2026-05-02T23:36:55.546-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-10 - Start completed.
+2026-05-02T23:36:55.553-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:36:55.562-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:36:55.624-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:36:55.660-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:36:55.858-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T23:36:55.904-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 8aa76005-1492-4c7c-97ec-28644d41ffe6
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T23:36:55.905-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T23:36:56.073-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T23:36:56.183-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T23:36:56.187-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 1.31 seconds (process running for 8995.848)
+2026-05-02T23:36:56.188-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-05-02T23:36:58.481-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 96 class path changes (0 additions, 0 deletions, 96 modifications)
+2026-05-02T23:36:58.484-03:00  INFO 13560 --- [      Thread-34] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T23:36:58.487-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T23:36:58.489-03:00  INFO 13560 --- [      Thread-34] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:36:58.489-03:00  INFO 13560 --- [      Thread-34] com.zaxxer.hikari.HikariDataSource       : HikariPool-10 - Shutdown initiated...
+2026-05-02T23:36:58.491-03:00  INFO 13560 --- [      Thread-34] com.zaxxer.hikari.HikariDataSource       : HikariPool-10 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:36:58.599-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:36:58.599-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:36:58.858-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:36:58.885-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 24 ms. Found 1 JPA repository interface.
+2026-05-02T23:36:59.016-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:36:59.017-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:36:59.017-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:36:59.034-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 432 ms
+2026-05-02T23:36:59.092-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:36:59.126-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:36:59.126-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-11 - Starting...
+2026-05-02T23:36:59.181-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-11 - Added connection org.postgresql.jdbc.PgConnection@32ef0cb5
+2026-05-02T23:36:59.181-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-11 - Start completed.
+2026-05-02T23:36:59.190-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:36:59.198-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:36:59.285-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:36:59.319-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:36:59.496-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T23:36:59.533-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 53bd46ee-4cee-4530-8ae8-8b444629b0b0
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T23:36:59.534-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T23:36:59.674-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T23:36:59.726-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T23:36:59.729-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 1.149 seconds (process running for 8999.39)
+2026-05-02T23:36:59.731-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-05-02T23:37:25.610-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 96 class path changes (0 additions, 0 deletions, 96 modifications)
+2026-05-02T23:37:25.611-03:00  INFO 13560 --- [      Thread-40] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T23:37:25.615-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T23:37:25.616-03:00  INFO 13560 --- [      Thread-40] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:37:25.617-03:00  INFO 13560 --- [      Thread-40] com.zaxxer.hikari.HikariDataSource       : HikariPool-11 - Shutdown initiated...
+2026-05-02T23:37:25.620-03:00  INFO 13560 --- [      Thread-40] com.zaxxer.hikari.HikariDataSource       : HikariPool-11 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:37:25.709-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:37:25.710-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:37:26.056-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:37:26.092-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 1 JPA repository interface.
+2026-05-02T23:37:26.277-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:37:26.277-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:37:26.278-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:37:26.292-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 581 ms
+2026-05-02T23:37:26.337-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:37:26.362-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:37:26.363-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-12 - Starting...
+2026-05-02T23:37:26.414-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-12 - Added connection org.postgresql.jdbc.PgConnection@73038b15
+2026-05-02T23:37:26.414-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-12 - Start completed.
+2026-05-02T23:37:26.421-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:37:26.428-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:37:26.475-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:37:26.502-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:37:26.700-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T23:37:26.736-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: bccfd9dc-b676-4e9b-94b1-6b68b6953060
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T23:37:26.738-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T23:37:26.912-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T23:37:26.982-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T23:37:26.985-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 1.299 seconds (process running for 9026.645)
+2026-05-02T23:37:26.986-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-05-02T23:37:29.872-03:00  INFO 13560 --- [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 96 class path changes (0 additions, 0 deletions, 96 modifications)
+2026-05-02T23:37:29.874-03:00  INFO 13560 --- [      Thread-44] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-02T23:37:29.877-03:00  INFO 13560 --- [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-05-02T23:37:29.880-03:00  INFO 13560 --- [      Thread-44] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:37:29.881-03:00  INFO 13560 --- [      Thread-44] com.zaxxer.hikari.HikariDataSource       : HikariPool-12 - Shutdown initiated...
+2026-05-02T23:37:29.884-03:00  INFO 13560 --- [      Thread-44] com.zaxxer.hikari.HikariDataSource       : HikariPool-12 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.5)
+
+2026-05-02T23:37:29.997-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Starting MechanicalWorkshopSystem using Java 21.0.10 with PID 13560 (C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica\target\classes started by Gustavo Vieira in C:\Users\Gustavo Vieira\Documents\Github\sistema-oficina-mecanica)
+2026-05-02T23:37:29.998-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : No active profile set, falling back to 1 default profile: "default"
+2026-05-02T23:37:30.261-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-02T23:37:30.284-03:00  INFO 13560 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 22 ms. Found 1 JPA repository interface.
+2026-05-02T23:37:30.403-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-02T23:37:30.404-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-02T23:37:30.405-03:00  INFO 13560 --- [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-05-02T23:37:30.421-03:00  INFO 13560 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 421 ms
+2026-05-02T23:37:30.467-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-02T23:37:30.495-03:00  INFO 13560 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-02T23:37:30.496-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-13 - Starting...
+2026-05-02T23:37:30.546-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-13 - Added connection org.postgresql.jdbc.PgConnection@4f172536
+2026-05-02T23:37:30.547-03:00  INFO 13560 --- [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-13 - Start completed.
+2026-05-02T23:37:30.556-03:00  WARN 13560 --- [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-02T23:37:30.564-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/workshop]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: workshop/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-02T23:37:30.619-03:00  INFO 13560 --- [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-02T23:37:30.652-03:00  INFO 13560 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-02T23:37:30.828-03:00  WARN 13560 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-02T23:37:30.867-03:00  WARN 13560 --- [  restartedMain] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 1fe9244d-dfee-4ed1-85c5-3625eb0902bb
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-02T23:37:30.869-03:00  INFO 13560 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-02T23:37:31.024-03:00  WARN 13560 --- [  restartedMain] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2026-05-02T23:37:31.108-03:00  INFO 13560 --- [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-02T23:37:31.111-03:00  INFO 13560 --- [  restartedMain] b.c.f.postech.MechanicalWorkshopSystem   : Started MechanicalWorkshopSystem in 1.138 seconds (process running for 9030.771)
+2026-05-02T23:37:31.113-03:00  INFO 13560 --- [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged

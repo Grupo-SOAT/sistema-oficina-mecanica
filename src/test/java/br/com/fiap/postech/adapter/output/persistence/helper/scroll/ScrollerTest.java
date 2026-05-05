@@ -1,71 +1,166 @@
 package br.com.fiap.postech.adapter.output.persistence.helper.scroll;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class ScrollerTest {
-    @ParameterizedTest
-    @MethodSource("cursorCases")
-    void should_parse_cursor_and_create_pageable_with_extra_item(String cursor, long expectedCursor, int pageSize) {
-        AtomicLong receivedCursor = new AtomicLong(Long.MIN_VALUE);
-        AtomicReference<Pageable> receivedPageable = new AtomicReference<>();
 
-        Scroller.scroll(cursor, pageSize, (parsedCursor, pageable) -> {
-            receivedCursor.set(parsedCursor);
-            receivedPageable.set(pageable);
+    @Test
+    void should_use_zero_cursor_when_cursor_is_null() {
+        List<Long> captured = new ArrayList<>();
+
+        Scroller.scroll(null, 10, (cursor, pageable) -> {
+            captured.add(cursor);
             return List.of();
         });
 
-        assertThat(receivedCursor.get()).isEqualTo(expectedCursor);
-        assertThat(receivedPageable.get()).isNotNull();
-        assertThat(receivedPageable.get().getPageNumber()).isZero();
-        assertThat(receivedPageable.get().getPageSize()).isEqualTo(pageSize + 1);
+        assertThat(captured).containsExactly(0L);
     }
 
-    @ParameterizedTest
-    @MethodSource("scrollCases")
-    void should_build_scroll_page_for_multiple_data_shapes(
-            List<Integer> sourceData,
-            int pageSize,
-            int expectedDataSize,
-            boolean expectedIsLast,
-            String expectedCursor
-    ) {
-        ScrollPage<Integer> page = Scroller.scroll("0", pageSize, (parsedCursor, pageable) -> sourceData);
+    @Test
+    void should_use_zero_cursor_when_cursor_is_blank() {
+        List<Long> captured = new ArrayList<>();
 
-        assertThat(page.pageSize()).isEqualTo(pageSize);
-        assertThat(page.data()).hasSize(expectedDataSize);
-        assertThat(page.isLast()).isEqualTo(expectedIsLast);
-        assertThat(page.cursor()).isEqualTo(expectedCursor);
+        Scroller.scroll("   ", 10, (cursor, pageable) -> {
+            captured.add(cursor);
+            return List.of();
+        });
+
+        assertThat(captured).containsExactly(0L);
     }
 
-    static Stream<org.junit.jupiter.params.provider.Arguments> cursorCases() {
-        int pageSize = 5;
-        return Stream.of(
-                arguments(null, 0L, pageSize),
-                arguments("", 0L, pageSize),
-                arguments("   ", 0L, pageSize),
-                arguments("abc", 0L, pageSize),
-                arguments("10", 10L, pageSize)
-        );
+    @Test
+    void should_use_zero_cursor_when_cursor_is_empty_string() {
+        List<Long> captured = new ArrayList<>();
+
+        Scroller.scroll("", 10, (cursor, pageable) -> {
+            captured.add(cursor);
+            return List.of();
+        });
+
+        assertThat(captured).containsExactly(0L);
     }
 
-    static Stream<org.junit.jupiter.params.provider.Arguments> scrollCases() {
-        return Stream.of(
-                arguments(null, 2, 0, true, null),
-                arguments(List.of(), 2, 0, true, null),
-                arguments(List.of(1), 2, 1, true, null),
-                arguments(List.of(1, 2), 2, 2, true, null),
-                arguments(List.of(1, 2, 3), 2, 2, false, "2")
-        );
+    @Test
+    void should_parse_valid_numeric_cursor_string() {
+        List<Long> captured = new ArrayList<>();
+
+        Scroller.scroll("42", 10, (cursor, pageable) -> {
+            captured.add(cursor);
+            return List.of();
+        });
+
+        assertThat(captured).containsExactly(42L);
+    }
+
+    @Test
+    void should_use_zero_cursor_when_cursor_is_not_numeric() {
+        List<Long> captured = new ArrayList<>();
+
+        Scroller.scroll("not-a-number", 10, (cursor, pageable) -> {
+            captured.add(cursor);
+            return List.of();
+        });
+
+        assertThat(captured).containsExactly(0L);
+    }
+
+    @Test
+    void should_request_page_size_plus_one_to_detect_overflow() {
+        List<Integer> capturedSizes = new ArrayList<>();
+
+        Scroller.scroll(null, 10, (cursor, pageable) -> {
+            capturedSizes.add(pageable.getPageSize());
+            return List.of();
+        });
+
+        assertThat(capturedSizes).containsExactly(11);
+    }
+
+    @Test
+    void should_return_empty_page_when_query_returns_empty_list() {
+        ScrollPage<String> page = Scroller.scroll(null, 10, (cursor, pageable) -> List.of());
+
+        assertThat(page.data()).isEmpty();
+        assertThat(page.isLast()).isTrue();
+        assertThat(page.cursor()).isNull();
+        assertThat(page.pageSize()).isEqualTo(10);
+    }
+
+    @Test
+    void should_return_empty_page_when_query_returns_null() {
+        ScrollPage<String> page = Scroller.scroll(null, 10, (cursor, pageable) -> null);
+
+        assertThat(page.data()).isEmpty();
+        assertThat(page.isLast()).isTrue();
+        assertThat(page.cursor()).isNull();
+    }
+
+    @Test
+    void should_return_last_page_when_results_equal_page_size() {
+        ScrollPage<String> page = Scroller.scroll(null, 3, (cursor, pageable) ->
+                List.of("a", "b", "c"));
+
+        assertThat(page.data()).hasSize(3);
+        assertThat(page.isLast()).isTrue();
+        assertThat(page.cursor()).isNull();
+    }
+
+    @Test
+    void should_return_last_page_when_results_less_than_page_size() {
+        ScrollPage<String> page = Scroller.scroll(null, 5, (cursor, pageable) ->
+                List.of("a", "b"));
+
+        assertThat(page.data()).hasSize(2);
+        assertThat(page.isLast()).isTrue();
+        assertThat(page.cursor()).isNull();
+    }
+
+    @Test
+    void should_truncate_data_and_set_cursor_when_results_exceed_page_size() {
+        ScrollPage<String> page = Scroller.scroll(null, 3, (cursor, pageable) ->
+                List.of("a", "b", "c", "d"));
+
+        assertThat(page.data()).hasSize(3);
+        assertThat(page.isLast()).isFalse();
+        assertThat(page.cursor()).isEqualTo("c");
+    }
+
+    @Test
+    void should_set_cursor_from_last_item_of_current_page() {
+        ScrollPage<String> page = Scroller.scroll("0", 3, (cursor, pageable) ->
+                List.of("item-1", "item-2", "item-3", "item-4"));
+
+        assertThat(page.cursor()).isEqualTo("item-3");
+        assertThat(page.data()).containsExactly("item-1", "item-2", "item-3");
+    }
+
+    @Test
+    void should_pass_parsed_cursor_to_query_on_subsequent_pages() {
+        List<Long> captured = new ArrayList<>();
+
+        Scroller.scroll("7", 5, (cursor, pageable) -> {
+            captured.add(cursor);
+            return List.of();
+        });
+
+        assertThat(captured).containsExactly(7L);
+    }
+
+    @Test
+    void should_use_first_page_offset_in_pageable() {
+        List<Integer> capturedOffsets = new ArrayList<>();
+
+        Scroller.scroll(null, 10, (cursor, pageable) -> {
+            capturedOffsets.add(pageable.getPageNumber());
+            return List.of();
+        });
+
+        assertThat(capturedOffsets).containsExactly(0);
     }
 }
