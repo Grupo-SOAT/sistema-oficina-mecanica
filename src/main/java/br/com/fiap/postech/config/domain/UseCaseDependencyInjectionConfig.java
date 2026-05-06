@@ -7,7 +7,6 @@ import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.reporting.usecase.ServiceReportingUseCase;
 import br.com.fiap.postech.domain.reporting.usecase.impl.ServiceReportingUseCaseImpl;
 import br.com.fiap.postech.domain.service.usecase.ServiceUseCase;
-import br.com.fiap.postech.domain.serviceorder.usecase.ServiceOrderUseCase;
 import br.com.fiap.postech.domain.supply.usecase.SupplyUseCase;
 import br.com.fiap.postech.domain.user.UserUseCase;
 import br.com.fiap.postech.domain.vehicle.usecase.VehicleUseCase;
@@ -15,7 +14,6 @@ import br.com.fiap.postech.port.authentication.AuthenticationPort;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
 import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
-import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
 import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
 import br.com.fiap.postech.port.user.UserPort;
@@ -65,15 +63,6 @@ public class UseCaseDependencyInjectionConfig {
     @Bean
     public OwnerUseCase ownerUseCase(OwnerPersistencePort persistencePort) {
         return new OwnerUseCase(persistencePort);
-    }
-
-    @Bean
-    public ServiceOrderUseCase serviceOrderUseCase(
-            ServiceOrderPersistencePort serviceOrderPersistencePort,
-            OwnerPersistencePort ownerPersistencePort,
-            VehiclePersistencePort vehiclePersistencePort
-    ) {
-        return new ServiceOrderUseCase(serviceOrderPersistencePort, ownerPersistencePort, vehiclePersistencePort);
     }
 
     @Bean

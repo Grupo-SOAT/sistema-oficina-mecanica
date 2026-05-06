@@ -16,32 +16,7 @@
       "PowerShell(Get-Content *)",
       "PowerShell(Get-Process *)",
       "PowerShell(Wait-Job *)",
-      "Bash(mvn compile *)",
-      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Gustavo Vieira\\\\Documents\\\\Github\\\\sistema-oficina-mecanica\" -Force)",
-      "Bash(Select-Object Name, Mode)",
-      "Bash(Format-Table -AutoSize)",
-      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Gustavo Vieira\\\\Documents\\\\Github\\\\sistema-oficina-mecanica\\\\src\\\\main\\\\java\\\\br\\\\com\\\\fiap\\\\postech\" -Directory)",
-      "Bash(Select-Object Name)",
-      "Bash(docker --version)",
-      "Bash(docker compose *)",
-      "Bash(docker info *)",
-      "Bash(Start-Process \"C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker Desktop.exe\")",
-      "PowerShell(Start-Process \"C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker Desktop.exe\"; Write-Output \"Docker Desktop iniciado\")",
-      "PowerShell(docker info *)",
-      "PowerShell(Test-Path *)",
-      "PowerShell(wsl --update 2>&1)",
-      "PowerShell(Stop-Process *)",
-      "PowerShell(Get-ChildItem *)",
-      "PowerShell(wsl --status 2>&1; wsl --list --verbose 2>&1)",
-      "Bash(docker version *)",
-      "Bash(curl *)",
-      "Bash(grep -r \"INSERT INTO users\\\\|user_name\\\\|bcrypt\\\\|2a\\\\$10\\\\|admin\" \"C:\\\\Users\\\\Gustavo Vieira\\\\Documents\\\\Github\\\\sistema-oficina-mecanica\\\\src\\\\test\" --include=\"*.sql\" --include=\"*.feature\" -i)",
-      "Bash(docker exec workshop-db *)",
-      "Bash(grep -v \"^$\")",
-      "Bash(./mvnw test *)",
-      "Bash(./mvnw verify *)",
-      "Bash(docker exec *)",
-      "Bash(mvn clean *)"
+      "Bash(mvn compile *)"
     ]
   }
 }
