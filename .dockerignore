@@ -1,0 +1,9 @@
+target/
+.git/
+.github/
+*.log
+.claude/
+reports/
+docs/
+zap/
+scripts/

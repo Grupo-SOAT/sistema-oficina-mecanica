@@ -159,11 +159,26 @@ public class ServiceOrdersStepDefinitions extends FeatureStepSupport {
 
     @Quando("eu registrar a decisão do cliente sobre o orçamento da ordem de serviço")
     public void registerBudgetDecision() throws Exception {
-        String body = objectMapper.writeValueAsString(java.util.Map.of(
-                "decision", budgetDecision,
-                "comment", budgetComment,
-                "rejectedServiceIds", budgetRejectedServiceIds == null ? "" : budgetRejectedServiceIds
-        ));
+        if (context.getCurrentRole() == null || context.getCurrentRole().isBlank()) {
+            performLoginAs("admin");
+        }
+
+        java.util.List<Long> rejectedIds = new java.util.ArrayList<>();
+        if (budgetRejectedServiceIds != null && !budgetRejectedServiceIds.isBlank()) {
+            for (String part : budgetRejectedServiceIds.split(",")) {
+                String trimmed = part.trim();
+                if (!trimmed.isEmpty()) {
+                    rejectedIds.add(Long.parseLong(trimmed));
+                }
+            }
+        }
+
+        java.util.Map<String, Object> bodyMap = new java.util.LinkedHashMap<>();
+        bodyMap.put("decision", budgetDecision);
+        bodyMap.put("comment", budgetComment);
+        bodyMap.put("rejectedServiceIds", rejectedIds);
+
+        String body = objectMapper.writeValueAsString(bodyMap);
         executeRequest("POST", "/service-orders/" + serviceOrderId + "/budget", body, null);
     }
 

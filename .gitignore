@@ -36,4 +36,3 @@ start-local.bat
 app-err.log
 app.log
 .claude/settings.local.json
-application-local.properties
