@@ -1,0 +1,48 @@
+name: Util | Gerar hash das senhas para seed
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-hash:
+    name: Senhas BCRYPT
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq apache2-utils
+          
+      - name: Generate BCrypt hashes for passwords
+        run: |
+          HASH=$(htpasswd -bnBC 10 "" admin | tr -d ':\n')
+          echo "admin "
+          echo "$HASH"
+          HASH=$(htpasswd -bnBC 10 "" mecanico | tr -d ':\n')
+          echo "mecanico "
+          echo "$HASH"
+          HASH=$(htpasswd -bnBC 10 "" atendente | tr -d ':\n')
+          echo "atendente "
+          echo "$HASH"
+          HASH=$(htpasswd -bnBC 10 "" almorarife | tr -d ':\n')
+          echo "almoxarife: "
+          echo "$HASH"
+          HASH=$(htpasswd -bnBC 10 "" correta | tr -d ':\n')
+          echo "correta: "
+          echo "$HASH"
+          HASH=$(htpasswd -bnBC 10 "" 123 | tr -d ':\n')
+          echo "123: "
+          echo "$HASH"
+          
+          
