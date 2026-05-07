@@ -2,8 +2,8 @@ package br.com.fiap.postech.adapter.output.authentication;
 
 import br.com.fiap.postech.adapter.output.user.persistence.entity.UserEntity;
 import br.com.fiap.postech.adapter.output.user.persistence.repository.UserRepository;
-import br.com.fiap.postech.domain.authentication.exception.ChatBotApiKeyInvalidaException;
-import br.com.fiap.postech.domain.authentication.exception.SenhaInvalidaException;
+import br.com.fiap.postech.domain.authentication.exception.InvalidChatbotApiKeyException;
+import br.com.fiap.postech.domain.authentication.exception.InvalidPasswordException;
 import br.com.fiap.postech.domain.authentication.model.Authentication;
 import br.com.fiap.postech.domain.authentication.model.UserChangePassword;
 import br.com.fiap.postech.domain.authentication.model.UserLogin;
@@ -86,7 +86,7 @@ class AuthenticationAdapterTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(passwordEncoder.matches("wrong", "encoded")).thenReturn(false);
 
-        assertThrows(SenhaInvalidaException.class,
+        assertThrows(InvalidPasswordException.class,
                 () -> adapter.autenticar(user, login));
     }
 
@@ -117,7 +117,7 @@ class AuthenticationAdapterTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(entity));
         when(passwordEncoder.matches("wrong", "encoded")).thenReturn(false);
 
-        assertThrows(SenhaInvalidaException.class,
+        assertThrows(InvalidPasswordException.class,
                 () -> adapter.mudarSenha(change, user));
     }
 
@@ -135,7 +135,7 @@ class AuthenticationAdapterTest {
 
     @Test
     void shouldThrowWhenApiKeyInvalid() {
-        assertThrows(ChatBotApiKeyInvalidaException.class,
+        assertThrows(InvalidChatbotApiKeyException.class,
                 () -> adapter.autenticarChatBot("invalid-key"));
     }
 }

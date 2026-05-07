@@ -47,7 +47,7 @@ class UserAdapterTest {
     // =========================
     @Test
     void shouldReturnDefaultPassword() {
-        assertEquals("123", adapter.getSenhaDefault());
+        assertEquals("123", adapter.getDefaultPassword());
     }
 
     // =========================
@@ -60,7 +60,7 @@ class UserAdapterTest {
         when(userRepository.findByUsername("andre"))
                 .thenReturn(Optional.of(entity));
 
-        Optional<User> result = adapter.encontrarUsuarioPorUsername("andre");
+        Optional<User> result = adapter.findByUsername("andre");
 
         assertTrue(result.isPresent());
         assertEquals("andre", result.get().username());
@@ -71,7 +71,7 @@ class UserAdapterTest {
         when(userRepository.findByUsername("andre"))
                 .thenReturn(Optional.empty());
 
-        assertTrue(adapter.encontrarUsuarioPorUsername("andre").isEmpty());
+        assertTrue(adapter.findByUsername("andre").isEmpty());
     }
 
     // =========================
@@ -84,7 +84,7 @@ class UserAdapterTest {
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(entity));
 
-        Optional<User> result = adapter.encontrarUsuarioPorId(1L);
+        Optional<User> result = adapter.findById(1L);
 
         assertTrue(result.isPresent());
         assertEquals(1L, result.get().id());
@@ -105,7 +105,7 @@ class UserAdapterTest {
                     return e;
                 });
 
-        User result = adapter.criarUsuario(dto, "123");
+        User result = adapter.createUser(dto, "123");
 
         assertEquals("andre", result.username());
         assertEquals(List.of(Roles.ADMIN), result.roles());
@@ -119,7 +119,7 @@ class UserAdapterTest {
     // =========================
     @Test
     void shouldDeleteUser() {
-        adapter.deletarUsuario(1L);
+        adapter.deleteUser(1L);
 
         verify(userRepository).deleteById(1L);
     }
@@ -134,7 +134,7 @@ class UserAdapterTest {
         when(userRepository.updateUser(eq(1L), eq("andre"), any()))
                 .thenReturn(1);
 
-        int result = adapter.atualizarUsuario(1L, dto);
+        int result = adapter.updateUser(1L, dto);
 
         assertEquals(1, result);
         verify(userRepository).updateUser(eq(1L), eq("andre"), any());

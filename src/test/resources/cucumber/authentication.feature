@@ -12,7 +12,7 @@ Funcionalidade: Login no sistema
     Quando informo o usuário "<usuario>" e a senha "<senha>"
     Então devo receber uma resposta com status "200"
     E com um token de sessão válido
-    E devo ser capaz de obter meus dados de usuário com "role" igual a "<role>"
+    E devo ser capaz de obter meus dados de usuário com "roles" igual a "<role>"
     Exemplos:
       | usuario    | senha      | role        |
       | admin      | admin      | admin       |
@@ -26,9 +26,9 @@ Funcionalidade: Login no sistema
     Então devo receber um erro com status "400"
     E com a mensagem de erro igual a "<erro>"
     Exemplos:
-      | usuario  | senha    | erro             |
-      | inválido | válida   | INVALID_USERNAME |
-      | válido   | inválida | INVALID_PASSWORD |
+      | usuario     | senha    | erro               |
+      | inexistente | 123      | USERNAME_NOT_FOUND |
+      | admin       | inválida | INVALID_PASSWORD   |
 
 # === Autenticação do Chatbot via api-key ===
 
@@ -43,7 +43,7 @@ Funcionalidade: Login no sistema
     Dado que eu esteja deslogado
     Quando informo a chave de API "inválida"
     Então devo receber um erro com status "400"
-    E com a mensagem de erro igual a "INVALID_API_KEY"
+    E com a mensagem de erro igual a "INVALID_CHATBOT_API_KEY"
 
 # === Controle de Acesso por Role (Autorização) ===
 
@@ -58,21 +58,21 @@ Funcionalidade: Login no sistema
       | GET    | /users/:id                              |
       | PATCH  | /users/:id                              |
       | DELETE | /users/:id                              |
-      | GET    | /clients                                |
-      | POST   | /clients                                |
-      | GET    | /clients/:id                            |
-      | PATCH  | /clients/:id                            |
-      | DELETE | /clients/:id                            |
+      | GET    | /owners                                 |
+      | POST   | /owners                                 |
+      | GET    | /owners/:id                             |
+      | PATCH  | /owners/:id                             |
+      | DELETE | /owners/:id                             |
       | GET    | /vehicles                               |
       | POST   | /vehicles                               |
       | GET    | /vehicles/:id                           |
       | PATCH  | /vehicles/:id                           |
       | DELETE | /vehicles/:id                           |
-      | GET    | /services                               |
-      | POST   | /services                               |
-      | GET    | /services/:id                           |
-      | PATCH  | /services/:id                           |
-      | DELETE | /services/:id                           |
+      | GET    | /catalog/services                       |
+      | POST   | /catalog/services                       |
+      | GET    | /catalog/services/:id                   |
+      | PATCH  | /catalog/services/:id                   |
+      | DELETE | /catalog/services/:id                   |
       | GET    | /supplies                               |
       | POST   | /supplies                               |
       | GET    | /supplies/:id                           |
@@ -108,18 +108,21 @@ Funcionalidade: Login no sistema
     Exemplos:
       | method | endpoint                                |
       | GET    | /users                                  |
-      | GET    | /clients                                |
-      | GET    | /clients/:id                            |
+      | GET    | /users/:id                              |
+      | GET    | /owners                                 |
+      | GET    | /owners/:id                             |
       | GET    | /vehicles                               |
       | GET    | /vehicles/:id                           |
-      | GET    | /services                               |
-      | GET    | /services/:id                           |
+      | GET    | /catalog/services                       |
+      | GET    | /catalog/services/:id                   |
       | GET    | /supplies                               |
       | GET    | /supplies/:id                           |
       | GET    | /service-orders                         |
       | GET    | /service-orders/:id                     |
       | GET    | /service-orders/:id/services            |
       | GET    | /service-orders/:id/services/:serviceId |
+      | PATCH  | /service-orders/:id/services/:serviceId |
+      | DELETE | /service-orders/:id/services/:serviceId |
       | POST   | /service-orders/:id/services            |
       | POST   | /service-orders/:id/progress            |
 
@@ -128,65 +131,65 @@ Funcionalidade: Login no sistema
     Quando acesso o endpoint "<method>" "<endpoint>"
     Então devo receber uma resposta com status "403"
     Exemplos:
-      | method | endpoint                                |
-      | POST   | /users                                  |
-      | GET    | /users/:id                              |
-      | PATCH  | /users/:id                              |
-      | DELETE | /users/:id                              |
-      | POST   | /clients                                |
-      | PATCH  | /clients/:id                            |
-      | DELETE | /clients/:id                            |
-      | POST   | /vehicles                               |
-      | PATCH  | /vehicles/:id                           |
-      | DELETE | /vehicles/:id                           |
-      | POST   | /services                               |
-      | PATCH  | /services/:id                           |
-      | DELETE | /services/:id                           |
-      | POST   | /supplies                               |
-      | PATCH  | /supplies/:id                           |
-      | DELETE | /supplies/:id                           |
-      | POST   | /suppliers                              |
-      | GET    | /suppliers                              |
-      | PATCH  | /suppliers/:id                          |
-      | DELETE | /suppliers/:id                          |
-      | GET    | /purchase-orders                        |
-      | POST   | /purchase-orders                        |
-      | PATCH  | /purchase-orders/:id                    |
-      | DELETE | /purchase-orders/:id                    |
-      | POST   | /service-orders                         |
-      | PATCH  | /service-orders/:id                     |
-      | DELETE | /service-orders/:id                     |
-      | PATCH  | /service-orders/:id/services/:serviceId |
-      | DELETE | /service-orders/:id/services/:serviceId |
-      | POST   | /service-orders/:id/budget              |
+      | method | endpoint                   |
+      | POST   | /users                     |
+      | PATCH  | /users/:id                 |
+      | DELETE | /users/:id                 |
+      | POST   | /owners                    |
+      | PATCH  | /owners/:id                |
+      | DELETE | /owners/:id                |
+      | POST   | /vehicles                  |
+      | PATCH  | /vehicles/:id              |
+      | DELETE | /vehicles/:id              |
+      | POST   | /catalog/services          |
+      | PATCH  | /catalog/services/:id      |
+      | DELETE | /catalog/services/:id      |
+      | POST   | /supplies                  |
+      | PATCH  | /supplies/:id              |
+      | DELETE | /supplies/:id              |
+      | POST   | /suppliers                 |
+      | GET    | /suppliers                 |
+      | PATCH  | /suppliers/:id             |
+      | DELETE | /suppliers/:id             |
+      | GET    | /purchase-orders           |
+      | POST   | /purchase-orders           |
+      | PATCH  | /purchase-orders/:id       |
+      | DELETE | /purchase-orders/:id       |
+      | POST   | /service-orders            |
+      | PATCH  | /service-orders/:id        |
+      | DELETE | /service-orders/:id        |
+      | POST   | /service-orders/:id/budget |
 
   Esquema do Cenário: Atendente - Acesso permitido
     Dado que eu esteja logado como "atendente"
     Quando acesso o endpoint "<method>" "<endpoint>"
     Então devo receber uma resposta com status diferente de "403"
     Exemplos:
-      | method | endpoint                   |
-      | GET    | /users                     |
-      | GET    | /clients                   |
-      | POST   | /clients                   |
-      | GET    | /clients/:id               |
-      | PATCH  | /clients/:id               |
-      | DELETE | /clients/:id               |
-      | GET    | /vehicles                  |
-      | POST   | /vehicles                  |
-      | GET    | /vehicles/:id              |
-      | PATCH  | /vehicles/:id              |
-      | DELETE | /vehicles/:id              |
-      | GET    | /services                  |
-      | GET    | /services/:id              |
-      | GET    | /supplies                  |
-      | GET    | /supplies/:id              |
-      | GET    | /service-orders            |
-      | POST   | /service-orders            |
-      | GET    | /service-orders/:id        |
-      | POST   | /service-orders/:id/budget |
-      | GET    | /purchase-orders           |
-      | GET    | /purchase-orders/:id       |
+      | method | endpoint                                |
+      | GET    | /users                                  |
+      | GET    | /users/:id                              |
+      | GET    | /owners                                 |
+      | POST   | /owners                                 |
+      | GET    | /owners/:id                             |
+      | PATCH  | /owners/:id                             |
+      | DELETE | /owners/:id                             |
+      | GET    | /vehicles                               |
+      | POST   | /vehicles                               |
+      | GET    | /vehicles/:id                           |
+      | PATCH  | /vehicles/:id                           |
+      | DELETE | /vehicles/:id                           |
+      | GET    | /catalog/services                       |
+      | GET    | /catalog/services/:id                   |
+      | GET    | /supplies                               |
+      | GET    | /supplies/:id                           |
+      | GET    | /service-orders                         |
+      | POST   | /service-orders                         |
+      | GET    | /service-orders/:id                     |
+      | GET    | /service-orders/:id/services            |
+      | GET    | /service-orders/:id/services/:serviceId |
+      | POST   | /service-orders/:id/budget              |
+      | GET    | /purchase-orders                        |
+      | GET    | /purchase-orders/:id                    |
 
   Esquema do Cenário: Atendente - Acesso bloqueado
     Dado que eu esteja logado como "atendente"
@@ -195,12 +198,11 @@ Funcionalidade: Login no sistema
     Exemplos:
       | method | endpoint                                |
       | POST   | /users                                  |
-      | GET    | /users/:id                              |
       | PATCH  | /users/:id                              |
       | DELETE | /users/:id                              |
-      | POST   | /services                               |
-      | PATCH  | /services/:id                           |
-      | DELETE | /services/:id                           |
+      | POST   | /catalog/services                       |
+      | PATCH  | /catalog/services/:id                   |
+      | DELETE | /catalog/services/:id                   |
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |
@@ -210,9 +212,7 @@ Funcionalidade: Login no sistema
       | DELETE | /suppliers/:id                          |
       | PATCH  | /service-orders/:id                     |
       | DELETE | /service-orders/:id                     |
-      | GET    | /service-orders/:id/services            |
       | POST   | /service-orders/:id/services            |
-      | GET    | /service-orders/:id/services/:serviceId |
       | PATCH  | /service-orders/:id/services/:serviceId |
       | DELETE | /service-orders/:id/services/:serviceId |
       | POST   | /service-orders/:id/progress            |
@@ -226,18 +226,18 @@ Funcionalidade: Login no sistema
     Então devo receber uma resposta com status diferente de "403"
     Exemplos:
       | method | endpoint                   |
-      | GET    | /clients                   |
-      | POST   | /clients                   |
-      | GET    | /clients/:id               |
-      | PATCH  | /clients/:id               |
-      | DELETE | /clients/:id               |
+      | GET    | /owners                    |
+      | POST   | /owners                    |
+      | GET    | /owners/:id                |
+      | PATCH  | /owners/:id                |
+      | DELETE | /owners/:id                |
       | GET    | /vehicles                  |
       | POST   | /vehicles                  |
       | GET    | /vehicles/:id              |
       | PATCH  | /vehicles/:id              |
       | DELETE | /vehicles/:id              |
-      | GET    | /services                  |
-      | GET    | /services/:id              |
+      | GET    | /catalog/services          |
+      | GET    | /catalog/services/:id      |
       | GET    | /supplies                  |
       | GET    | /supplies/:id              |
       | GET    | /service-orders            |
@@ -258,9 +258,9 @@ Funcionalidade: Login no sistema
       | GET    | /users/:id                              |
       | PATCH  | /users/:id                              |
       | DELETE | /users/:id                              |
-      | POST   | /services                               |
-      | PATCH  | /services/:id                           |
-      | DELETE | /services/:id                           |
+      | POST   | /catalog/services                       |
+      | PATCH  | /catalog/services/:id                   |
+      | DELETE | /catalog/services/:id                   |
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |
@@ -287,6 +287,7 @@ Funcionalidade: Login no sistema
     Exemplos:
       | method | endpoint             |
       | GET    | /users               |
+      | GET    | /users/:id           |
       | GET    | /supplies            |
       | GET    | /supplies/:id        |
       | GET    | /suppliers           |
@@ -306,21 +307,20 @@ Funcionalidade: Login no sistema
     Exemplos:
       | method | endpoint                                |
       | POST   | /users                                  |
-      | GET    | /users/:id                              |
       | PATCH  | /users/:id                              |
       | DELETE | /users/:id                              |
-      | POST   | /clients                                |
-      | GET    | /clients                                |
-      | PATCH  | /clients/:id                            |
-      | DELETE | /clients/:id                            |
+      | POST   | /owners                                 |
+      | GET    | /owners                                 |
+      | PATCH  | /owners/:id                             |
+      | DELETE | /owners/:id                             |
       | POST   | /vehicles                               |
       | GET    | /vehicles                               |
       | PATCH  | /vehicles/:id                           |
       | DELETE | /vehicles/:id                           |
-      | POST   | /services                               |
-      | GET    | /services                               |
-      | PATCH  | /services/:id                           |
-      | DELETE | /services/:id                           |
+      | POST   | /catalog/services                       |
+      | GET    | /catalog/services                       |
+      | PATCH  | /catalog/services/:id                   |
+      | DELETE | /catalog/services/:id                   |
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |

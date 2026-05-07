@@ -39,7 +39,7 @@ public class ReportingStepDefinitions extends BaseStepDefinition {
 
     private void resetReportingData() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("db/reporting-seed.sql"));
+        populator.addScript(new ClassPathResource("db/seed/canonical-seed.sql"));
         populator.execute(dataSource);
     }
 

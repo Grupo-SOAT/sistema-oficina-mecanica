@@ -49,7 +49,7 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
 
     private void resetSuppliesData() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("db/supplies-seed.sql"));
+        populator.addScript(new ClassPathResource("db/seed/canonical-seed.sql"));
         populator.execute(dataSource);
     }
 

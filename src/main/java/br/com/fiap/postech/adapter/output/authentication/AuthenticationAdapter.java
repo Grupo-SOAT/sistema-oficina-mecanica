@@ -1,23 +1,8 @@
 package br.com.fiap.postech.adapter.output.authentication;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-
-import javax.crypto.SecretKey;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import br.com.fiap.postech.adapter.output.user.persistence.repository.UserRepository;
-import br.com.fiap.postech.domain.authentication.exception.ChatBotApiKeyInvalidaException;
-import br.com.fiap.postech.domain.authentication.exception.SenhaInvalidaException;
+import br.com.fiap.postech.domain.authentication.exception.InvalidChatbotApiKeyException;
+import br.com.fiap.postech.domain.authentication.exception.InvalidPasswordException;
 import br.com.fiap.postech.domain.authentication.model.Authentication;
 import br.com.fiap.postech.domain.authentication.model.UserChangePassword;
 import br.com.fiap.postech.domain.authentication.model.UserLogin;
@@ -26,6 +11,19 @@ import br.com.fiap.postech.port.authentication.AuthenticationPort;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +46,7 @@ public class AuthenticationAdapter implements AuthenticationPort {
         var usuario = userRepository.findById(user.id());
 
         if (!passwordEncoder.matches(userLogin.password(), usuario.get().getPassword())) {
-            throw new SenhaInvalidaException("senha invalida. tente novamente.");
+            throw new InvalidPasswordException();
         }
 
         Instant now = Instant.now();
@@ -82,18 +80,17 @@ public class AuthenticationAdapter implements AuthenticationPort {
         var usuario = userRepository.findById(user.id());
 
         if (!passwordEncoder.matches(userChangePassword.password(), usuario.get().getPassword())) {
-            throw new SenhaInvalidaException("senha invalida. tente novamente.");
+            throw new InvalidPasswordException();
         }
 
         usuario.get().setPassword(passwordEncoder.encode(userChangePassword.newPassword()));
-
     }
 
     @Override
     public Authentication autenticarChatBot(String apiKey) {
 
         if (!apiKey.equals(this.chatBotAuthKey)) {
-            throw new ChatBotApiKeyInvalidaException("API KEY chatbot inválida!! acesso negado.");
+            throw new InvalidChatbotApiKeyException();
         }
 
         Instant now = Instant.now();
@@ -108,10 +105,8 @@ public class AuthenticationAdapter implements AuthenticationPort {
                 .issuer("mechanic-workshop-system")
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiration))
-
                 .claim("roles", roles)
                 .claim("userId", "chatbot")
-
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
 

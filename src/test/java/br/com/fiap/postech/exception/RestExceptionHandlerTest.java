@@ -8,20 +8,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import br.com.fiap.postech.adapter.input.api.model.ErrorResponse;
+import br.com.fiap.postech.domain.authentication.exception.InvalidChatbotApiKeyException;
+import br.com.fiap.postech.domain.authentication.exception.InvalidPasswordException;
 import br.com.fiap.postech.domain.owner.exception.DuplicatedOwnerException;
 import br.com.fiap.postech.domain.owner.exception.InvalidDocumentException;
 import br.com.fiap.postech.domain.owner.exception.InvalidEmailException;
 import br.com.fiap.postech.domain.owner.exception.NoMatchingOwnersException;
 import br.com.fiap.postech.domain.owner.exception.OwnerNotFoundException;
-import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
 import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
 import br.com.fiap.postech.domain.user.exception.SameUsernameException;
+import br.com.fiap.postech.domain.user.exception.UserNotFoundException;
+import br.com.fiap.postech.domain.user.exception.UsernameNotFoundException;
 import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
 import br.com.fiap.postech.domain.vehicle.excecption.InvalidLicensePlateException;
 import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
 import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
 
-public class RestExceptionHandlerTest {
+class RestExceptionHandlerTest {
 
     private RestExceptionHandler handler;
 
@@ -32,138 +35,168 @@ public class RestExceptionHandlerTest {
 
     @Test
     void should_handle_same_username_exception() {
-        ResponseEntity<Object> response = handler.handleSameUsernameException(
-                new SameUsernameException("Username already exists")
+        ResponseEntity<ErrorResponse> response = handler.handleSameUsernameException(
+                new SameUsernameException()
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(body.getCode()).isEqualTo(400);
-        assertThat(body.getReason()).isEqualTo("USER_ALREADY_EXISTS");
-        assertThat(body.getMessage()).isEqualTo("Username already exists");
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getReason()).isEqualTo("USER_ALREADY_EXISTS");
+        assertThat(response.getBody().getMessage()).isEqualTo("Username already exists");
     }
 
     @Test
-    void should_handle_id_usuario_inexistente_exception() {
-        ResponseEntity<Object> response = handler.handleIdUsuarioInexistenteException(
-                new IdUsuarioInexistenteException("User id not found")
+    void should_handle_user_not_found_exception() {
+        ResponseEntity<ErrorResponse> response = handler.handleUserNotFoundException(
+                new UserNotFoundException()
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getCode()).isEqualTo(400);
-        assertThat(body.getReason()).isEqualTo("ID_NOT_FOUND");
-        assertThat(body.getMessage()).isEqualTo("User id not found");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getCode()).isEqualTo(404);
+        assertThat(response.getBody().getReason()).isEqualTo("USER_NOT_FOUND");
+        assertThat(response.getBody().getMessage()).isEqualTo("User not found");
     }
 
     @Test
     void should_handle_no_matching_users_exception() {
-        ResponseEntity<Object> response = handler.handleNoMatchingUsersException(
+        ResponseEntity<ErrorResponse> response = handler.handleNoMatchingUsersException(
                 new NoMatchingUsersException("john")
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("USERNAME_NOT_FOUND_PAGINATION");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getBody()).isNull();
     }
 
     @Test
     void should_handle_no_matching_vehicles_exception() {
-        ResponseEntity<Object> response = handler.handleNoMatchingVehiclesException(
+        ResponseEntity<ErrorResponse> response = handler.handleNoMatchingVehiclesException(
                 new NoMatchingVehiclesException("ABC1234")
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("VEHICLE_NOT_FOUND_PAGINATION");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getBody()).isNull();
     }
 
     @Test
     void should_handle_duplicated_vehicle_exception() {
-        ResponseEntity<Object> response = handler.handleDuplicatedVehicleException(
+        ResponseEntity<ErrorResponse> response = handler.handleDuplicatedVehicleException(
                 new DuplicatedVehicleException("ABC1234")
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("VEHICLE_ALREADY_EXISTS");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getReason()).isEqualTo("VEHICLE_ALREADY_EXISTS");
     }
 
     @Test
     void should_handle_vehicle_not_found_exception() {
-        ResponseEntity<Object> response = handler.handleVehicleNotFoundException(
+        ResponseEntity<ErrorResponse> response = handler.handleVehicleNotFoundException(
                 new VehicleNotFoundException(1L)
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("VEHICLE_NOT_FOUND");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getCode()).isEqualTo(404);
+        assertThat(response.getBody().getReason()).isEqualTo("VEHICLE_NOT_FOUND");
     }
 
     @Test
     void should_handle_no_matching_owners_exception() {
-        ResponseEntity<Object> response = handler.handleNoMatchingOwnersException(
+        ResponseEntity<ErrorResponse> response = handler.handleNoMatchingOwnersException(
                 new NoMatchingOwnersException("teste@email.com")
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("OWNER_NOT_FOUND_PAGINATION");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getBody()).isNull();
     }
 
     @Test
     void should_handle_duplicated_owner_exception() {
-        ResponseEntity<Object> response = handler.handleDuplicatedOwnerException(
+        ResponseEntity<ErrorResponse> response = handler.handleDuplicatedOwnerException(
                 new DuplicatedOwnerException("31058167049")
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("OWNER_ALREADY_EXISTS");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(response.getBody().getCode()).isEqualTo(409);
+        assertThat(response.getBody().getReason()).isEqualTo("OWNER_ALREADY_EXISTS");
     }
 
     @Test
     void should_handle_owner_not_found_exception() {
-        ResponseEntity<Object> response = handler.handleOwnerNotFoundException(
+        ResponseEntity<ErrorResponse> response = handler.handleOwnerNotFoundException(
                 new OwnerNotFoundException(1L)
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getCode()).isEqualTo(404);
+        assertThat(response.getBody().getReason()).isEqualTo("OWNER_NOT_FOUND");
+    }
 
-        assertThat(body.getReason()).isEqualTo("OWNER_NOT_FOUND");
+    @Test
+    void should_handle_username_not_found_exception() {
+        ResponseEntity<ErrorResponse> response = handler.handleUsernameNotFoundException(
+                new UsernameNotFoundException("teste")
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getReason()).isEqualTo("USERNAME_NOT_FOUND");
+        assertThat(response.getBody().getMessage()).isEqualTo("User not found by username: teste");
+    }
+
+    @Test
+    void should_handle_invalid_password_exception() {
+        ResponseEntity<ErrorResponse> response = handler.handleInvalidPasswordException(
+                new InvalidPasswordException()
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getReason()).isEqualTo("INVALID_PASSWORD");
+        assertThat(response.getBody().getMessage()).isEqualTo("Invalid password");
+    }
+
+    @Test
+    void should_handle_invalid_chatbot_api_key_exception() {
+        ResponseEntity<ErrorResponse> response = handler.handleInvalidChatbotApiKeyException(
+                new InvalidChatbotApiKeyException()
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getReason()).isEqualTo("INVALID_CHATBOT_API_KEY");
+        assertThat(response.getBody().getMessage()).isEqualTo("Invalid chatbot API key");
     }
 
     @Test
     void should_handle_invalid_document_exception() {
-        ResponseEntity<Object> response = handler.handleInvalidDocumentException(
+        ResponseEntity<ErrorResponse> response = handler.handleInvalidDocumentException(
                 new InvalidDocumentException("123")
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("DOCUMENT_INVALID");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getReason()).isEqualTo("INVALID_DOCUMENT");
     }
 
     @Test
     void should_handle_invalid_email_exception() {
-        ResponseEntity<Object> response = handler.handleInvalidEmailException(
+        ResponseEntity<ErrorResponse> response = handler.handleInvalidEmailException(
                 new InvalidEmailException("email-invalido")
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("EMAIL_INVALID");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getReason()).isEqualTo("INVALID_EMAIL");
     }
 
     @Test
     void should_handle_invalid_license_plate_exception() {
-        ResponseEntity<Object> response = handler.handleInvalidLicensePlateException(
+        ResponseEntity<ErrorResponse> response = handler.handleInvalidLicensePlateException(
                 new InvalidLicensePlateException("AAA000")
         );
 
-        ErrorResponse body = (ErrorResponse) response.getBody();
-
-        assertThat(body.getReason()).isEqualTo("LICENSE_PLATE_INVALID");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getCode()).isEqualTo(400);
+        assertThat(response.getBody().getReason()).isEqualTo("INVALID_LICENSE_PLATE");
     }
 }

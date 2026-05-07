@@ -31,26 +31,26 @@ public class UserAdapter implements UserPort {
     private String defaultPassword;
 
     @Override
-    public String getSenhaDefault() {
+    public String getDefaultPassword() {
         return this.defaultPassword;
     }
 
     @Override
-    public Optional<User> encontrarUsuarioPorUsername(String username) {
+    public Optional<User> findByUsername(String username) {
 
         return userRepository.findByUsername(username)
                 .map(this::toDomain);
     }
 
     @Override
-    public Optional<User> encontrarUsuarioPorId(Long id) {
+    public Optional<User> findById(Long id) {
 
         return userRepository.findById(id)
                 .map(this::toDomain);
     }
 
     @Override
-    public User criarUsuario(UserDTO userDTO, String defaultPassword) {
+    public User createUser(UserDTO userDTO, String defaultPassword) {
 
         var entity = new UserEntity();
 
@@ -64,13 +64,13 @@ public class UserAdapter implements UserPort {
     }
 
     @Override
-    public void deletarUsuario(Long id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
     @Override
     @Transactional
-    public int atualizarUsuario(Long id, UserDTO userDTO) {
+    public int updateUser(Long id, UserDTO userDTO) {
 
         return userRepository.updateUser(
                 id,

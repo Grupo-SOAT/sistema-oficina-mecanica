@@ -1,7 +1,7 @@
 package br.com.fiap.postech.domain.authentication;
 
 import br.com.fiap.postech.domain.authentication.model.*;
-import br.com.fiap.postech.domain.user.exception.UsuarioNaoEncontradoPorUsernameException;
+import br.com.fiap.postech.domain.user.exception.UsernameNotFoundException;
 import br.com.fiap.postech.domain.user.enums.Roles;
 import br.com.fiap.postech.domain.user.model.User;
 import br.com.fiap.postech.port.authentication.AuthenticationPort;
@@ -40,7 +40,7 @@ class AuthenticationUseCaseTest {
         User user = new User(1L, "andre", List.of(Roles.ADMIN));
         Authentication auth = new Authentication("token", OffsetDateTime.now());
 
-        when(userPort.encontrarUsuarioPorUsername("andre"))
+        when(userPort.findByUsername("andre"))
                 .thenReturn(Optional.of(user));
 
         when(authenticationPort.autenticar(user, login))
@@ -55,10 +55,10 @@ class AuthenticationUseCaseTest {
     void shouldThrowWhenUserNotFoundOnLogin() {
         UserLogin login = new UserLogin("andre", "123");
 
-        when(userPort.encontrarUsuarioPorUsername("andre"))
+        when(userPort.findByUsername("andre"))
                 .thenReturn(Optional.empty());
 
-        assertThrows(UsuarioNaoEncontradoPorUsernameException.class,
+        assertThrows(UsernameNotFoundException.class,
                 () -> useCase.gerarTokenParaUsuario(login));
     }
 
@@ -69,7 +69,7 @@ class AuthenticationUseCaseTest {
 
         User user = new User(1L, "andre", List.of(Roles.ADMIN));
 
-        when(userPort.encontrarUsuarioPorUsername("andre"))
+        when(userPort.findByUsername("andre"))
                 .thenReturn(Optional.of(user));
 
         useCase.mudarSenhaUsuario(change);
@@ -82,10 +82,10 @@ class AuthenticationUseCaseTest {
         UserChangePassword change =
                 new UserChangePassword("new", "andre", "old");
 
-        when(userPort.encontrarUsuarioPorUsername("andre"))
+        when(userPort.findByUsername("andre"))
                 .thenReturn(Optional.empty());
 
-        assertThrows(UsuarioNaoEncontradoPorUsernameException.class,
+        assertThrows(UsernameNotFoundException.class,
                 () -> useCase.mudarSenhaUsuario(change));
     }
 

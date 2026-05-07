@@ -5,15 +5,24 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.E;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.crypto.SecretKey;
+import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,9 +32,18 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
     @Autowired
     private WebApplicationContext webContext;
 
-    @Before
+    @Autowired
+    private DataSource dataSource;
+
+    @Value("${security.jwt.secret}")
+    private String jwtSecret;
+
+    @Before("@authentication")
     public void initialize() {
         context.reset();
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(new ClassPathResource("db/seed/canonical-seed.sql"));
+        populator.execute(dataSource);
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webContext)
                 .apply(springSecurity())
@@ -73,11 +91,25 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
 
     @E("devo ser capaz de obter meus dados de usuário com {string} igual a {string}")
     public void verifyUserRoleField(String field, String expectedValue) {
-        performGet("/auth/me", context.getAuthToken());
+        String token = context.getAuthToken();
+        assertNotNull(token, "Token ausente para consultar o usuário autenticado");
+
+        Long userId = extractUserIdFromToken(token);
+        performGet("/users/" + userId, token);
         assertEquals(200, context.getLastStatusCode(),
-            "GET /auth/me falhou. Body: " + context.getLastResponseBodyAsString());
-        String actual = extractJsonField(context.getLastResponseBody(), field);
-        assertNotNull(actual, "Campo '" + field + "' ausente. Body: " + context.getLastResponseBodyAsString());
+            "GET /users/{id} falhou. Body: " + context.getLastResponseBodyAsString());
+
+        JsonNode root = context.getLastResponseBody();
+        assertTrue(root.has(field), "Campo '" + field + "' ausente. Body: " + context.getLastResponseBodyAsString());
+
+        JsonNode actualNode = root.get(field);
+        if (actualNode.isArray()) {
+            assertTrue(arrayContainsValue(actualNode, expectedValue),
+                    "Array '" + field + "' não contém o valor esperado '" + expectedValue + "'. Body: " + context.getLastResponseBodyAsString());
+            return;
+        }
+
+        String actual = actualNode.isValueNode() ? actualNode.asText() : actualNode.toString();
         assertEquals(expectedValue.toUpperCase(), actual.toUpperCase(),
                 "Valor inesperado para '" + field + "'");
     }
@@ -178,5 +210,32 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
         assertNotEquals(Integer.parseInt(forbiddenStatus), context.getLastStatusCode(),
                 "Endpoint não deveria retornar " + forbiddenStatus
                         + ". Body: " + context.getLastResponseBodyAsString());
+    }
+
+    private Long extractUserIdFromToken(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        Object userId = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("userId");
+
+        assertNotNull(userId, "Claim userId ausente no token");
+        if (userId instanceof Number number) {
+            return number.longValue();
+        }
+
+        return Long.parseLong(userId.toString());
+    }
+
+    private boolean arrayContainsValue(JsonNode arrayNode, String expectedValue) {
+        for (JsonNode item : arrayNode) {
+            String actual = item.isValueNode() ? item.asText() : item.toString();
+            if (actual != null && actual.equalsIgnoreCase(expectedValue)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

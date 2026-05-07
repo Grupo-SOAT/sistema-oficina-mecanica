@@ -27,4 +27,3 @@ public interface Owner {
 
     void setEmail(String email);
 }
-    

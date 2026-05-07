@@ -34,12 +34,12 @@ class UserUseCaseTest {
     void shouldCreateUser() {
         UserDTO dto = new UserDTO("andre", List.of(Roles.ADMIN));
 
-        when(userPort.encontrarUsuarioPorUsername("andre")).thenReturn(Optional.empty());
-        when(userPort.getSenhaDefault()).thenReturn("123");
-        when(userPort.criarUsuario(dto, "123"))
+        when(userPort.findByUsername("andre")).thenReturn(Optional.empty());
+        when(userPort.getDefaultPassword()).thenReturn("123");
+        when(userPort.createUser(dto, "123"))
                 .thenReturn(new User(1L, "andre", List.of(Roles.ADMIN)));
 
-        User result = useCase.criarUsuario(dto);
+        User result = useCase.createUser(dto);
 
         assertEquals("andre", result.username());
     }
@@ -48,46 +48,46 @@ class UserUseCaseTest {
     void shouldThrowWhenUsernameExists() {
         UserDTO dto = new UserDTO("andre", List.of(Roles.ADMIN));
 
-        when(userPort.encontrarUsuarioPorUsername("andre"))
+        when(userPort.findByUsername("andre"))
                 .thenReturn(Optional.of(mock(User.class)));
 
         assertThrows(SameUsernameException.class,
-                () -> useCase.criarUsuario(dto));
+                () -> useCase.createUser(dto));
     }
 
     @Test
     void shouldDeleteUser() {
-        when(userPort.encontrarUsuarioPorId(1L))
+        when(userPort.findById(1L))
                 .thenReturn(Optional.of(mock(User.class)));
 
-        useCase.deletarUsuario(1L);
+        useCase.deleteUser(1L);
 
-        verify(userPort).deletarUsuario(1L);
+        verify(userPort).deleteUser(1L);
     }
 
     @Test
     void shouldThrowWhenDeleteUserNotFound() {
-        when(userPort.encontrarUsuarioPorId(1L)).thenReturn(Optional.empty());
+        when(userPort.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(IdUsuarioInexistenteException.class,
-                () -> useCase.deletarUsuario(1L));
+        assertThrows(UserNotFoundException.class,
+                () -> useCase.deleteUser(1L));
     }
 
     @Test
     void shouldGetUserById() {
         User user = new User(1L, "andre", List.of(Roles.ADMIN));
 
-        when(userPort.encontrarUsuarioPorId(1L)).thenReturn(Optional.of(user));
+        when(userPort.findById(1L)).thenReturn(Optional.of(user));
 
-        assertEquals(user, useCase.obterUsuarioPorId(1L));
+        assertEquals(user, useCase.getUserById(1L));
     }
 
     @Test
     void shouldThrowWhenUserNotFound() {
-        when(userPort.encontrarUsuarioPorId(1L)).thenReturn(Optional.empty());
+        when(userPort.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(IdUsuarioInexistenteException.class,
-                () -> useCase.obterUsuarioPorId(1L));
+        assertThrows(UserNotFoundException.class,
+                () -> useCase.getUserById(1L));
     }
 
     @Test
@@ -95,11 +95,11 @@ class UserUseCaseTest {
         UserDTO dto = new UserDTO("andre", List.of(Roles.ADMIN));
         User user = new User(1L, "andre", List.of(Roles.ADMIN));
 
-        when(userPort.encontrarUsuarioPorId(1L)).thenReturn(Optional.of(user));
-        when(userPort.atualizarUsuario(1L, dto)).thenReturn(1);
-        when(userPort.encontrarUsuarioPorId(1L)).thenReturn(Optional.of(user));
+        when(userPort.findById(1L)).thenReturn(Optional.of(user));
+        when(userPort.updateUser(1L, dto)).thenReturn(1);
+        when(userPort.findById(1L)).thenReturn(Optional.of(user));
 
-        User result = useCase.atualizarUsuarioPorId(1L, dto);
+        User result = useCase.updateUser(1L, dto);
 
         assertEquals(user, result);
     }
@@ -108,12 +108,12 @@ class UserUseCaseTest {
     void shouldThrowWhenUpdateFails() {
         UserDTO dto = new UserDTO("andre", List.of(Roles.ADMIN));
 
-        when(userPort.encontrarUsuarioPorId(1L))
+        when(userPort.findById(1L))
                 .thenReturn(Optional.of(mock(User.class)));
-        when(userPort.atualizarUsuario(1L, dto)).thenReturn(0);
+        when(userPort.updateUser(1L, dto)).thenReturn(0);
 
-        assertThrows(IdUsuarioInexistenteException.class,
-                () -> useCase.atualizarUsuarioPorId(1L, dto));
+        assertThrows(UserNotFoundException.class,
+                () -> useCase.updateUser(1L, dto));
     }
 
     @Test
@@ -139,10 +139,10 @@ class UserUseCaseTest {
 
     @Test
     void shouldResetPassword() {
-        when(userPort.encontrarUsuarioPorId(1L))
+        when(userPort.findById(1L))
                 .thenReturn(Optional.of(mock(User.class)));
 
-        useCase.resetarSenhaUsuario(1L);
+        useCase.resetUserPassoword(1L);
 
         verify(userPort).resetarSenhaUsuario(1L);
     }

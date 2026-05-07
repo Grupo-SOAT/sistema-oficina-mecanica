@@ -17,7 +17,7 @@ public class RolePermissions {
             // =========================
             Map.entry("GET_/users", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_STOREKEEPER")),
             Map.entry("POST_/users", List.of("ROLE_ADMIN")),
-            Map.entry("GET_/users/:id", List.of("ROLE_ADMIN")),
+            Map.entry("GET_/users/:id", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_STOREKEEPER")),
             Map.entry("PATCH_/users/:id", List.of("ROLE_ADMIN")),
             Map.entry("DELETE_/users/:id", List.of("ROLE_ADMIN")),
 
@@ -42,11 +42,11 @@ public class RolePermissions {
             // =========================
             // SERVICES
             // =========================
-            Map.entry("GET_/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
-            Map.entry("POST_/services", List.of("ROLE_ADMIN")),
-            Map.entry("GET_/services/:id", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
-            Map.entry("PATCH_/services/:id", List.of("ROLE_ADMIN")),
-            Map.entry("DELETE_/services/:id", List.of("ROLE_ADMIN")),
+            Map.entry("GET_/catalog/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("POST_/catalog/services", List.of("ROLE_ADMIN")),
+            Map.entry("GET_/catalog/services/:id", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("PATCH_/catalog/services/:id", List.of("ROLE_ADMIN")),
+            Map.entry("DELETE_/catalog/services/:id", List.of("ROLE_ADMIN")),
 
             // =========================
             // SUPPLIES
@@ -93,11 +93,11 @@ public class RolePermissions {
             // =========================
             // SERVICE ORDER - SERVICES
             // =========================
-            Map.entry("GET_/service-orders/:id/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
+            Map.entry("GET_/service-orders/:id/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT")),
             Map.entry("POST_/service-orders/:id/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
-            Map.entry("GET_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
-            Map.entry("PATCH_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN")),
-            Map.entry("DELETE_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN")),
+            Map.entry("GET_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT")),
+            Map.entry("PATCH_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
+            Map.entry("DELETE_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
 
             // =========================
             // SERVICE ORDER - PROGRESS / BUDGET

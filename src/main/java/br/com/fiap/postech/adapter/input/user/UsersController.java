@@ -28,7 +28,7 @@ public class UsersController implements UsersApi {
         var userDomainDTO = new UserDTO(request.getUsername(), 
         mapper.toDomain(request.getRoles()));
 
-        var domainResponse = userUseCase.criarUsuario(userDomainDTO);
+        var domainResponse = userUseCase.createUser(userDomainDTO);
 
         System.out.println("usuário criado: " + domainResponse);
 
@@ -42,7 +42,7 @@ public class UsersController implements UsersApi {
 
         System.out.println("Request recebida: deletar usuario. ");
 
-        userUseCase.deletarUsuario(id);
+        userUseCase.deleteUser(id);
 
         System.out.println("usuário deletado com sucesso.");
 
@@ -54,7 +54,7 @@ public class UsersController implements UsersApi {
 
         System.out.println("Request recebida para obter usuário. id: " + id);
 
-        var domainResponse = userUseCase.obterUsuarioPorId(id);
+        var domainResponse = userUseCase.getUserById(id);
 
         var clientResponse = mapper.toClientResponse(domainResponse);
 
@@ -86,7 +86,7 @@ public class UsersController implements UsersApi {
 
         System.out.println("Request para resetar a senha do usuario recebida. id: " + id);
 
-        userUseCase.resetarSenhaUsuario(id);
+        userUseCase.resetUserPassoword(id);
 
         var response = new OneTimePassword("[message]: senha resetada com sucesso. O usuário com id " +
             id + " está utilizando a senha default do sistema."
@@ -102,7 +102,7 @@ public class UsersController implements UsersApi {
 
         var userDTO = new UserDTO(userData.getUsername(), mapper.toDomain(userData.getRoles()));
 
-        var domainResponse = userUseCase.atualizarUsuarioPorId(id, userDTO);
+        var domainResponse = userUseCase.updateUser(id, userDTO);
         
         System.out.println("usuario atualizado com sucesso: " + domainResponse);
 

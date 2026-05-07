@@ -1,9 +1,9 @@
 package br.com.fiap.postech.domain.user;
 
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
-import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
 import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
 import br.com.fiap.postech.domain.user.exception.SameUsernameException;
+import br.com.fiap.postech.domain.user.exception.UserNotFoundException;
 import br.com.fiap.postech.domain.user.model.User;
 import br.com.fiap.postech.domain.user.model.UserDTO;
 import br.com.fiap.postech.port.user.UserPort;
@@ -16,55 +16,44 @@ public class UserUseCase {
         this.userPort = userPort;
     }
 
-    public User criarUsuario(UserDTO userDTO){
-
-        if (userPort.encontrarUsuarioPorUsername(userDTO.username()).isPresent()) {
-            throw new SameUsernameException("Já existe um usuário com esse nome.");
+    public User createUser(UserDTO userDTO){
+        if (userPort.findByUsername(userDTO.username()).isPresent()) {
+            throw new SameUsernameException();
         }
 
-        String senhaDefault = userPort.getSenhaDefault();
+        String senhaDefault = userPort.getDefaultPassword();
 
-        return userPort.criarUsuario(userDTO, senhaDefault);
+        return userPort.createUser(userDTO, senhaDefault);
     }
 
-    public void deletarUsuario(Long id){
+    public void deleteUser(Long id){
+        userPort.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
 
-        userPort.encontrarUsuarioPorId(id)
-            .orElseThrow(() -> 
-                new IdUsuarioInexistenteException("Não existe nenhum usuário com o id selecionado.")
-            );
-
-        userPort.deletarUsuario(id);
+        userPort.deleteUser(id);
     }
 
-    public User obterUsuarioPorId(Long id){
-
-        return userPort.encontrarUsuarioPorId(id)
-            .orElseThrow(() -> 
-                new IdUsuarioInexistenteException("Não existe nenhum usuário com o id selecionado.")
-            );
+    public User getUserById(Long id){
+        return userPort.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public User atualizarUsuarioPorId(Long id, UserDTO userDTO){
+    public User updateUser(Long id, UserDTO userDTO){
+        userPort.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
 
-        userPort.encontrarUsuarioPorId(id)
-            .orElseThrow(() -> 
-                new IdUsuarioInexistenteException("Não existe nenhum usuário com o id selecionado.")
-            );
-
-        int updated = userPort.atualizarUsuario(id, userDTO);
+        int updated = userPort.updateUser(id, userDTO);
 
         if (updated == 0) {
-            throw new IdUsuarioInexistenteException("Não foi possível atualizar o usuário.");
+            throw new UserNotFoundException(id);
         }
 
-        return userPort.encontrarUsuarioPorId(id)
-            .orElseThrow(); 
+        return userPort.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public ScrollPage<User> scroll(String username, Integer size, String cursor) {
-        
-        final var result = userPort.scroll( username, size, cursor);
+        final var result = userPort.scroll(username, size, cursor);
 
         if (result.data().isEmpty()) {
             throw new NoMatchingUsersException(username);
@@ -73,16 +62,10 @@ public class UserUseCase {
         return result;
     }
 
-    public void resetarSenhaUsuario(Long id){
+    public void resetUserPassoword(Long id){
+        userPort.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
 
-        userPort.encontrarUsuarioPorId(id)
-            .orElseThrow(() -> 
-                new IdUsuarioInexistenteException("Não existe nenhum usuário com o id selecionado.")
-            );
-        
         userPort.resetarSenhaUsuario(id);
-
     }
-
-
 }
