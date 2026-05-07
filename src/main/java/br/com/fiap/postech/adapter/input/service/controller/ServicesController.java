@@ -6,9 +6,12 @@ import br.com.fiap.postech.adapter.input.api.model.ServiceData;
 import br.com.fiap.postech.adapter.input.api.model.ServiceRequest;
 import br.com.fiap.postech.adapter.input.api.model.ServiceStatus;
 import br.com.fiap.postech.adapter.input.service.mapper.ServiceMapper;
+import br.com.fiap.postech.domain.catalogservices.exception.CatalogServiceNotFoundException;
 import br.com.fiap.postech.domain.service.exception.NoMatchingServicesException;
+import br.com.fiap.postech.domain.service.exception.NegativeSupplyQuantityException;
 import br.com.fiap.postech.domain.service.exception.ServiceNotFoundException;
 import br.com.fiap.postech.domain.service.usecase.ServiceUseCase;
+import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException;
 import br.com.fiap.postech.port.api.ServicesApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,8 +29,7 @@ public class ServicesController implements ServicesApi {
     public ResponseEntity<PaginatedServiceResponse> listServices(
             Long id, Long serviceId, String name, ServiceStatus status, Integer pageSize, String cursor
     ) {
-        String statusValue = status != null ? status.getValue() : null;
-        final var pageResult = serviceUseCase.scroll(id, serviceId, statusValue, pageSize, cursor);
+        final var pageResult = serviceUseCase.scroll(id, serviceId, name, pageSize, cursor);
         final var responseBody = ServiceMapper.toPaginatedResponse(pageResult);
         return ResponseEntity.ok(responseBody);
     }
@@ -69,6 +71,34 @@ public class ServicesController implements ServicesApi {
     @ExceptionHandler(ServiceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(ServiceNotFoundException exception) {
         final var httpStatus = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(ServiceOrderNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleServiceOrderNotFound(ServiceOrderNotFoundException exception) {
+        final var httpStatus = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(CatalogServiceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCatalogServiceNotFound(CatalogServiceNotFoundException exception) {
+        final var httpStatus = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(ServiceUseCase.InvalidServiceException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidService(ServiceUseCase.InvalidServiceException exception) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(NegativeSupplyQuantityException.class)
+    public ResponseEntity<ErrorResponse> handleNegativeSupplyQuantity(NegativeSupplyQuantityException exception) {
+        final var httpStatus = HttpStatus.CONFLICT;
         return ResponseEntity.status(httpStatus)
                 .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
     }

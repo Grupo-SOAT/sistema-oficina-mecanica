@@ -6,7 +6,7 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 
-public class UsersStepDefinitions extends FeatureStepSupport {
+public class UsersStepDefinitions extends BaseStepDefinition {
     private Long userId;
 
     @Before

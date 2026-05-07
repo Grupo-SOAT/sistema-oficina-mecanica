@@ -1,12 +1,15 @@
 package br.com.fiap.postech.it.cucumber.steps;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 
-public class ServiceOrdersStepDefinitions extends FeatureStepSupport {
+public class ServiceOrdersStepDefinitions extends BaseStepDefinition {
     private Long serviceOrderId;
     private Long serviceId;
     private String budgetDecision;
@@ -15,12 +18,22 @@ public class ServiceOrdersStepDefinitions extends FeatureStepSupport {
 
     @Before
     public void initialize() {
-        initializeFeature("service-orders", "services", "supplies");
+        initializeFeature();
+        runCanonicalSeed();
+        runDomainSeed("service-orders");
+
         serviceOrderId = null;
         serviceId = null;
         budgetDecision = null;
         budgetComment = null;
         budgetRejectedServiceIds = null;
+    }
+
+    private void runCanonicalSeed() {
+        org.springframework.jdbc.datasource.init.ResourceDatabasePopulator populator =
+                new org.springframework.jdbc.datasource.init.ResourceDatabasePopulator();
+        populator.addScript(new org.springframework.core.io.ClassPathResource("db/seed/canonical-seed.sql"));
+        populator.execute(dataSource);
     }
 
     @Dado("que o filtro status seja {string}")
@@ -65,16 +78,28 @@ public class ServiceOrdersStepDefinitions extends FeatureStepSupport {
     @Dado("que o corpo de atualização da ordem de serviço seja:")
     public void setUpdateOrderBody(DataTable table) throws Exception {
         setJsonBody(table);
+        JsonNode root = objectMapper.readTree(context.getRequestBody());
+        if (root instanceof ObjectNode objectNode) {
+            objectNode.fields().forEachRemaining(entry -> {
+                JsonNode value = entry.getValue();
+                if (value != null && value.isTextual() && value.asText().matches("^<.*>$")) {
+                    objectNode.putNull(entry.getKey());
+                }
+            });
+            context.setRequestBody(objectMapper.writeValueAsString(objectNode));
+        }
     }
 
     @Dado("que o corpo do novo serviço da ordem de serviço seja:")
     public void setCreateServiceBody(DataTable table) throws Exception {
         setJsonBody(table);
+        context.setRequestBody(normalizeNeededSupplies(context.getRequestBody()));
     }
 
     @Dado("que o corpo de atualização do serviço da ordem de serviço seja:")
     public void setUpdateServiceBody(DataTable table) throws Exception {
         setJsonBody(table);
+        context.setRequestBody(normalizeNeededSupplies(context.getRequestBody()));
     }
 
     @Dado("que o corpo da ação de progresso da ordem de serviço seja:")
@@ -100,6 +125,7 @@ public class ServiceOrdersStepDefinitions extends FeatureStepSupport {
     @Dado("que o orçamento da ordem de serviço de ID {string} foi enviado ao cliente")
     public void setBudgetServiceOrderId(String value) {
         serviceOrderId = Long.parseLong(value);
+        performLoginAs("admin");
     }
 
     @Quando("eu listar as ordens de serviço")
@@ -159,10 +185,20 @@ public class ServiceOrdersStepDefinitions extends FeatureStepSupport {
 
     @Quando("eu registrar a decisão do cliente sobre o orçamento da ordem de serviço")
     public void registerBudgetDecision() throws Exception {
+        java.util.List<Long> rejectedIds = new java.util.ArrayList<>();
+        if (budgetRejectedServiceIds != null && !budgetRejectedServiceIds.isBlank()) {
+            for (String part : budgetRejectedServiceIds.split(",")) {
+                String trimmed = part.trim();
+                if (!trimmed.isEmpty()) {
+                    rejectedIds.add(Long.parseLong(trimmed));
+                }
+            }
+        }
+
         String body = objectMapper.writeValueAsString(java.util.Map.of(
                 "decision", budgetDecision,
                 "comment", budgetComment,
-                "rejectedServiceIds", budgetRejectedServiceIds == null ? "" : budgetRejectedServiceIds
+                "rejectedServiceIds", rejectedIds
         ));
         executeRequest("POST", "/service-orders/" + serviceOrderId + "/budget", body, null);
     }
@@ -185,5 +221,44 @@ public class ServiceOrdersStepDefinitions extends FeatureStepSupport {
     @Então("a resposta deve conter ao menos um serviço da ordem de serviço com name {string}")
     public void verifyServiceName(String expectedName) throws Exception {
         assertHasItemWithField("name", expectedName, "serviço da ordem de serviço");
+    }
+
+    private String normalizeNeededSupplies(String body) throws Exception {
+        JsonNode root = objectMapper.readTree(body);
+        if (!(root instanceof ObjectNode objectNode) || !objectNode.has("neededSupplies")) {
+            return body;
+        }
+
+        JsonNode neededSuppliesNode = objectNode.get("neededSupplies");
+        if (!neededSuppliesNode.isTextual()) {
+            return body;
+        }
+
+        String raw = neededSuppliesNode.asText().trim();
+        ArrayNode neededSupplies = objectMapper.createArrayNode();
+        if (!raw.isBlank() && !raw.equals(",")) {
+            ObjectNode item = objectMapper.createObjectNode();
+            for (String part : raw.split(",")) {
+                String[] kv = part.split("=", 2);
+                if (kv.length != 2) {
+                    continue;
+                }
+                String key = kv[0].trim();
+                String value = kv[1].trim();
+                switch (key) {
+                    case "sku", "idSupply" -> item.put("idSupply", Long.parseLong(value.replace("SKU-", "")));
+                    case "quantity" -> item.put("quantity", Integer.parseInt(value));
+                    case "note" -> item.put("note", value);
+                    default -> {
+                    }
+                }
+            }
+            if (!item.isEmpty()) {
+                neededSupplies.add(item);
+            }
+        }
+
+        objectNode.set("neededSupplies", neededSupplies);
+        return objectMapper.writeValueAsString(objectNode);
     }
 }

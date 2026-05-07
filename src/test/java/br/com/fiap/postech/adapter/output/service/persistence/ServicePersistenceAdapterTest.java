@@ -75,26 +75,26 @@ class ServicePersistenceAdapterTest {
     }
 
     @Test
-    void should_scroll_by_status_when_filter_provided() {
-        ServiceEntity entity = ServiceEntity.builder().id(1L).serviceOrderId(10L).status("IN_PROGRESS").build();
-        when(repository.findByServiceOrderIdAndStatus(eq(10L), eq("IN_PROGRESS"), anyLong(), any(Pageable.class)))
+    void should_scroll_by_name_when_filter_provided() {
+        ServiceEntity entity = ServiceEntity.builder().id(1L).serviceOrderId(10L).build();
+        when(repository.findByServiceOrderIdAndName(eq(10L), eq("troca"), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(entity));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, "IN_PROGRESS", 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, null, "troca", 10, null);
 
-        verify(repository).findByServiceOrderIdAndStatus(eq(10L), eq("IN_PROGRESS"), anyLong(), any(Pageable.class));
+        verify(repository).findByServiceOrderIdAndName(eq(10L), eq("troca"), anyLong(), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
     }
 
     @Test
-    void should_scroll_by_service_id_and_status_when_both_filters_provided() {
-        ServiceEntity entity = ServiceEntity.builder().id(5L).serviceOrderId(10L).status("COMPLETED").build();
-        when(repository.findByServiceOrderIdAndServiceIdAndStatus(eq(10L), eq(5L), eq("COMPLETED"), anyLong(), any(Pageable.class)))
+    void should_scroll_by_service_id_and_name_when_both_filters_provided() {
+        ServiceEntity entity = ServiceEntity.builder().id(5L).serviceOrderId(10L).build();
+        when(repository.findByServiceOrderIdAndServiceIdAndName(eq(10L), eq(5L), eq("troca"), anyLong(), any(Pageable.class)))
                 .thenReturn(List.of(entity));
 
-        ScrollPage<Service> page = adapter.scroll(10L, 5L, "COMPLETED", 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, 5L, "troca", 10, null);
 
-        verify(repository).findByServiceOrderIdAndServiceIdAndStatus(eq(10L), eq(5L), eq("COMPLETED"), anyLong(), any(Pageable.class));
+        verify(repository).findByServiceOrderIdAndServiceIdAndName(eq(10L), eq(5L), eq("troca"), anyLong(), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
     }
 

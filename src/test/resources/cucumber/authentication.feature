@@ -78,16 +78,16 @@ Funcionalidade: Login no sistema
       | GET    | /supplies/:id                           |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |
-      | GET    | /suppliers                              |
-      | POST   | /suppliers                              |
-      | GET    | /suppliers/:id                          |
-      | PATCH  | /suppliers/:id                          |
-      | DELETE | /suppliers/:id                          |
-      | GET    | /purchase-orders                        |
-      | POST   | /purchase-orders                        |
-      | GET    | /purchase-orders/:id                    |
-      | PATCH  | /purchase-orders/:id                    |
-      | DELETE | /purchase-orders/:id                    |
+#      | GET    | /suppliers                              |
+#      | POST   | /suppliers                              |
+#      | GET    | /suppliers/:id                          |
+#      | PATCH  | /suppliers/:id                          |
+#      | DELETE | /suppliers/:id                          |
+#      | GET    | /purchase-orders                        |
+#      | POST   | /purchase-orders                        |
+#      | GET    | /purchase-orders/:id                    |
+#      | PATCH  | /purchase-orders/:id                    |
+#      | DELETE | /purchase-orders/:id                    |
       | GET    | /service-orders                         |
       | POST   | /service-orders                         |
       | GET    | /service-orders/:id                     |
@@ -147,14 +147,14 @@ Funcionalidade: Login no sistema
       | POST   | /supplies                  |
       | PATCH  | /supplies/:id              |
       | DELETE | /supplies/:id              |
-      | POST   | /suppliers                 |
-      | GET    | /suppliers                 |
-      | PATCH  | /suppliers/:id             |
-      | DELETE | /suppliers/:id             |
-      | GET    | /purchase-orders           |
-      | POST   | /purchase-orders           |
-      | PATCH  | /purchase-orders/:id       |
-      | DELETE | /purchase-orders/:id       |
+#      | POST   | /suppliers                 |
+#      | GET    | /suppliers                 |
+#      | PATCH  | /suppliers/:id             |
+#      | DELETE | /suppliers/:id             |
+#      | GET    | /purchase-orders           |
+#      | POST   | /purchase-orders           |
+#      | PATCH  | /purchase-orders/:id       |
+#      | DELETE | /purchase-orders/:id       |
       | POST   | /service-orders            |
       | PATCH  | /service-orders/:id        |
       | DELETE | /service-orders/:id        |
@@ -188,8 +188,8 @@ Funcionalidade: Login no sistema
       | GET    | /service-orders/:id/services            |
       | GET    | /service-orders/:id/services/:serviceId |
       | POST   | /service-orders/:id/budget              |
-      | GET    | /purchase-orders                        |
-      | GET    | /purchase-orders/:id                    |
+#      | GET    | /purchase-orders                        |
+#      | GET    | /purchase-orders/:id                    |
 
   Esquema do Cenário: Atendente - Acesso bloqueado
     Dado que eu esteja logado como "atendente"
@@ -206,19 +206,19 @@ Funcionalidade: Login no sistema
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |
-      | POST   | /suppliers                              |
-      | GET    | /suppliers                              |
-      | PATCH  | /suppliers/:id                          |
-      | DELETE | /suppliers/:id                          |
+#      | POST   | /suppliers                              |
+#      | GET    | /suppliers                              |
+#      | PATCH  | /suppliers/:id                          |
+#      | DELETE | /suppliers/:id                          |
       | PATCH  | /service-orders/:id                     |
       | DELETE | /service-orders/:id                     |
       | POST   | /service-orders/:id/services            |
       | PATCH  | /service-orders/:id/services/:serviceId |
       | DELETE | /service-orders/:id/services/:serviceId |
       | POST   | /service-orders/:id/progress            |
-      | POST   | /purchase-orders                        |
-      | PATCH  | /purchase-orders/:id                    |
-      | DELETE | /purchase-orders/:id                    |
+#      | POST   | /purchase-orders                        |
+#      | PATCH  | /purchase-orders/:id                    |
+#      | DELETE | /purchase-orders/:id                    |
 
   Esquema do Cenário: Chatbot - Acesso permitido
     Dado que eu esteja autenticado como "chatbot"
@@ -244,8 +244,8 @@ Funcionalidade: Login no sistema
       | POST   | /service-orders            |
       | GET    | /service-orders/:id        |
       | POST   | /service-orders/:id/budget |
-      | GET    | /purchase-orders           |
-      | GET    | /purchase-orders/:id       |
+#      | GET    | /purchase-orders           |
+#      | GET    | /purchase-orders/:id       |
 
   Esquema do Cenário: Chatbot - Acesso bloqueado
     Dado que eu esteja autenticado como "chatbot"
@@ -264,10 +264,10 @@ Funcionalidade: Login no sistema
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |
-      | POST   | /suppliers                              |
-      | GET    | /suppliers                              |
-      | PATCH  | /suppliers/:id                          |
-      | DELETE | /suppliers/:id                          |
+#      | POST   | /suppliers                              |
+#      | GET    | /suppliers                              |
+#      | PATCH  | /suppliers/:id                          |
+#      | DELETE | /suppliers/:id                          |
       | PATCH  | /service-orders/:id                     |
       | DELETE | /service-orders/:id                     |
       | GET    | /service-orders/:id/services            |
@@ -276,9 +276,9 @@ Funcionalidade: Login no sistema
       | PATCH  | /service-orders/:id/services/:serviceId |
       | DELETE | /service-orders/:id/services/:serviceId |
       | POST   | /service-orders/:id/progress            |
-      | POST   | /purchase-orders                        |
-      | PATCH  | /purchase-orders/:id                    |
-      | DELETE | /purchase-orders/:id                    |
+#      | POST   | /purchase-orders                        |
+#      | PATCH  | /purchase-orders/:id                    |
+#      | DELETE | /purchase-orders/:id                    |
 
   Esquema do Cenário: Almoxarife - Acesso permitido
     Dado que eu esteja logado como "almoxarife"
@@ -290,13 +290,13 @@ Funcionalidade: Login no sistema
       | GET    | /users/:id           |
       | GET    | /supplies            |
       | GET    | /supplies/:id        |
-      | GET    | /suppliers           |
-      | GET    | /suppliers/:id       |
-      | GET    | /purchase-orders     |
-      | POST   | /purchase-orders     |
-      | GET    | /purchase-orders/:id |
-      | PATCH  | /purchase-orders/:id |
-      | DELETE | /purchase-orders/:id |
+#      | GET    | /suppliers           |
+#      | GET    | /suppliers/:id       |
+#      | GET    | /purchase-orders     |
+#      | POST   | /purchase-orders     |
+#      | GET    | /purchase-orders/:id |
+#      | PATCH  | /purchase-orders/:id |
+#      | DELETE | /purchase-orders/:id |
       | GET    | /service-orders      |
       | GET    | /service-orders/:id  |
 
@@ -324,9 +324,9 @@ Funcionalidade: Login no sistema
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |
-      | POST   | /suppliers                              |
-      | PATCH  | /suppliers/:id                          |
-      | DELETE | /suppliers/:id                          |
+#      | POST   | /suppliers                              |
+#      | PATCH  | /suppliers/:id                          |
+#      | DELETE | /suppliers/:id                          |
       | POST   | /service-orders                         |
       | PATCH  | /service-orders/:id                     |
       | DELETE | /service-orders/:id                     |

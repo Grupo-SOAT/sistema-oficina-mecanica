@@ -28,7 +28,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
 
   Cenário: Paginação sem resultados deve retornar no content
     Dado que eu esteja devidamente logado
-    E que o filtro clientDocument seja "000.000.000-00"
+    E que o filtro status seja "DELIVERED"
     E que o tamanho da pagina seja 10
     Quando eu listar as ordens de serviço
     Então devo receber uma resposta com status "204"
@@ -110,9 +110,9 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
-      | id | clientId | vehicleId | description            | reason                          |
-      | 1  | 99999    | 1         | Troca de óleo e filtro | SERVICE_ORDER_CLIENT_NOT_FOUND  |
-      | 1  | 1        | 99999     | Troca de óleo e filtro | SERVICE_ORDER_VEHICLE_NOT_FOUND |
+      | id | clientId | vehicleId | description            | status   | reason                          |
+      | 1  | 99999    | 1         | Troca de óleo e filtro | APPROVED | SERVICE_ORDER_CLIENT_NOT_FOUND  |
+      | 1  | 1        | 99999     | Troca de óleo e filtro | APPROVED | SERVICE_ORDER_VEHICLE_NOT_FOUND |
 
   Cenário: Atualização de ordem de serviço inexistente
     Dado que eu esteja devidamente logado

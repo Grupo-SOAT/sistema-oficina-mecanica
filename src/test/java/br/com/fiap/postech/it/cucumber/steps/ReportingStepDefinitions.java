@@ -32,9 +32,9 @@ public class ReportingStepDefinitions extends BaseStepDefinition {
     public void initialize() {
         context.reset();
         resetReportingData();
-        mockMvc = webAppContextSetup(webContext)
+        setMockMvc(webAppContextSetup(webContext)
                 .apply(springSecurity())
-                .build();
+                .build());
     }
 
     private void resetReportingData() {

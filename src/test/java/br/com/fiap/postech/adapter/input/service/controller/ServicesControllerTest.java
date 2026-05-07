@@ -7,7 +7,7 @@ import br.com.fiap.postech.adapter.input.api.model.ServiceRequest;
 import br.com.fiap.postech.adapter.input.api.model.ServiceStatus;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.service.persistence.entity.ServiceEntity;
-import br.com.fiap.postech.domain.service.exception.NoMatchingServicesException;
+import br.com.fiap.postech.domain.catalogservices.exception.CatalogServiceNotFoundException;
 import br.com.fiap.postech.domain.service.exception.ServiceNotFoundException;
 import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.service.usecase.ServiceUseCase;
@@ -56,16 +56,16 @@ class ServicesControllerTest {
     }
 
     @Test
-    void should_pass_status_value_to_use_case_when_filtering_by_status() {
+    void should_pass_name_filter_to_use_case() {
         Service one = ServiceEntity.builder()
                 .id(1L).serviceOrderId(10L).catalogServiceId(5L)
                 .price(new BigDecimal("100.00")).status("IN_PROGRESS").build();
         ScrollPage<Service> page = ScrollPage.<Service>builder()
                 .data(List.of(one)).cursor("1").isLast(true).pageSize(10).build();
 
-        when(serviceUseCase.scroll(10L, null, "IN_PROGRESS", 10, null)).thenReturn(page);
+        when(serviceUseCase.scroll(10L, null, "troca", 10, null)).thenReturn(page);
 
-        ResponseEntity<PaginatedServiceResponse> response = controller.listServices(10L, null, null, ServiceStatus.IN_PROGRESS, 10, null);
+        ResponseEntity<PaginatedServiceResponse> response = controller.listServices(10L, null, "troca", null, 10, null);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
@@ -73,7 +73,6 @@ class ServicesControllerTest {
     @Test
     void should_return_no_content_when_no_matching_services() {
         ResponseEntity<Void> response = controller.handleNoMatchingServices();
-
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
@@ -121,7 +120,18 @@ class ServicesControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getMessage()).contains("99");
+        assertThat(response.getBody().getReason()).isEqualTo("SERVICE_NOT_FOUND");
+    }
+
+    @Test
+    void should_return_404_when_catalog_service_not_found() {
+        CatalogServiceNotFoundException exception = new CatalogServiceNotFoundException(99L);
+
+        ResponseEntity<ErrorResponse> response = controller.handleCatalogServiceNotFound(exception);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getReason()).isEqualTo("CATALOG_SERVICE_NOT_FOUND");
     }
 
     @Test
@@ -129,7 +139,8 @@ class ServicesControllerTest {
         ServiceData requestData = new ServiceData()
                 .id(5L)
                 .catalogServiceId(3L)
-                .price(new BigDecimal("90.00"));
+                .price(new BigDecimal("90.00"))
+                .status(ServiceStatus.AWAITING_APPROVAL);
 
         ServiceEntity updated = ServiceEntity.builder()
                 .id(5L).serviceOrderId(10L).catalogServiceId(3L)
@@ -141,7 +152,7 @@ class ServicesControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getPrice()).isEqualByComparingTo(new BigDecimal("90.00"));
+        assertThat(response.getBody().getStatus()).isEqualTo(ServiceStatus.AWAITING_APPROVAL);
     }
 
     @Test

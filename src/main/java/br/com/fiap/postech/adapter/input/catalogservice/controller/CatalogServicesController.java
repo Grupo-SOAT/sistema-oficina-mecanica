@@ -2,16 +2,19 @@ package br.com.fiap.postech.adapter.input.catalogservice.controller;
 
 import br.com.fiap.postech.adapter.input.api.model.*;
 import br.com.fiap.postech.adapter.input.catalogservice.mapper.CatalogServicesMapper;
-import br.com.fiap.postech.domain.catalogservices.exception.CatalogServicesNotFoundException;
-import br.com.fiap.postech.domain.catalogservices.exception.DuplicatedCatalogServicesException;
+import br.com.fiap.postech.domain.catalogservices.exception.CatalogServiceNotFoundException;
+import br.com.fiap.postech.domain.catalogservices.exception.DuplicatedCatalogServiceException;
+import br.com.fiap.postech.domain.catalogservices.exception.InvalidCatalogServiceNameException;
+import br.com.fiap.postech.domain.catalogservices.exception.InvalidCatalogServicePriceException;
+import br.com.fiap.postech.domain.catalogservices.exception.InvalidSupplyQuantityException;
 import br.com.fiap.postech.domain.catalogservices.exception.NoMatchingCatalogServiceException;
 import br.com.fiap.postech.domain.catalogservices.usecase.CatalogServicesUseCase;
 import br.com.fiap.postech.port.api.CatalogServicesApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +23,7 @@ public class CatalogServicesController implements CatalogServicesApi {
 
     @Override
     public ResponseEntity<PaginatedCatalogServiceResponse> listCatalogServices(Long id, String name, Integer pageSize, String cursor) {
-        final var pageResult = catalogServicesUseCase.scroll(name, pageSize, cursor);
+        final var pageResult = catalogServicesUseCase.scroll(id, name, pageSize, cursor);
         final var responseBody = CatalogServicesMapper.toPaginatedResponse(pageResult);
 
         return ResponseEntity.ok(responseBody);
@@ -61,22 +64,38 @@ public class CatalogServicesController implements CatalogServicesApi {
     }
 
     @ExceptionHandler(NoMatchingCatalogServiceException.class)
-    public ResponseEntity<ErrorResponse> handleNoMatchingCatalogServices() {
+    public ResponseEntity<Void> handleNoMatchingCatalogServices(NoMatchingCatalogServiceException exception) {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(CatalogServicesNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(CatalogServicesNotFoundException exception) {
+    @ExceptionHandler(CatalogServiceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(CatalogServiceNotFoundException exception) {
         final var status = HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status.value(), exception.reason.name(), exception.getMessage()));
     }
 
-    @ExceptionHandler(DuplicatedCatalogServicesException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicated(DuplicatedCatalogServicesException exception) {
+    @ExceptionHandler(DuplicatedCatalogServiceException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicated(DuplicatedCatalogServiceException exception) {
         final var status = HttpStatus.CONFLICT;
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status.value(), exception.reason.name(), exception.getMessage()));
     }
 
+    @ExceptionHandler({
+            InvalidCatalogServiceNameException.class,
+            InvalidCatalogServicePriceException.class,
+            InvalidSupplyQuantityException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBadRequest(RuntimeException exception) {
+        final var status = HttpStatus.BAD_REQUEST;
+        String reason = switch (exception) {
+            case InvalidCatalogServiceNameException ex -> ex.reason.name();
+            case InvalidCatalogServicePriceException ex -> ex.reason.name();
+            case InvalidSupplyQuantityException ex -> ex.reason.name();
+            default -> "BAD_REQUEST";
+        };
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(status.value(), reason, exception.getMessage()));
+    }
 }

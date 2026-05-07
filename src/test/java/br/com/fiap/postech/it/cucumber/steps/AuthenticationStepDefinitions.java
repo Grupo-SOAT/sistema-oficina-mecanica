@@ -44,10 +44,10 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("db/seed/canonical-seed.sql"));
         populator.execute(dataSource);
-        mockMvc = MockMvcBuilders
+        setMockMvc(MockMvcBuilders
                 .webAppContextSetup(webContext)
                 .apply(springSecurity())
-                .build();
+                .build());
     }
 
     // Autenticação com usuário e senha
@@ -135,7 +135,7 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
     public void submitApiKey(String apiKey) {
         context.setCurrentApiKey(apiKey);
         try {
-            MvcResult result = mockMvc.perform(
+            MvcResult result = mockMvc().perform(
                     MockMvcRequestBuilders.post("/auth/chatbot")
                             .header("X-API-Key", apiKey)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -192,7 +192,7 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
             if (hasRoleAuth() && !"GET".equalsIgnoreCase(method)) {
                 request.with(SecurityMockMvcRequestPostProcessors.csrf());
             }
-            MvcResult result = mockMvc.perform(request).andReturn();
+            MvcResult result = mockMvc().perform(request).andReturn();
             context.setLastStatusCode(result.getResponse().getStatus());
             context.setLastResponseBody(result.getResponse().getContentAsString());
             context.setLastResponseContentType(result.getResponse().getContentType());

@@ -6,7 +6,7 @@ import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
 import java.util.Optional;
 
 public interface CatalogServicesPersistencePort {
-    ScrollPage<CatalogServices> scroll(String name, Integer pageSize, String cursor);
+    ScrollPage<CatalogServices> scroll(Long id, String name, Integer pageSize, String cursor);
 
     CatalogServices save(CatalogServices catalogServices);
 

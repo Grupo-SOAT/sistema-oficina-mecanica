@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.test.web.servlet.MockMvc;
 
 @Getter
 @Setter
@@ -32,6 +33,7 @@ public class CucumberTestContext {
     private String lastResponseContentType;
     private String lastResponseContentDisposition;
     private Long catalogServiceId;
+    private MockMvc mockMvc;
 
     public static synchronized CucumberTestContext getInstance() {
         return INSTANCE;

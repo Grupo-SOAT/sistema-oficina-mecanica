@@ -28,22 +28,25 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
             Pageable pageable
     );
 
-    @Query("SELECT s FROM ServiceEntity s WHERE s.serviceOrderId = :serviceOrderId AND s.status = :status AND s.id > :cursor ORDER BY s.id ASC")
-    List<ServiceEntity> findByServiceOrderIdAndStatus(
+    @Query("SELECT s FROM ServiceEntity s JOIN br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.CatalogServicesEntity c ON c.id = s.catalogServiceId WHERE s.serviceOrderId = :serviceOrderId AND LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%')) AND s.id > :cursor ORDER BY s.id ASC")
+    List<ServiceEntity> findByServiceOrderIdAndName(
             @Param("serviceOrderId") Long serviceOrderId,
-            @Param("status") String status,
+            @Param("name") String name,
             @Param("cursor") Long cursor,
             Pageable pageable
     );
 
-    @Query("SELECT s FROM ServiceEntity s WHERE s.serviceOrderId = :serviceOrderId AND s.id = :serviceId AND s.status = :status AND s.id > :cursor ORDER BY s.id ASC")
-    List<ServiceEntity> findByServiceOrderIdAndServiceIdAndStatus(
+    @Query("SELECT s FROM ServiceEntity s JOIN br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.CatalogServicesEntity c ON c.id = s.catalogServiceId WHERE s.serviceOrderId = :serviceOrderId AND s.id = :serviceId AND LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%')) AND s.id > :cursor ORDER BY s.id ASC")
+    List<ServiceEntity> findByServiceOrderIdAndServiceIdAndName(
             @Param("serviceOrderId") Long serviceOrderId,
             @Param("serviceId") Long serviceId,
-            @Param("status") String status,
+            @Param("name") String name,
             @Param("cursor") Long cursor,
             Pageable pageable
     );
 
     List<ServiceEntity> findByCatalogServiceId(Long catalogServiceId);
+
+    @Query("SELECT s FROM ServiceEntity s WHERE s.serviceOrderId = :serviceOrderId")
+    List<ServiceEntity> findAllByServiceOrderId(@Param("serviceOrderId") Long serviceOrderId);
 }

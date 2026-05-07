@@ -30,21 +30,21 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
     private final CatalogServicesRepository catalogServicesRepository;
 
     @Override
-    public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String status, Integer pageSize, String cursor) {
+    public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String name, Integer pageSize, String cursor) {
         return Scroller.scroll(
                 cursor,
                 pageSize,
                 (parsedCursor, pageable) -> {
                     boolean hasServiceId = serviceId != null;
-                    boolean hasStatus = status != null && !status.isBlank();
+                    boolean hasName = name != null && !name.isBlank();
 
                     List<ServiceEntity> results;
-                    if (hasServiceId && hasStatus) {
-                        results = repository.findByServiceOrderIdAndServiceIdAndStatus(serviceOrderId, serviceId, status, parsedCursor, pageable);
+                    if (hasServiceId && hasName) {
+                        results = repository.findByServiceOrderIdAndServiceIdAndName(serviceOrderId, serviceId, name, parsedCursor, pageable);
                     } else if (hasServiceId) {
                         results = repository.findByServiceOrderIdAndServiceId(serviceOrderId, serviceId, parsedCursor, pageable);
-                    } else if (hasStatus) {
-                        results = repository.findByServiceOrderIdAndStatus(serviceOrderId, status, parsedCursor, pageable);
+                    } else if (hasName) {
+                        results = repository.findByServiceOrderIdAndName(serviceOrderId, name, parsedCursor, pageable);
                     } else {
                         results = repository.findAllByServiceOrderId(serviceOrderId, parsedCursor, pageable);
                     }
@@ -57,6 +57,13 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
     @Override
     public Optional<Service> findByIdAndServiceOrderId(Long id, Long serviceOrderId) {
         return repository.findByIdAndServiceOrderId(id, serviceOrderId).map(item -> (Service) item);
+    }
+
+    @Override
+    public List<Service> findAllByServiceOrderId(Long serviceOrderId) {
+        return repository.findAllByServiceOrderId(serviceOrderId).stream()
+                .map(item -> (Service) item)
+                .toList();
     }
 
     @Override

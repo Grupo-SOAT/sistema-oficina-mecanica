@@ -4,13 +4,14 @@ import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.Cata
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CatalogServicesRepository extends JpaRepository<CatalogServicesEntity, Long> {
+public interface CatalogServicesRepository extends JpaRepository<CatalogServicesEntity, Long>, JpaSpecificationExecutor<CatalogServicesEntity> {
     @EntityGraph(attributePaths = "supplies")
     Optional<CatalogServicesEntity> findWithSuppliesById(Long id);
 

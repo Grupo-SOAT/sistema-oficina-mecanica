@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @CucumberContextConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@ActiveProfiles("test")
+@ActiveProfiles("it")
 @ContextConfiguration(initializers = br.com.fiap.postech.config.PostgresContainerInitializer.class)
 public class CucumberTestConfiguration {
 }

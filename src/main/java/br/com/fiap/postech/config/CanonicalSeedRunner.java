@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 
 @Component
-@Profile({"local", "test"})
+@Profile({"local", "test", "it"})
 public class CanonicalSeedRunner implements ApplicationRunner {
 
     private final DataSource dataSource;
