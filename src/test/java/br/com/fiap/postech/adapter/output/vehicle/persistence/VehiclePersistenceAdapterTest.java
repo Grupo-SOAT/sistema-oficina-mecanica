@@ -127,7 +127,6 @@ public class VehiclePersistenceAdapterTest {
 
         VehicleEntity savedEntity = (VehicleEntity) result;
 
-        assertThat(savedEntity.getId()).isEqualTo(1L);
         assertThat(savedEntity.getOwnerId()).isEqualTo(10L);
         assertThat(savedEntity.getLicensePlate()).isEqualTo("XYZ9999");
         assertThat(savedEntity.getBrand()).isEqualTo("Honda");

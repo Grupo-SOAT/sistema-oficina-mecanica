@@ -24,4 +24,11 @@ public interface OwnerRepository extends JpaRepository<OwnerEntity, Long>{
             @Param("cursor") Long cursor,
             Pageable pageable
     );
+
+    @Query("SELECT s FROM OwnerEntity s WHERE s.document LIKE CONCAT('%', :document, '%') AND s.id > :cursor ORDER BY s.id ASC")
+    List<OwnerEntity> findByDocumentAfterCursor(
+            @Param("document") String document,
+            @Param("cursor") Long cursor,
+            Pageable pageable
+    );
 }

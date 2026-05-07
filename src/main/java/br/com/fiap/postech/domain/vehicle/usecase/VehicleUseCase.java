@@ -4,6 +4,7 @@ import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.domain.owner.exception.OwnerNotFoundException;
 import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
 import br.com.fiap.postech.domain.vehicle.excecption.InvalidLicensePlateException;
+import br.com.fiap.postech.domain.vehicle.excecption.InvalidVehicleYearException;
 import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
 import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
 import br.com.fiap.postech.domain.vehicle.model.Vehicle;
@@ -40,6 +41,7 @@ public class VehicleUseCase {
 
     public Vehicle create(Vehicle vehicle) {
         validateLicensePlate(vehicle);
+        validateYear(vehicle);
         validateOwnerExists(vehicle.getOwnerId());
 
         persistencePort.findByLicensePlate(vehicle.getLicensePlate()).ifPresent(s -> {
@@ -50,6 +52,7 @@ public class VehicleUseCase {
 
     public Vehicle update(Long id, Vehicle vehicle) {
         validateLicensePlate(vehicle);
+        validateYear(vehicle);
         validateOwnerExists(vehicle.getOwnerId());
 
         persistencePort.findByLicensePlate(vehicle.getLicensePlate())
@@ -59,9 +62,8 @@ public class VehicleUseCase {
                 }
             });
 
-        persistencePort.findById(id)
+        final var existing = persistencePort.findById(id)
                 .orElseThrow(() -> new VehicleNotFoundException(id));
-
         vehicle.setId(id);
 
         return persistencePort.save(vehicle);
@@ -79,6 +81,14 @@ public class VehicleUseCase {
 
         if (!VehicleLicensePlateValidator.isValid(vehicle.getLicensePlate())) {
             throw new InvalidLicensePlateException(vehicle.getLicensePlate());
+        }
+    }
+
+    private void validateYear(Vehicle vehicle) {
+        Integer year = vehicle.getYear();
+        
+        if (year == null || year < 1900 || year > 2050) {
+            throw new InvalidVehicleYearException(year);
         }
     }
 

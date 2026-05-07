@@ -16,6 +16,7 @@ import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
 import br.com.fiap.postech.domain.user.exception.SameUsernameException;
 import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
 import br.com.fiap.postech.domain.vehicle.excecption.InvalidLicensePlateException;
+import br.com.fiap.postech.domain.vehicle.excecption.InvalidVehicleYearException;
 import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
 import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
 import br.com.fiap.postech.domain.authentication.exception.InvalidChatbotApiKeyException;
@@ -52,8 +53,8 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(DuplicatedVehicleException.class)
     public ResponseEntity<ErrorResponse> handleDuplicatedVehicleException(DuplicatedVehicleException ex) {
-        final var httpStatus = HttpStatus.BAD_REQUEST;
-        final var response = new ErrorResponse(httpStatus.value(), "VEHICLE_ALREADY_EXISTS", ex.getMessage());
+        final var httpStatus = HttpStatus.CONFLICT;
+        final var response = new ErrorResponse(httpStatus.value(), "VEHICLE_CONFLICT_DUPLICATED_LICENSE_PLATE", ex.getMessage());
         return new ResponseEntity<>(response, httpStatus);
     }
 
@@ -122,6 +123,13 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidLicensePlateException(InvalidLicensePlateException ex) {
         final var httpStatus = HttpStatus.BAD_REQUEST;
         final var response = new ErrorResponse(httpStatus.value(), "INVALID_LICENSE_PLATE", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @ExceptionHandler(InvalidVehicleYearException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidVehicleYearException(InvalidVehicleYearException ex) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        final var response = new ErrorResponse(httpStatus.value(), "INVALID_VEHICLE_YEAR", ex.getMessage());
         return new ResponseEntity<>(response, httpStatus);
     }
 }

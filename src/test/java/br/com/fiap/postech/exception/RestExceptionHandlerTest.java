@@ -83,9 +83,9 @@ class RestExceptionHandlerTest {
                 new DuplicatedVehicleException("ABC1234")
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().getCode()).isEqualTo(400);
-        assertThat(response.getBody().getReason()).isEqualTo("VEHICLE_ALREADY_EXISTS");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(response.getBody().getCode()).isEqualTo(409);
+        assertThat(response.getBody().getReason()).isEqualTo("VEHICLE_CONFLICT_DUPLICATED_LICENSE_PLATE");
     }
 
     @Test

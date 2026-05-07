@@ -6,7 +6,7 @@ get:
     - SessionToken: [ ]
   parameters:
     - in: query
-      name: email
+      name: document
       schema: { type: string }
     - in: query
       name: pageSize

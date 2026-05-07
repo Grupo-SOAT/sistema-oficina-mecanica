@@ -116,6 +116,7 @@ public class VehicleUseCaseTest {
 
         when(vehicle.getOwnerId()).thenReturn(10L);
         when(vehicle.getLicensePlate()).thenReturn("ABC1D23");
+        when(vehicle.getYear()).thenReturn(2022);
 
         when(ownerPersistencePort.findById(10L))
                 .thenReturn(Optional.of(owner));
@@ -150,6 +151,7 @@ public class VehicleUseCaseTest {
     void should_throw_exception_when_owner_not_found_on_create() {
         when(vehicle.getOwnerId()).thenReturn(10L);
         when(vehicle.getLicensePlate()).thenReturn("ABC1D23");
+        when(vehicle.getYear()).thenReturn(2022);
 
         when(ownerPersistencePort.findById(10L))
                 .thenReturn(Optional.empty());
@@ -168,6 +170,7 @@ public class VehicleUseCaseTest {
 
         when(vehicle.getOwnerId()).thenReturn(10L);
         when(vehicle.getLicensePlate()).thenReturn("ABC1D23");
+        when(vehicle.getYear()).thenReturn(2022);
 
         when(ownerPersistencePort.findById(10L))
                 .thenReturn(Optional.of(owner));
@@ -191,6 +194,7 @@ public class VehicleUseCaseTest {
         when(vehicle.getOwnerId()).thenReturn(10L);
         when(vehicle.getLicensePlate()).thenReturn("ABC1D23");
         when(vehicle.getId()).thenReturn(1L);
+        when(vehicle.getYear()).thenReturn(2022);
 
         when(ownerPersistencePort.findById(10L))
                 .thenReturn(Optional.of(owner));
@@ -219,6 +223,7 @@ public class VehicleUseCaseTest {
 
         when(vehicle.getOwnerId()).thenReturn(10L);
         when(vehicle.getLicensePlate()).thenReturn("ABC1D23");
+        when(vehicle.getYear()).thenReturn(2022);
 
         when(ownerPersistencePort.findById(10L))
                 .thenReturn(Optional.of(owner));
@@ -241,6 +246,7 @@ public class VehicleUseCaseTest {
 
         when(vehicle.getOwnerId()).thenReturn(10L);
         when(vehicle.getLicensePlate()).thenReturn("ABC1D23");
+        when(vehicle.getYear()).thenReturn(2022);
 
         when(ownerPersistencePort.findById(10L))
                 .thenReturn(Optional.of(owner));

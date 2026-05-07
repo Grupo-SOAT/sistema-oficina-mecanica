@@ -18,11 +18,11 @@ public class OwnerUseCase {
         this.persistencePort = persistencePort;
     }
 
-    public ScrollPage<Owner> scroll(String email, Integer pageSize, String cursor) {
-        final var result = persistencePort.scroll(email, pageSize, cursor);
+    public ScrollPage<Owner> scroll(String document, Integer pageSize, String cursor) {
+        final var result = persistencePort.scroll(document, pageSize, cursor);
 
         if (result.data().isEmpty()) {
-            throw new NoMatchingOwnersException(email);
+            throw new NoMatchingOwnersException(document);
         }
 
         return result;
@@ -55,9 +55,10 @@ public class OwnerUseCase {
                 }
             });
 
-        persistencePort.findById(id)
+        final var existing = persistencePort.findById(id)
                 .orElseThrow(() -> new OwnerNotFoundException(id));
         owner.setId(id);
+        owner.setCreatedAt(existing.getCreatedAt());
 
         return persistencePort.save(owner);
     }

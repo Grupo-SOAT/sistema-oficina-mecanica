@@ -19,14 +19,14 @@ public class OwnerPersistenceAdapter implements OwnerPersistencePort{
     private final OwnerRepository repository;
 
     @Override
-    public ScrollPage<Owner> scroll(String email, Integer pageSize, String cursor) {
+    public ScrollPage<Owner> scroll(String document, Integer pageSize, String cursor) {
         return Scroller.scroll(
                 cursor,
                 pageSize,
                 (parsedCursor, pageable) -> {
-                    List<OwnerEntity> results = (email == null || email.isBlank())
+                    List<OwnerEntity> results = (document == null || document.isBlank())
                             ? repository.findAllAfterCursor(parsedCursor, pageable)
-                            : repository.findByEmailAfterCursor(email, parsedCursor, pageable);
+                            : repository.findByDocumentAfterCursor(document, parsedCursor, pageable);
 
                     return results.stream().map(item -> (Owner) item).toList();
                 }
@@ -56,6 +56,7 @@ public class OwnerPersistenceAdapter implements OwnerPersistencePort{
             entity.setDocumentType(owner.getDocumentType());
             entity.setPhone(owner.getPhone());
             entity.setEmail(owner.getEmail());
+            entity.setCreatedAt(owner.getCreatedAt());
         }
 
         return repository.save(entity);
