@@ -34,25 +34,23 @@ public class ChangeServiceStatusUseCase {
         service.setStartedAt(now);
         service.setUpdatedAt(now);
 
-        // Decrement reserved supplies for this service
         if (service.getNeededSupplies() != null) {
             for (var needed : service.getNeededSupplies()) {
                 final var supply = supplyPersistencePort.findById(needed.getIdSupply().longValue())
-                        .orElseThrow(() -> new ServiceNotFoundException(serviceId)); // Shouldn't happen if validated on create
-                
+                        .orElseThrow(() -> new ServiceNotFoundException(serviceId));
+
                 final var newReserved = supply.getReservedQuantity() - needed.getQuantity();
                 if (newReserved < 0) {
                     throw new NegativeSupplyQuantityException(needed.getIdSupply().longValue());
                 }
-                
+
                 supply.setReservedQuantity(newReserved);
                 supplyPersistencePort.save(supply);
             }
         }
 
         final var savedService = servicePersistencePort.save(service);
-        
-        // Update OS to IN_PROGRESS if this is the first service transitioning to IN_PROGRESS
+
         updateServiceOrderIfFirstServiceStarted(serviceOrderId, serviceId);
 
         return savedService;
@@ -71,8 +69,7 @@ public class ChangeServiceStatusUseCase {
         service.setUpdatedAt(now);
 
         final var savedService = servicePersistencePort.save(service);
-        
-        // Update OS to COMPLETED if last eligible service reached completion
+
         updateServiceOrderIfLastServiceCompleted(serviceOrderId);
 
         return savedService;
@@ -90,19 +87,18 @@ public class ChangeServiceStatusUseCase {
         service.setCancelledAt(now);
         service.setUpdatedAt(now);
 
-        // Release reserved supplies (add them back to available)
         if (service.getNeededSupplies() != null) {
             for (var needed : service.getNeededSupplies()) {
                 final var supply = supplyPersistencePort.findById(needed.getIdSupply().longValue())
                         .orElseThrow(() -> new ServiceNotFoundException(serviceId)); // Shouldn't happen
-                
+
                 final var newReserved = supply.getReservedQuantity() - needed.getQuantity();
                 final var newAvailable = supply.getAvailableQuantity() + needed.getQuantity();
-                
+
                 if (newReserved < 0) {
                     throw new NegativeSupplyQuantityException(needed.getIdSupply().longValue());
                 }
-                
+
                 supply.setReservedQuantity(newReserved);
                 supply.setAvailableQuantity(newAvailable);
                 supplyPersistencePort.save(supply);
@@ -142,11 +138,11 @@ public class ChangeServiceStatusUseCase {
         }
 
         final var services = servicePersistencePort.findAllByServiceOrderId(serviceOrderId);
-        
+
         // Check if all services are completed or cancelled
         final var allDone = services.stream()
                 .allMatch(s -> "COMPLETED".equals(s.getStatus()) || "CANCELLED".equals(s.getStatus()));
-        
+
         // Check if any service is still IN_PROGRESS or APPROVED
         final var anyInProgress = services.stream()
                 .anyMatch(s -> "IN_PROGRESS".equals(s.getStatus()) || "APPROVED".equals(s.getStatus()));

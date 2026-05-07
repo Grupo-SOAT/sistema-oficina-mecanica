@@ -6,9 +6,12 @@ import br.com.fiap.postech.adapter.output.serviceorder.persistence.entity.Servic
 import br.com.fiap.postech.adapter.output.serviceorder.persistence.repository.ServiceOrderRepository;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,21 +22,43 @@ public class ServiceOrderPersistenceAdapter implements ServiceOrderPersistencePo
     private final ServiceOrderRepository repository;
 
     @Override
-    public ScrollPage<ServiceOrder> scroll(String status, Integer pageSize, String cursor) {
+    public ScrollPage<ServiceOrder> scroll(String status, Long clientId, Long vehicleId, Integer pageSize, String cursor) {
         return Scroller.scroll(
                 cursor,
                 pageSize,
-                (parsedCursor, pageable) -> {
-                    boolean hasStatus = status != null && !status.isBlank();
-                    List<ServiceOrderEntity> results;
-                    if (hasStatus) {
-                        results = repository.findAllByStatusAndIdGreaterThanOrderByIdAsc(status, parsedCursor, pageable);
-                    } else {
-                        results = repository.findAllByIdGreaterThanOrderByIdAsc(parsedCursor, pageable);
-                    }
-                    return results.stream().map(item -> (ServiceOrder) item).toList();
-                }
+                (parsedCursor, pageable) -> repository.findAll(buildSpecification(status, clientId, vehicleId, parsedCursor), pageable)
+                        .getContent()
+                        .stream()
+                        .map(item -> (ServiceOrder) item)
+                        .toList()
         );
+    }
+
+    private Specification<ServiceOrderEntity> buildSpecification(String status, Long clientId, Long vehicleId, Long cursor) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            query.orderBy(criteriaBuilder.asc(root.get("id")));
+
+            final var predicates = new ArrayList<Predicate>();
+
+            if (status != null && !status.isBlank()) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            }
+
+            if (clientId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("clientId"), clientId));
+            }
+
+            if (vehicleId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("vehicleId"), vehicleId));
+            }
+
+            if (cursor > 0) {
+                predicates.add(criteriaBuilder.greaterThan(root.get("id"), cursor));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     @Override

@@ -64,7 +64,7 @@ class ServicesControllerIntegrationTest {
         ScrollPage<Service> page = ScrollPage.<Service>builder()
                 .data(List.of(service)).cursor("1").isLast(true).pageSize(10).build();
 
-        when(serviceUseCase.scroll(10L, null, null, 10, null)).thenReturn(page);
+        when(serviceUseCase.scroll(10L, null, null, null, 10, null)).thenReturn(page);
 
         mockMvc.perform(get("/service-orders/10/services")
                         .param("pageSize", "10"))
@@ -78,7 +78,7 @@ class ServicesControllerIntegrationTest {
 
     @Test
     void should_return_204_when_no_services_match() throws Exception {
-        when(serviceUseCase.scroll(eq(10L), any(), any(), any(), any()))
+        when(serviceUseCase.scroll(eq(10L), any(), any(), any(), any(), any()))
                 .thenThrow(new NoMatchingServicesException(10L));
 
         mockMvc.perform(get("/service-orders/10/services"))

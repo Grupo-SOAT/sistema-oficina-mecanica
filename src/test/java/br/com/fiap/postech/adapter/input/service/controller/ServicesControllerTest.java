@@ -45,7 +45,7 @@ class ServicesControllerTest {
         ScrollPage<Service> page = ScrollPage.<Service>builder()
                 .data(List.of(one)).cursor("1").isLast(true).pageSize(10).build();
 
-        when(serviceUseCase.scroll(10L, null, null, 10, null)).thenReturn(page);
+        when(serviceUseCase.scroll(10L, null, null, null, 10, null)).thenReturn(page);
 
         ResponseEntity<PaginatedServiceResponse> response = controller.listServices(10L, null, null, null, 10, null);
 
@@ -63,7 +63,7 @@ class ServicesControllerTest {
         ScrollPage<Service> page = ScrollPage.<Service>builder()
                 .data(List.of(one)).cursor("1").isLast(true).pageSize(10).build();
 
-        when(serviceUseCase.scroll(10L, null, "troca", 10, null)).thenReturn(page);
+        when(serviceUseCase.scroll(10L, null, "troca", null, 10, null)).thenReturn(page);
 
         ResponseEntity<PaginatedServiceResponse> response = controller.listServices(10L, null, "troca", null, 10, null);
 

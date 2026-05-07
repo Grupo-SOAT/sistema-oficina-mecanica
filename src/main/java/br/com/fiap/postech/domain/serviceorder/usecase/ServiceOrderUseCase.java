@@ -26,8 +26,8 @@ public class ServiceOrderUseCase {
         this.vehiclePersistencePort = vehiclePersistencePort;
     }
 
-    public ScrollPage<ServiceOrder> scroll(String status, Integer pageSize, String cursor) {
-        final var result = persistencePort.scroll(status, pageSize, cursor);
+    public ScrollPage<ServiceOrder> scroll(String status, Long clientId, Long vehicleId, Integer pageSize, String cursor) {
+        final var result = persistencePort.scroll(status, clientId, vehicleId, pageSize, cursor);
 
         if (result.data().isEmpty()) {
             throw new NoMatchingServiceOrdersException(status != null ? "status=" + status : "all");

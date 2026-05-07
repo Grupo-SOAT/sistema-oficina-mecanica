@@ -6,10 +6,6 @@ get:
     - SessionToken: [ ]
   parameters:
     - in: query
-      name: id
-      description: ID da OS
-      schema: { type: integer, format: int64 }
-    - in: query
       name: status
       description: Status da OS
       schema: { $ref: '../schemas/ServiceOrderStatus.yaml' }
@@ -18,21 +14,9 @@ get:
       description: ID do cliente
       schema: { type: integer, format: int64 }
     - in: query
-      name: clientDocument
-      description: Documento do cliente
-      schema: { type: string }
-    - in: query
-      name: clientPhone
-      description: Telefone do cliente
-      schema: { type: string }
-    - in: query
       name: vehicleId
       description: ID do veículo
       schema: { type: integer, format: int64 }
-    - in: query
-      name: vehicleLicensePlate
-      description: Placa do Veículo
-      schema: { type: string }
     - in: query
       name: pageSize
       description: Tamanho da página

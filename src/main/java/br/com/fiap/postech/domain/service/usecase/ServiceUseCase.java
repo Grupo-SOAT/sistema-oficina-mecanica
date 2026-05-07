@@ -36,9 +36,9 @@ public class ServiceUseCase {
         this.supplyPersistencePort = supplyPersistencePort;
     }
 
-    public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String name, Integer pageSize, String cursor) {
+    public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String name, String status, Integer pageSize, String cursor) {
         ensureServiceOrderExists(serviceOrderId);
-        final var result = persistencePort.scroll(serviceOrderId, serviceId, name, pageSize, cursor);
+        final var result = persistencePort.scroll(serviceOrderId, serviceId, name, status, pageSize, cursor);
 
         if (result.data().isEmpty()) {
             throw new NoMatchingServicesException(serviceOrderId);

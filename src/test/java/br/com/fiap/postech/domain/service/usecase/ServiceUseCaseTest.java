@@ -58,9 +58,9 @@ class ServiceUseCaseTest {
                 .cursor("1")
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(1L, null, null, 10, "0")).thenReturn(expected);
+        when(persistencePort.scroll(1L, null, null, null, 10, "0")).thenReturn(expected);
 
-        ScrollPage<Service> actual = useCase.scroll(1L, null, null, 10, "0");
+        ScrollPage<Service> actual = useCase.scroll(1L, null, null, null, 10, "0");
 
         assertThat(actual).isSameAs(expected);
     }
@@ -74,9 +74,9 @@ class ServiceUseCaseTest {
                 .cursor(null)
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(99L, null, null, 10, null)).thenReturn(empty);
+        when(persistencePort.scroll(99L, null, null, null, 10, null)).thenReturn(empty);
 
-        assertThatThrownBy(() -> useCase.scroll(99L, null, null, 10, null))
+        assertThatThrownBy(() -> useCase.scroll(99L, null, null, null, 10, null))
                 .isInstanceOf(NoMatchingServicesException.class)
                 .hasMessage("No matching services for service order id: 99");
     }

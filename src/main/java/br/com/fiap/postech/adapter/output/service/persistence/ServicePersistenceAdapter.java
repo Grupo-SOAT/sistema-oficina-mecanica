@@ -9,16 +9,14 @@ import br.com.fiap.postech.adapter.output.service.persistence.repository.Service
 import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,29 +27,57 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
     private final ServiceRepository repository;
     private final CatalogServicesRepository catalogServicesRepository;
 
+
     @Override
-    public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String name, Integer pageSize, String cursor) {
+    public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String name, String status, Integer pageSize, String cursor) {
         return Scroller.scroll(
                 cursor,
                 pageSize,
-                (parsedCursor, pageable) -> {
-                    boolean hasServiceId = serviceId != null;
-                    boolean hasName = name != null && !name.isBlank();
-
-                    List<ServiceEntity> results;
-                    if (hasServiceId && hasName) {
-                        results = repository.findByServiceOrderIdAndServiceIdAndName(serviceOrderId, serviceId, name, parsedCursor, pageable);
-                    } else if (hasServiceId) {
-                        results = repository.findByServiceOrderIdAndServiceId(serviceOrderId, serviceId, parsedCursor, pageable);
-                    } else if (hasName) {
-                        results = repository.findByServiceOrderIdAndName(serviceOrderId, name, parsedCursor, pageable);
-                    } else {
-                        results = repository.findAllByServiceOrderId(serviceOrderId, parsedCursor, pageable);
-                    }
-
-                    return results.stream().map(item -> (Service) item).toList();
-                }
+                (parsedCursor, pageable) -> repository.findAll(
+                                buildSpecification(serviceOrderId, serviceId, name, status, parsedCursor),
+                                pageable
+                        )
+                        .getContent()
+                        .stream()
+                        .map(item -> (Service) item)
+                        .toList()
         );
+    }
+
+    private Specification<ServiceEntity> buildSpecification(Long serviceOrderId, Long serviceId, String name, String status, Long cursor) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            query.orderBy(criteriaBuilder.asc(root.get("id")));
+
+            final var predicates = new ArrayList<Predicate>();
+
+            if (serviceOrderId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("serviceOrderId"), serviceOrderId));
+            }
+
+            if (serviceId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("id"), serviceId));
+            }
+
+            if (name != null && !name.isBlank()) {
+                predicates.add(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("name")),
+                                name.toLowerCase() + "%"
+                        )
+                );
+            }
+
+            if (status != null && !status.isBlank()) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            }
+
+            if (cursor > 0) {
+                predicates.add(criteriaBuilder.greaterThan(root.get("id"), cursor));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     @Override

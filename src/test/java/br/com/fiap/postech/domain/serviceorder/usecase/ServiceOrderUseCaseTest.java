@@ -56,9 +56,9 @@ class ServiceOrderUseCaseTest {
                 .cursor("1")
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(null, 10, "0")).thenReturn(expected);
+        when(persistencePort.scroll(null, null, null, 10, "0")).thenReturn(expected);
 
-        ScrollPage<ServiceOrder> actual = useCase.scroll(null, 10, "0");
+        ScrollPage<ServiceOrder> actual = useCase.scroll(null, null, null, 10, "0");
 
         assertThat(actual).isSameAs(expected);
     }
@@ -71,9 +71,9 @@ class ServiceOrderUseCaseTest {
                 .cursor(null)
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(null, 10, null)).thenReturn(empty);
+        when(persistencePort.scroll(null, null, null, 10, null)).thenReturn(empty);
 
-        assertThatThrownBy(() -> useCase.scroll(null, 10, null))
+        assertThatThrownBy(() -> useCase.scroll(null, null, null, 10, null))
                 .isInstanceOf(NoMatchingServiceOrdersException.class)
                 .hasMessage("No matching service orders for filter: all");
     }

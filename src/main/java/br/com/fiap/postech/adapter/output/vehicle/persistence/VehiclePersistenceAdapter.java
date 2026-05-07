@@ -1,8 +1,11 @@
 package br.com.fiap.postech.adapter.output.vehicle.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
@@ -23,14 +26,36 @@ public class VehiclePersistenceAdapter implements VehiclePersistencePort{
         return Scroller.scroll(
                 cursor,
                 pageSize,
-                (parsedCursor, pageable) -> {
-                    List<VehicleEntity> results = (licensePlate == null || licensePlate.isBlank())
-                            ? repository.findAllAfterCursor(parsedCursor, pageable)
-                            : repository.findByLicensePlateAfterCursor(licensePlate, parsedCursor, pageable);
-
-                    return results.stream().map(item -> (Vehicle) item).toList();
-                }
+                (parsedCursor, pageable) -> repository.findAll(buildSpecification(licensePlate, parsedCursor), pageable)
+                        .getContent()
+                        .stream()
+                        .map(item -> (Vehicle) item)
+                        .toList()
         );
+    }
+
+    private Specification<VehicleEntity> buildSpecification(String licensePlate, Long cursor) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            query.orderBy(criteriaBuilder.asc(root.get("id")));
+
+            final var predicates = new ArrayList<Predicate>();
+
+            if (licensePlate != null && !licensePlate.isBlank()) {
+                predicates.add(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("licensePlate")),
+                                licensePlate.toLowerCase() + "%"
+                        )
+                );
+            }
+
+            if (cursor > 0) {
+                predicates.add(criteriaBuilder.greaterThan(root.get("id"), cursor));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     @Override

@@ -29,7 +29,8 @@ public class ServicesController implements ServicesApi {
     public ResponseEntity<PaginatedServiceResponse> listServices(
             Long id, Long serviceId, String name, ServiceStatus status, Integer pageSize, String cursor
     ) {
-        final var pageResult = serviceUseCase.scroll(id, serviceId, name, pageSize, cursor);
+        String statusValue = status != null ? status.getValue() : null;
+        final var pageResult = serviceUseCase.scroll(id, serviceId, name, statusValue, pageSize, cursor);
         final var responseBody = ServiceMapper.toPaginatedResponse(pageResult);
         return ResponseEntity.ok(responseBody);
     }

@@ -28,19 +28,14 @@ public class ServiceOrdersController implements ServiceOrdersApi {
 
     @Override
     public ResponseEntity<PaginatedServiceOrderResponse> listServiceOrders(
-            @Nullable Long id,
-            @Nullable ServiceOrderStatus status,
-            @Nullable Long clientId,
-            @Nullable String clientDocument,
-            @Nullable String clientPhone,
-            @Nullable Long vehicleId,
-            @Nullable String vehicleLicensePlate,
+            ServiceOrderStatus status,
+            Long clientId,
+            Long vehicleId,
             Integer pageSize,
-            @Nullable String cursor
+            String cursor
     ) {
-        // V1: suporta apenas filtro por status
         String statusValue = status != null ? status.getValue() : null;
-        final var pageResult = serviceOrderUseCase.scroll(statusValue, pageSize, cursor);
+        final var pageResult = serviceOrderUseCase.scroll(statusValue, clientId, vehicleId, pageSize, cursor);
         final var responseBody = ServiceOrderMapper.toPaginatedResponse(pageResult);
         return ResponseEntity.ok(responseBody);
     }
@@ -76,8 +71,8 @@ public class ServiceOrdersController implements ServiceOrdersApi {
 
     @Override
     public ResponseEntity<Void> registerProgress(Long id, ServiceOrderActionRequest serviceOrderActionRequest) {
-        changeStatusUseCase.registerProgress(id, serviceOrderActionRequest.getAction(), 
-            serviceOrderActionRequest.getRelatedServiceId());
+        changeStatusUseCase.registerProgress(id, serviceOrderActionRequest.getAction(),
+                serviceOrderActionRequest.getRelatedServiceId());
         return ResponseEntity.accepted().build();
     }
 

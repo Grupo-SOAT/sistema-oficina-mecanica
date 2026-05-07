@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ServiceOrderPersistencePort {
 
-    ScrollPage<ServiceOrder> scroll(String status, Integer pageSize, String cursor);
+    ScrollPage<ServiceOrder> scroll(String status, Long clientId, Long vehicleId, Integer pageSize, String cursor);
 
     Optional<ServiceOrder> findById(Long id);
 

@@ -217,13 +217,6 @@ public abstract class BaseStepDefinition {
         context.setLastResponseBody("{}");
     }
 
-    protected MockHttpServletRequestBuilder withBearerAuth(MockHttpServletRequestBuilder request) {
-        if (context.getAuthToken() != null && !context.getAuthToken().isBlank()) {
-            request.header("Authorization", "Bearer " + context.getAuthToken());
-        }
-        return request;
-    }
-
     protected MockHttpServletRequestBuilder withRoleAuth(MockHttpServletRequestBuilder request) {
         if (context.getCurrentRole() == null || context.getCurrentRole().isBlank()) {
             return request;

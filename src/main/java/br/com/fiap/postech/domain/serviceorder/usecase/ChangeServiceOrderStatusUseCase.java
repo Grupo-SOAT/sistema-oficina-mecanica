@@ -48,9 +48,9 @@ public class ChangeServiceOrderStatusUseCase {
     }
 
     private boolean isServiceAction(ServiceOrderAction action) {
-        return action == ServiceOrderAction.START_SERVICE 
-            || action == ServiceOrderAction.COMPLETE_SERVICE 
-            || action == ServiceOrderAction.CANCEL_SERVICE;
+        return action == ServiceOrderAction.START_SERVICE
+                || action == ServiceOrderAction.COMPLETE_SERVICE
+                || action == ServiceOrderAction.CANCEL_SERVICE;
     }
 
     private void handleServiceAction(ServiceOrderAction action, Long relatedServiceId, ServiceOrder serviceOrder) {
@@ -68,7 +68,6 @@ public class ChangeServiceOrderStatusUseCase {
                 applyStatusTransition(serviceOrder, ServiceOrderStatus.CANCELLED);
             }
             default -> {
-                // Handle non-service actions normally
                 var targetStatus = resolveProgressTarget(action);
                 applyStatusTransition(serviceOrder, targetStatus);
             }
@@ -82,11 +81,10 @@ public class ChangeServiceOrderStatusUseCase {
     }
 
     private void checkAndUpdateToCompleted(ServiceOrder serviceOrder) {
-        // Check if all services are completed
         final var services = servicePersistencePort.findAllByServiceOrderId(serviceOrder.getId());
         boolean allCompleted = services.stream()
                 .allMatch(s -> "COMPLETED".equals(s.getStatus()));
-        
+
         if (allCompleted && !"COMPLETED".equals(serviceOrder.getStatus())) {
             applyStatusTransition(serviceOrder, ServiceOrderStatus.COMPLETED);
         }
@@ -105,8 +103,7 @@ public class ChangeServiceOrderStatusUseCase {
 
         validateTransition(currentStatus, targetStatus);
         applyStatusTransition(serviceOrder, targetStatus);
-        
-        // Reverberate status changes to eligible services
+
         reverberate(serviceOrder, targetStatus);
 
         return serviceOrderPersistencePort.save(serviceOrder);
@@ -149,7 +146,6 @@ public class ChangeServiceOrderStatusUseCase {
             case DELIVERED -> serviceOrder.setDeliveredAt(now);
             case PARTIALLY_REJECTED -> serviceOrder.setPartiallyRejectedAt(now);
             default -> {
-                // no-op for PENDING and AWAITING_APPROVAL in this step
             }
         }
     }
@@ -163,18 +159,18 @@ public class ChangeServiceOrderStatusUseCase {
         if (targetStatus == ServiceOrderStatus.APPROVED || targetStatus == ServiceOrderStatus.CANCELLED) {
             final var services = servicePersistencePort.findAllByServiceOrderId(serviceOrder.getId());
             final var now = LocalDateTime.now();
-            
+
             for (Service service : services) {
                 if ("AWAITING_APPROVAL".equals(service.getStatus())) {
                     service.setStatus(targetStatus.name());
                     service.setUpdatedAt(now);
-                    
+
                     if (targetStatus == ServiceOrderStatus.APPROVED) {
                         service.setApprovedAt(now);
                     } else if (targetStatus == ServiceOrderStatus.CANCELLED) {
                         service.setCancelledAt(now);
                     }
-                    
+
                     servicePersistencePort.save(service);
                 }
             }

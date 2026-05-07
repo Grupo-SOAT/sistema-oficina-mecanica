@@ -32,9 +32,6 @@ public class CatalogServicesUseCaseTest {
     @Mock
     private CatalogServicesPersistencePort persistencePort;
 
-    @Mock
-    private SupplyPersistencePort supplyPersistencePort;
-
     @InjectMocks
     private CatalogServicesUseCase useCase;
 

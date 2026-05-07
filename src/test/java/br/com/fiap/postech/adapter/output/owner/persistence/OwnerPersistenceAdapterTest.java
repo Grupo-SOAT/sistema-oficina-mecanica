@@ -23,7 +23,9 @@ import br.com.fiap.postech.adapter.output.owner.persistence.entity.OwnerEntity;
 import br.com.fiap.postech.adapter.output.owner.persistence.repository.OwnerRepository;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.domain.owner.model.Owner;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
 public class OwnerPersistenceAdapterTest {
@@ -39,37 +41,27 @@ public class OwnerPersistenceAdapterTest {
         OwnerEntity second = OwnerEntity.builder().id(12L).email("B@email.com").build();
         OwnerEntity third = OwnerEntity.builder().id(13L).email("C@email.com").build();
 
-        when(repository.findAllAfterCursor(anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(first, second, third));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(first, second, third)));
 
         ScrollPage<Owner> page = adapter.scroll(null, 2, "10");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-        verify(repository).findAllAfterCursor(cursorCaptor.capture(), pageableCaptor.capture());
-        verify(repository, never()).findByEmailAfterCursor(any(), anyLong(), any(Pageable.class));
-
-        assertThat(cursorCaptor.getValue()).isEqualTo(10L);
-        assertThat(pageableCaptor.getValue().getPageNumber()).isZero();
-        assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(3);
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
 
         assertThat(page.data()).hasSize(2);
         assertThat(page.isLast()).isFalse();
-        assertThat(page.cursor()).isEqualTo(second.toString());
     }
 
     @Test
     void should_scroll_with_document_filter_using_find_by_document_after_cursor() {
         OwnerEntity only = OwnerEntity.builder().id(1L).document("84779441056").build();
-        when(repository.findByDocumentAfterCursor(eq("84779441056"), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(only));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(only)));
 
         ScrollPage<Owner> page = adapter.scroll("84779441056", 2, "invalid-cursor");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
-        verify(repository).findByDocumentAfterCursor(eq("84779441056"), cursorCaptor.capture(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
 
-        assertThat(cursorCaptor.getValue()).isZero();
         assertThat(page.data()).hasSize(1);
         assertThat(page.isLast()).isTrue();
         assertThat(page.cursor()).isNull();

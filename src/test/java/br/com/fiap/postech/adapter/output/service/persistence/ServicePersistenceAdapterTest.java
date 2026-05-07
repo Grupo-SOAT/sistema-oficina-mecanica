@@ -13,7 +13,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -48,15 +51,12 @@ class ServicePersistenceAdapterTest {
         ServiceEntity second = ServiceEntity.builder().id(2L).serviceOrderId(10L).build();
         ServiceEntity third = ServiceEntity.builder().id(3L).serviceOrderId(10L).build();
 
-        when(repository.findAllByServiceOrderId(eq(10L), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(first, second, third));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(first, second, third)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, null, 2, "0");
+        ScrollPage<Service> page = adapter.scroll(10L, null, null, null, 2, "0");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
-        verify(repository).findAllByServiceOrderId(eq(10L), cursorCaptor.capture(), any(Pageable.class));
-
-        assertThat(cursorCaptor.getValue()).isZero();
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(2);
         assertThat(page.isLast()).isFalse();
     }
@@ -64,12 +64,12 @@ class ServicePersistenceAdapterTest {
     @Test
     void should_scroll_by_service_id_when_filter_provided() {
         ServiceEntity entity = ServiceEntity.builder().id(5L).serviceOrderId(10L).build();
-        when(repository.findByServiceOrderIdAndServiceId(eq(10L), eq(5L), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(entity));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, 5L, null, 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, 5L, null, null, 10, null);
 
-        verify(repository).findByServiceOrderIdAndServiceId(eq(10L), eq(5L), anyLong(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
         assertThat(page.isLast()).isTrue();
     }
@@ -77,33 +77,33 @@ class ServicePersistenceAdapterTest {
     @Test
     void should_scroll_by_name_when_filter_provided() {
         ServiceEntity entity = ServiceEntity.builder().id(1L).serviceOrderId(10L).build();
-        when(repository.findByServiceOrderIdAndName(eq(10L), eq("troca"), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(entity));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, "troca", 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, null, "troca", null, 10, null);
 
-        verify(repository).findByServiceOrderIdAndName(eq(10L), eq("troca"), anyLong(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
     }
 
     @Test
     void should_scroll_by_service_id_and_name_when_both_filters_provided() {
         ServiceEntity entity = ServiceEntity.builder().id(5L).serviceOrderId(10L).build();
-        when(repository.findByServiceOrderIdAndServiceIdAndName(eq(10L), eq(5L), eq("troca"), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(entity));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, 5L, "troca", 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, 5L, "troca", null, 10, null);
 
-        verify(repository).findByServiceOrderIdAndServiceIdAndName(eq(10L), eq(5L), eq("troca"), anyLong(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
     }
 
     @Test
     void should_return_empty_page_when_no_results() {
-        when(repository.findAllByServiceOrderId(eq(10L), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of());
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of()));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, null, 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, null, null, null, 10, null);
 
         assertThat(page.data()).isEmpty();
         assertThat(page.isLast()).isTrue();

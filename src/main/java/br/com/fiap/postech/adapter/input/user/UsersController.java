@@ -25,8 +25,8 @@ public class UsersController implements UsersApi {
 
         System.out.println("Request recebida para criar usuario!");
 
-        var userDomainDTO = new UserDTO(request.getUsername(), 
-        mapper.toDomain(request.getRoles()));
+        var userDomainDTO = new UserDTO(request.getUsername(),
+                mapper.toDomain(request.getRoles()));
 
         var domainResponse = userUseCase.createUser(userDomainDTO);
 
@@ -66,12 +66,12 @@ public class UsersController implements UsersApi {
 
     @Override
     public ResponseEntity<PaginatedUserResponse> listUsers(Long id,
-        String username,
-        Integer size,
-        String cursor
+                                                           String username,
+                                                           Integer size,
+                                                           String cursor
     ) {
         System.out.println("Request recebida para paginação de usuários! tamanho: " + size +
-            " cursor: " + cursor
+                " cursor: " + cursor
         );
 
         final var pageResult = userUseCase.scroll(username, size, cursor);
@@ -89,8 +89,8 @@ public class UsersController implements UsersApi {
         userUseCase.resetUserPassword(id);
 
         var response = new OneTimePassword("[message]: senha resetada com sucesso. O usuário com id " +
-            id + " está utilizando a senha default do sistema."
-         );
+                id + " está utilizando a senha default do sistema."
+        );
 
         return ResponseEntity.ok(response);
     }
@@ -103,7 +103,7 @@ public class UsersController implements UsersApi {
         var userDTO = new UserDTO(userData.getUsername(), mapper.toDomain(userData.getRoles()));
 
         var domainResponse = userUseCase.updateUser(id, userDTO);
-        
+
         System.out.println("usuario atualizado com sucesso: " + domainResponse);
 
         var clientResponse = mapper.toClientResponse(domainResponse);
