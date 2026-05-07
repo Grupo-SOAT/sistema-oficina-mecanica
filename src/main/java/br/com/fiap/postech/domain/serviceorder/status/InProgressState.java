@@ -2,22 +2,26 @@ package br.com.fiap.postech.domain.serviceorder.status;
 
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 
-import java.util.List;
+import java.util.Set;
 
+/**
+ * State representing an order in progress.
+ * Allowed transitions: COMPLETED, CANCELLED.
+ */
 public class InProgressState extends ServiceOrderState {
+
+    private static final Set<ServiceOrderStatus> ALLOWED_TRANSITIONS = 
+        Set.of(ServiceOrderStatus.COMPLETED, ServiceOrderStatus.CANCELLED);
 
     public InProgressState() {
         super(ServiceOrderStatus.IN_PROGRESS);
     }
 
     @Override
-    public List<Object> transitionTo(ServiceOrderStatus targetStatus) {
-        if (targetStatus == ServiceOrderStatus.COMPLETED) {
-            return List.of();
+    public void transitionTo(ServiceOrderStatus targetStatus) {
+        if (ALLOWED_TRANSITIONS.contains(targetStatus)) {
+            return;
         }
-        if (targetStatus == ServiceOrderStatus.CANCELLED) {
-            return List.of();
-        }
-        return super.transitionTo(targetStatus);
+        super.transitionTo(targetStatus);
     }
 }

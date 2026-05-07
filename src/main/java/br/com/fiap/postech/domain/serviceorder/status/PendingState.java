@@ -3,25 +3,26 @@ package br.com.fiap.postech.domain.serviceorder.status;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Initial state: PENDING.
- * From here, the only allowed transition is PENDING -> IN_INSPECTION.
+ * From here, the only allowed transitions are PENDING -> IN_INSPECTION and PENDING -> CANCELLED.
  */
 public class PendingState extends ServiceOrderState {
+
+    private static final Set<ServiceOrderStatus> ALLOWED_TRANSITIONS = 
+        Set.of(ServiceOrderStatus.IN_INSPECTION, ServiceOrderStatus.CANCELLED);
 
     public PendingState() {
         super(ServiceOrderStatus.PENDING);
     }
 
     @Override
-    public List<Object> transitionTo(ServiceOrderStatus targetStatus) {
-        if (targetStatus == ServiceOrderStatus.IN_INSPECTION) {
-            return List.of(); // No commands for this transition in V1
+    public void transitionTo(ServiceOrderStatus targetStatus) {
+        if (ALLOWED_TRANSITIONS.contains(targetStatus)) {
+            return;
         }
-        if (targetStatus == ServiceOrderStatus.CANCELLED) {
-            return List.of(); // Cancellation is always allowed
-        }
-        return super.transitionTo(targetStatus);
+        super.transitionTo(targetStatus);
     }
 }

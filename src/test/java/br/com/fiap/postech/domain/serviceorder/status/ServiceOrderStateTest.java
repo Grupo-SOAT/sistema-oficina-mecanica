@@ -5,6 +5,7 @@ import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ServiceOrderStateTest {
@@ -13,14 +14,14 @@ class ServiceOrderStateTest {
     void should_allow_pending_to_in_inspection() {
         var state = new PendingState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.IN_INSPECTION)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.IN_INSPECTION));
     }
 
     @Test
     void should_allow_pending_to_cancelled() {
         var state = new PendingState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.CANCELLED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.CANCELLED));
     }
 
     @Test
@@ -36,77 +37,77 @@ class ServiceOrderStateTest {
     void should_allow_in_inspection_to_awaiting_approval() {
         var state = new InInspectionState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.AWAITING_APPROVAL)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.AWAITING_APPROVAL));
     }
 
     @Test
     void should_allow_in_inspection_to_cancelled() {
         var state = new InInspectionState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.CANCELLED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.CANCELLED));
     }
 
     @Test
     void should_allow_awaiting_approval_to_approved() {
         var state = new AwaitingApprovalState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.APPROVED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.APPROVED));
     }
 
     @Test
     void should_allow_awaiting_approval_to_cancelled() {
         var state = new AwaitingApprovalState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.CANCELLED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.CANCELLED));
     }
 
     @Test
     void should_allow_awaiting_approval_to_partially_rejected_in_state_machine() {
         var state = new AwaitingApprovalState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.PARTIALLY_REJECTED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.PARTIALLY_REJECTED));
     }
 
     @Test
     void should_allow_approved_to_in_progress() {
         var state = new ApprovedState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.IN_PROGRESS)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.IN_PROGRESS));
     }
 
     @Test
     void should_allow_approved_to_cancelled() {
         var state = new ApprovedState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.CANCELLED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.CANCELLED));
     }
 
     @Test
     void should_allow_in_progress_to_completed() {
         var state = new InProgressState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.COMPLETED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.COMPLETED));
     }
 
     @Test
     void should_allow_in_progress_to_cancelled() {
         var state = new InProgressState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.CANCELLED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.CANCELLED));
     }
 
     @Test
     void should_allow_completed_to_delivered() {
         var state = new CompletedState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.DELIVERED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.DELIVERED));
     }
 
     @Test
     void should_allow_cancelled_to_delivered() {
         var state = new CancelledState();
 
-        assertThat(state.transitionTo(ServiceOrderStatus.DELIVERED)).isEmpty();
+        assertThatNoException().isThrownBy(() -> state.transitionTo(ServiceOrderStatus.DELIVERED));
     }
 
     @Test

@@ -2,28 +2,27 @@ package br.com.fiap.postech.domain.serviceorder.status;
 
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * State representing an order waiting for client approval.
+ * Allowed transitions: APPROVED, CANCELLED, PARTIALLY_REJECTED.
  */
 public class AwaitingApprovalState extends ServiceOrderState {
+
+    private static final Set<ServiceOrderStatus> ALLOWED_TRANSITIONS = 
+        Set.of(ServiceOrderStatus.APPROVED, ServiceOrderStatus.CANCELLED, 
+               ServiceOrderStatus.PARTIALLY_REJECTED);
 
     public AwaitingApprovalState() {
         super(ServiceOrderStatus.AWAITING_APPROVAL);
     }
 
     @Override
-    public List<Object> transitionTo(ServiceOrderStatus targetStatus) {
-        if (targetStatus == ServiceOrderStatus.APPROVED) {
-            return List.of();
+    public void transitionTo(ServiceOrderStatus targetStatus) {
+        if (ALLOWED_TRANSITIONS.contains(targetStatus)) {
+            return;
         }
-        if (targetStatus == ServiceOrderStatus.CANCELLED) {
-            return List.of();
-        }
-        if (targetStatus == ServiceOrderStatus.PARTIALLY_REJECTED) {
-            return List.of(); // Allowed in machine, but V2 use case will return 501
-        }
-        return super.transitionTo(targetStatus);
+        super.transitionTo(targetStatus);
     }
 }

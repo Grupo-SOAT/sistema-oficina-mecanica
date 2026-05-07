@@ -3,9 +3,6 @@ package br.com.fiap.postech.domain.serviceorder.status;
 import br.com.fiap.postech.domain.serviceorder.exception.StatusChangeNotAllowedException;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Abstract base class for ServiceOrder states.
  * Default behavior: any transition throws StatusChangeNotAllowedException.
@@ -24,12 +21,11 @@ public abstract class ServiceOrderState {
     }
 
     /**
-     * Attempts a status transition.
+     * Validates a status transition.
      * @param targetStatus the target status to transition to
-     * @return a list of domain commands to execute for this transition
      * @throws StatusChangeNotAllowedException if transition is not allowed
      */
-    public List<Object> transitionTo(ServiceOrderStatus targetStatus) {
+    public void transitionTo(ServiceOrderStatus targetStatus) {
         throw new StatusChangeNotAllowedException(this.status, targetStatus);
     }
 
