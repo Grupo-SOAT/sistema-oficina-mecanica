@@ -16,11 +16,11 @@ public interface UserPort {
 
     void deleteUser(Long id);
 
-    int updateUser(Long id, UserDTO userDTO);
+    User updateUser(Long id, UserDTO userDTO);
 
     ScrollPage<User> scroll(String username, Integer pageSize, String cursor);
 
-    void resetarSenhaUsuario(Long id);
+    void resetUserPassword(Long id);
 
     String getDefaultPassword();
 }

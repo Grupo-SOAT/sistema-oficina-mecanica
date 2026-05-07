@@ -58,7 +58,7 @@ class UsersControllerTest {
 
         ResponseEntity<UserData> response = controller.createUser(request);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(userData, response.getBody());
 
         verify(userUseCase).createUser(any(UserDTO.class));
@@ -105,7 +105,7 @@ class UsersControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().getPassword().contains("senha resetada"));
 
-        verify(userUseCase).resetUserPassoword(1L);
+        verify(userUseCase).resetUserPassword(1L);
     }
 
     @Test

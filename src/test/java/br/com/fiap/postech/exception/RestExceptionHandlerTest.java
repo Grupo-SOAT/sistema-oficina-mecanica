@@ -39,9 +39,9 @@ class RestExceptionHandlerTest {
                 new SameUsernameException()
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().getCode()).isEqualTo(400);
-        assertThat(response.getBody().getReason()).isEqualTo("USER_ALREADY_EXISTS");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(response.getBody().getCode()).isEqualTo(409);
+        assertThat(response.getBody().getReason()).isEqualTo("USER_CONFLICT_DUPLICATED_USERNAME");
         assertThat(response.getBody().getMessage()).isEqualTo("Username already exists");
     }
 

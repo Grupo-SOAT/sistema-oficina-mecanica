@@ -8,6 +8,8 @@ import io.cucumber.java.pt.Quando;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import com.fasterxml.jackson.databind.JsonNode;
+import br.com.fiap.postech.config.RoleAuthorizationFilter;
+import br.com.fiap.postech.config.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -34,6 +36,9 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private RoleAuthorizationFilter roleAuthorizationFilter;
 
     @Value("${security.jwt.secret}")
     private String jwtSecret;
@@ -184,11 +189,15 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
         String url = endpoint
                 .replace(":serviceId", "1")
                 .replace(":id", context.getCatalogServiceId() != null ? context.getCatalogServiceId().toString() : "1");
+        
+        // Gera payload válido baseado no endpoint e método HTTP
+        String body = getValidPayloadForEndpoint(method, endpoint);
+        
         try {
             MockHttpServletRequestBuilder request = withRoleAuth(
                     buildRequest(method, url)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{}"));
+                            .content(body));
             if (hasRoleAuth() && !"GET".equalsIgnoreCase(method)) {
                 request.with(SecurityMockMvcRequestPostProcessors.csrf());
             }
@@ -203,6 +212,43 @@ public class AuthenticationStepDefinitions extends BaseStepDefinition {
             context.setLastResponseContentType(null);
             context.setLastResponseContentDisposition(null);
         }
+    }
+    
+    private String getValidPayloadForEndpoint(String method, String endpoint) {
+        // Para GETs e DELETEs, payload vazio é aceitável
+        if ("GET".equalsIgnoreCase(method) || "DELETE".equalsIgnoreCase(method)) {
+            return "{}";
+        }
+        
+        // Para POST e PATCH, gera payloads válidos por tipo de recurso
+        if (endpoint.contains("/users")) {
+            return "{\"username\":\"testuser\",\"roles\":[\"ADMIN\"]}";
+        } else if (endpoint.contains("/owners")) {
+            return "{\"name\":\"Test Owner\",\"document\":\"12345678901234\",\"email\":\"owner@test.com\",\"phone\":\"11999999999\"}";
+        } else if (endpoint.contains("/vehicles")) {
+            return "{\"ownerId\":1,\"licensePlate\":\"ABC1234\",\"brand\":\"Toyota\",\"model\":\"Corolla\",\"year\":2020,\"color\":\"Red\"}";
+        } else if (endpoint.contains("/catalog/services")) {
+            // PATCH /catalog/services/:id requer 'id' no payload
+            if ("PATCH".equalsIgnoreCase(method)) {
+                return "{\"id\":1,\"name\":\"Test Service\",\"description\":\"Test Description\",\"basePrice\":100.00,\"neededSupplies\":[]}";
+            }
+            // POST /catalog/services não requer 'id'
+            return "{\"name\":\"Test Service\",\"description\":\"Test Description\",\"basePrice\":100.00,\"neededSupplies\":[]}";
+        } else if (endpoint.contains("/supplies")) {
+            return "{\"name\":\"Test Supply\",\"description\":\"Test Supply\",\"quantity\":10,\"unit\":\"UN\"}";
+        } else if (endpoint.contains("/service-orders/:id/services") && endpoint.contains(":serviceId")) {
+            return "{\"catalogServiceId\":1,\"price\":100.00,\"neededSupplies\":[]}";
+        } else if (endpoint.contains("/service-orders/:id/services") && !endpoint.contains(":serviceId")) {
+            return "{\"catalogServiceId\":1,\"price\":100.00,\"neededSupplies\":[]}";
+        } else if (endpoint.contains("/service-orders/:id/progress")) {
+            return "{\"newStatus\":\"IN_PROGRESS\"}";
+        } else if (endpoint.contains("/service-orders/:id/budget")) {
+            return "{\"budgetAmount\":1000.00}";
+        } else if (endpoint.contains("/service-orders")) {
+            return "{\"ownerId\":1,\"vehicleId\":1,\"description\":\"Test Order\"}";
+        }
+        
+        return "{}";
     }
 
     @Então("devo receber uma resposta com status diferente de {string}")

@@ -120,6 +120,7 @@ public class RolePermissions {
         String[] segments = uri.split("/");
 
         StringBuilder normalized = new StringBuilder();
+        String lastSegment = null;
 
         for (String segment : segments) {
 
@@ -130,8 +131,17 @@ public class RolePermissions {
 
             if (STATIC_SEGMENTS.contains(segment)) {
                 normalized.append(segment);
+                lastSegment = segment;
             } else {
-                normalized.append(":id");
+                // Este é um ID. Determinar qual ID:
+                // Se o segmento anterior é "services", este é um :serviceId
+                if ("services".equals(lastSegment)) {
+                    normalized.append(":serviceId");
+                } else {
+                    // Default para IDs simples
+                    normalized.append(":id");
+                }
+                lastSegment = null;  // Reset após processar ID
             }
         }
 
@@ -139,6 +149,7 @@ public class RolePermissions {
     }
 
     private static final List<String> STATIC_SEGMENTS = List.of(
+            "catalog",
             "users",
             "owners",
             "vehicles",

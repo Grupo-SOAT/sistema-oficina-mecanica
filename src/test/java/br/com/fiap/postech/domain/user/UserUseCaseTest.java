@@ -91,13 +91,25 @@ class UserUseCaseTest {
     }
 
     @Test
-    void shouldUpdateUser() {
+    void shouldThrowWhenUpdateUserWithDuplicateUsername() {
+        UserDTO dtoWithDuplicateUsername = new UserDTO("mecanico", List.of(Roles.ATTENDANT));
+        User existingUser = new User(1L, "admin", List.of(Roles.ADMIN));
+        User anotherUserWithMecanico = new User(2L, "mecanico", List.of(Roles.MECHANIC));
+
+        when(userPort.findById(1L)).thenReturn(Optional.of(existingUser));
+        when(userPort.findByUsername("mecanico")).thenReturn(Optional.of(anotherUserWithMecanico));
+
+        assertThrows(SameUsernameException.class,
+                () -> useCase.updateUser(1L, dtoWithDuplicateUsername));
+    }
+
+    @Test
+    void shouldUpdateUserWithSameUsername() {
         UserDTO dto = new UserDTO("andre", List.of(Roles.ADMIN));
         User user = new User(1L, "andre", List.of(Roles.ADMIN));
 
         when(userPort.findById(1L)).thenReturn(Optional.of(user));
-        when(userPort.updateUser(1L, dto)).thenReturn(1);
-        when(userPort.findById(1L)).thenReturn(Optional.of(user));
+        when(userPort.updateUser(1L, dto)).thenReturn(user);
 
         User result = useCase.updateUser(1L, dto);
 
@@ -107,10 +119,12 @@ class UserUseCaseTest {
     @Test
     void shouldThrowWhenUpdateFails() {
         UserDTO dto = new UserDTO("andre", List.of(Roles.ADMIN));
+        User mockUser = mock(User.class);
+        when(mockUser.username()).thenReturn("andre");
 
         when(userPort.findById(1L))
-                .thenReturn(Optional.of(mock(User.class)));
-        when(userPort.updateUser(1L, dto)).thenReturn(0);
+                .thenReturn(Optional.of(mockUser));
+        when(userPort.updateUser(1L, dto)).thenThrow(new UserNotFoundException(1L));
 
         assertThrows(UserNotFoundException.class,
                 () -> useCase.updateUser(1L, dto));
@@ -142,8 +156,8 @@ class UserUseCaseTest {
         when(userPort.findById(1L))
                 .thenReturn(Optional.of(mock(User.class)));
 
-        useCase.resetUserPassoword(1L);
+        useCase.resetUserPassword(1L);
 
-        verify(userPort).resetarSenhaUsuario(1L);
+        verify(userPort).resetUserPassword(1L);
     }
 }

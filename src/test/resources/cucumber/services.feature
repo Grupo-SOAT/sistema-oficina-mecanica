@@ -113,8 +113,8 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o id da ordem de serviço seja 1
     E que o id do serviço da ordem de serviço seja 1
     E que o corpo de atualização do serviço da ordem de serviço seja:
-      | id | serviceOrderId | catalogServiceId | price  | status      |
-      | 1  | 1              | 1                | 160.00 | IN_PROGRESS |
+      | id | serviceOrderId | catalogServiceId | price  | status              | neededSupplies |
+      | 1  | 1              | 1                | 160.00 | AWAITING_APPROVAL   | []             |
     Quando eu atualizar o serviço da ordem de serviço
     Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado

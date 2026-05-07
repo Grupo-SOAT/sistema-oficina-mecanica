@@ -63,12 +63,14 @@ public class ServiceUseCase {
 
     public Service update(Long serviceOrderId, Long serviceId, Service service) {
         ensureServiceOrderExists(serviceOrderId);
-        persistencePort.findByIdAndServiceOrderId(serviceId, serviceOrderId)
+        final var existing = persistencePort.findByIdAndServiceOrderId(serviceId, serviceOrderId)
                 .orElseThrow(() -> new ServiceNotFoundException(serviceId));
 
         validateService(service);
         service.setId(serviceId);
         service.setServiceOrderId(serviceOrderId);
+        // IMPORTANTE: preservar status existente - mudanças de status SÓ via endpoints de progresso
+        service.setStatus(existing.getStatus());
         return persistencePort.save(service);
     }
 

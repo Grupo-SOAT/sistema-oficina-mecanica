@@ -162,30 +162,30 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
   Cenário: Registrar ação START_SERVICE
     Dado que eu esteja devidamente logado
     E que o id da ordem de serviço seja 4
-    E que o id do serviço da ordem de serviço seja 1
+    E que o id do serviço da ordem de serviço seja 10
     E que o corpo da ação de progresso da ordem de serviço seja:
       | action        | additionalInfo          | relatedServiceId |
-      | START_SERVICE | Inicio da troca de oleo | 1                |
+      | START_SERVICE | Inicio da troca de oleo | 10               |
     Quando eu registrar o progresso da ordem de serviço
     Então devo receber uma resposta com status "202"
 
   Cenário: Registrar ação COMPLETE_SERVICE
     Dado que eu esteja devidamente logado
     E que o id da ordem de serviço seja 5
-    E que o id do serviço da ordem de serviço seja 2
+    E que o id do serviço da ordem de serviço seja 11
     E que o corpo da ação de progresso da ordem de serviço seja:
       | action           | additionalInfo    | relatedServiceId |
-      | COMPLETE_SERVICE | Serviço concluido | 2                |
+      | COMPLETE_SERVICE | Serviço concluido | 11               |
     Quando eu registrar o progresso da ordem de serviço
     Então devo receber uma resposta com status "202"
 
   Cenário: Registrar ação CANCEL_SERVICE
     Dado que eu esteja devidamente logado
     E que o id da ordem de serviço seja 5
-    E que o id do serviço da ordem de serviço seja 3
+    E que o id do serviço da ordem de serviço seja 12
     E que o corpo da ação de progresso da ordem de serviço seja:
       | action        | additionalInfo     | relatedServiceId |
-      | CANCEL_SERVICE | Serviço cancelado  | 3                |
+      | CANCEL_SERVICE | Serviço cancelado  | 12               |
     Quando eu registrar o progresso da ordem de serviço
     Então devo receber uma resposta com status "202"
 

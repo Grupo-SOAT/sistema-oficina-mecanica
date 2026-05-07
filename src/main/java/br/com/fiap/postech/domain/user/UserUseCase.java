@@ -16,7 +16,7 @@ public class UserUseCase {
         this.userPort = userPort;
     }
 
-    public User createUser(UserDTO userDTO){
+    public User createUser(UserDTO userDTO) {
         if (userPort.findByUsername(userDTO.username()).isPresent()) {
             throw new SameUsernameException();
         }
@@ -26,30 +26,27 @@ public class UserUseCase {
         return userPort.createUser(userDTO, senhaDefault);
     }
 
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
         userPort.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
         userPort.deleteUser(id);
     }
 
-    public User getUserById(Long id){
+    public User getUserById(Long id) {
         return userPort.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public User updateUser(Long id, UserDTO userDTO){
-        userPort.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
-
-        int updated = userPort.updateUser(id, userDTO);
-
-        if (updated == 0) {
-            throw new UserNotFoundException(id);
+    public User updateUser(Long id, UserDTO userDTO) {
+        if (userPort.findByUsername(userDTO.username()).isPresent()) {
+            throw new SameUsernameException();
         }
 
-        return userPort.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
+        userPort.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        return userPort.updateUser(id, userDTO);
     }
 
     public ScrollPage<User> scroll(String username, Integer size, String cursor) {
@@ -62,10 +59,10 @@ public class UserUseCase {
         return result;
     }
 
-    public void resetUserPassoword(Long id){
+    public void resetUserPassword(Long id) {
         userPort.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id));
+                .orElseThrow(() -> new UserNotFoundException(id));
 
-        userPort.resetarSenhaUsuario(id);
+        userPort.resetUserPassword(id);
     }
 }

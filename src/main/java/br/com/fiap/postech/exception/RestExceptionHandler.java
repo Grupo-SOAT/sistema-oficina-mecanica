@@ -28,8 +28,8 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(SameUsernameException.class)
     public ResponseEntity<ErrorResponse> handleSameUsernameException(SameUsernameException ex) {
-        final var httpStatus = HttpStatus.BAD_REQUEST;
-        final var response = new ErrorResponse(httpStatus.value(), "USER_ALREADY_EXISTS", ex.getMessage());
+        final var httpStatus = HttpStatus.CONFLICT;
+        final var response = new ErrorResponse(httpStatus.value(), "USER_CONFLICT_DUPLICATED_USERNAME", ex.getMessage());
         return new ResponseEntity<>(response, httpStatus);
     }
 

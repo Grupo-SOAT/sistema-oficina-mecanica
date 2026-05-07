@@ -115,6 +115,8 @@ Funcionalidade: Login no sistema
       | GET    | /vehicles/:id                           |
       | GET    | /catalog/services                       |
       | GET    | /catalog/services/:id                   |
+      | PATCH  | /catalog/services/:id                   |
+      | DELETE | /catalog/services/:id                   |
       | GET    | /supplies                               |
       | GET    | /supplies/:id                           |
       | GET    | /service-orders                         |
@@ -142,8 +144,6 @@ Funcionalidade: Login no sistema
       | PATCH  | /vehicles/:id              |
       | DELETE | /vehicles/:id              |
       | POST   | /catalog/services          |
-      | PATCH  | /catalog/services/:id      |
-      | DELETE | /catalog/services/:id      |
       | POST   | /supplies                  |
       | PATCH  | /supplies/:id              |
       | DELETE | /supplies/:id              |
@@ -201,8 +201,6 @@ Funcionalidade: Login no sistema
       | PATCH  | /users/:id                              |
       | DELETE | /users/:id                              |
       | POST   | /catalog/services                       |
-      | PATCH  | /catalog/services/:id                   |
-      | DELETE | /catalog/services/:id                   |
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |
@@ -213,9 +211,9 @@ Funcionalidade: Login no sistema
       | PATCH  | /service-orders/:id                     |
       | DELETE | /service-orders/:id                     |
       | POST   | /service-orders/:id/services            |
+      | POST   | /service-orders/:id/progress            |
       | PATCH  | /service-orders/:id/services/:serviceId |
       | DELETE | /service-orders/:id/services/:serviceId |
-      | POST   | /service-orders/:id/progress            |
 #      | POST   | /purchase-orders                        |
 #      | PATCH  | /purchase-orders/:id                    |
 #      | DELETE | /purchase-orders/:id                    |
@@ -238,14 +236,16 @@ Funcionalidade: Login no sistema
       | DELETE | /vehicles/:id              |
       | GET    | /catalog/services          |
       | GET    | /catalog/services/:id      |
+      | PATCH  | /catalog/services/:id      |
+      | DELETE | /catalog/services/:id      |
       | GET    | /supplies                  |
       | GET    | /supplies/:id              |
       | GET    | /service-orders            |
       | POST   | /service-orders            |
       | GET    | /service-orders/:id        |
       | POST   | /service-orders/:id/budget |
-#      | GET    | /purchase-orders           |
-#      | GET    | /purchase-orders/:id       |
+#      | GET    | /purchase-orders                        |
+#      | GET    | /purchase-orders/:id                    |
 
   Esquema do Cenário: Chatbot - Acesso bloqueado
     Dado que eu esteja autenticado como "chatbot"
@@ -259,8 +259,6 @@ Funcionalidade: Login no sistema
       | PATCH  | /users/:id                              |
       | DELETE | /users/:id                              |
       | POST   | /catalog/services                       |
-      | PATCH  | /catalog/services/:id                   |
-      | DELETE | /catalog/services/:id                   |
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |
@@ -272,10 +270,10 @@ Funcionalidade: Login no sistema
       | DELETE | /service-orders/:id                     |
       | GET    | /service-orders/:id/services            |
       | POST   | /service-orders/:id/services            |
+      | POST   | /service-orders/:id/progress            |
       | GET    | /service-orders/:id/services/:serviceId |
       | PATCH  | /service-orders/:id/services/:serviceId |
       | DELETE | /service-orders/:id/services/:serviceId |
-      | POST   | /service-orders/:id/progress            |
 #      | POST   | /purchase-orders                        |
 #      | PATCH  | /purchase-orders/:id                    |
 #      | DELETE | /purchase-orders/:id                    |
@@ -285,11 +283,13 @@ Funcionalidade: Login no sistema
     Quando acesso o endpoint "<method>" "<endpoint>"
     Então devo receber uma resposta com status diferente de "403"
     Exemplos:
-      | method | endpoint             |
-      | GET    | /users               |
-      | GET    | /users/:id           |
-      | GET    | /supplies            |
-      | GET    | /supplies/:id        |
+      | method | endpoint              |
+      | GET    | /users                |
+      | GET    | /users/:id            |
+      | GET    | /supplies             |
+      | GET    | /supplies/:id         |
+      | PATCH  | /catalog/services/:id |
+      | DELETE | /catalog/services/:id |
 #      | GET    | /suppliers           |
 #      | GET    | /suppliers/:id       |
 #      | GET    | /purchase-orders     |
@@ -297,8 +297,8 @@ Funcionalidade: Login no sistema
 #      | GET    | /purchase-orders/:id |
 #      | PATCH  | /purchase-orders/:id |
 #      | DELETE | /purchase-orders/:id |
-      | GET    | /service-orders      |
-      | GET    | /service-orders/:id  |
+      | GET    | /service-orders       |
+      | GET    | /service-orders/:id   |
 
   Esquema do Cenário: Almoxarife - Acesso bloqueado
     Dado que eu esteja logado como "almoxarife"
@@ -319,8 +319,6 @@ Funcionalidade: Login no sistema
       | DELETE | /vehicles/:id                           |
       | POST   | /catalog/services                       |
       | GET    | /catalog/services                       |
-      | PATCH  | /catalog/services/:id                   |
-      | DELETE | /catalog/services/:id                   |
       | POST   | /supplies                               |
       | PATCH  | /supplies/:id                           |
       | DELETE | /supplies/:id                           |

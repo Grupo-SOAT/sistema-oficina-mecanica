@@ -2,6 +2,7 @@ package br.com.fiap.postech.adapter.output.user;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,30 +38,27 @@ public class UserAdapter implements UserPort {
 
     @Override
     public Optional<User> findByUsername(String username) {
-
         return userRepository.findByUsername(username)
                 .map(this::toDomain);
     }
 
     @Override
     public Optional<User> findById(Long id) {
-
         return userRepository.findById(id)
                 .map(this::toDomain);
     }
 
     @Override
     public User createUser(UserDTO userDTO, String defaultPassword) {
-
         var entity = new UserEntity();
 
         entity.setUsername(userDTO.username());
         entity.setPassword(passwordEncoder.encode(defaultPassword));
         entity.setRolesList(rolesEnumToRolesString(userDTO.roles()));
 
-        var savedUser = userRepository.save(entity);
+        var created = userRepository.save(entity);
 
-        return toDomain(savedUser);
+        return toDomain(created);
     }
 
     @Override
@@ -70,12 +68,15 @@ public class UserAdapter implements UserPort {
 
     @Override
     @Transactional
-    public int updateUser(Long id, UserDTO userDTO) {
+    public User updateUser(Long id, UserDTO userDTO) {
+        final var entity = userRepository.findById(id).get();
 
-        return userRepository.updateUser(
-                id,
-                userDTO.username(),
-                rolesEnumToRolesString(userDTO.roles()).toArray(new String[0]));
+        entity.setUsername(userDTO.username());
+        entity.setRoles(userDTO.roles().stream().map(Enum::name).toArray(String[]::new));
+
+        final var updated = userRepository.save(entity);
+
+        return toDomain(updated);
     }
 
     @Override
@@ -91,17 +92,16 @@ public class UserAdapter implements UserPort {
                     return results.stream()
                             .map(this::toDomain)
                             .toList();
-                });
+                }
+        );
     }
 
     @Override
     @Transactional
-    public void resetarSenhaUsuario(Long id){
-
-        var usuario = userRepository.findById(id);
-
-        usuario.get().setPassword(passwordEncoder.encode(this.defaultPassword));
-
+    public void resetUserPassword(Long id) {
+        var entity = userRepository.findById(id).get();
+        entity.setPassword(passwordEncoder.encode(this.defaultPassword));
+        userRepository.save(entity);
     }
 
     // =========================
@@ -116,7 +116,6 @@ public class UserAdapter implements UserPort {
     }
 
     private List<String> rolesEnumToRolesString(List<Roles> roles) {
-
         if (roles == null) {
             return null;
         }

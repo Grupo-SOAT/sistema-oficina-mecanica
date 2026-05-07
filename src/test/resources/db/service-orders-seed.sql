@@ -33,23 +33,35 @@ INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description
 VALUES (7, 1, 1, 'Revisão cancelada', 'CANCELLED', 100.00, CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
 -- Services para testes
--- Para ID 4 (APPROVED) - testar START_SERVICE
-INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, approved_at)
-VALUES (1, 4, 1, 120.00, 'APPROVED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+-- IMPORTANTE: Service IDs segregados por contexto de teste
+--           OS 1: service 1 (usado por @services para testes de CRUD)
+--           OS 4: service 10 (usado por @serviceOrders para START_SERVICE)
+--           OS 5: services 11, 12 (usado por @serviceOrders para COMPLETE/CANCEL_SERVICE)
 
--- Para ID 5 (IN_PROGRESS) - testar COMPLETE_SERVICE e CANCEL_SERVICE
+-- Para OS 1 (PENDING) - testes de CRUD de services com service IDs 1, 2, 3
+INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at)
+VALUES 
+  (1, 1, 1, 120.00, 'AWAITING_APPROVAL', CURRENT_TIMESTAMP - INTERVAL '3 day', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  (4, 1, 2, 150.00, 'AWAITING_APPROVAL', CURRENT_TIMESTAMP - INTERVAL '2 day', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  (5, 1, 3, 100.00, 'AWAITING_APPROVAL', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+-- Para OS 4 (APPROVED) - testar START_SERVICE com service ID 10
+INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, approved_at)
+VALUES (10, 4, 1, 120.00, 'APPROVED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+-- Para OS 5 (IN_PROGRESS) - testar COMPLETE_SERVICE e CANCEL_SERVICE com services IDs 11 e 12
 INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, started_at)
 VALUES 
-  (2, 5, 2, 150.00, 'IN_PROGRESS', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day'),
-  (3, 5, 3, 100.00, 'IN_PROGRESS', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+  (11, 5, 2, 150.00, 'IN_PROGRESS', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  (12, 5, 3, 100.00, 'IN_PROGRESS', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
--- Para ID 6 (COMPLETED)
+-- Para OS 6 (COMPLETED)
 INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, completed_at)
-VALUES (4, 6, 1, 300.00, 'COMPLETED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+VALUES (20, 6, 1, 300.00, 'COMPLETED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
--- Para ID 7 (CANCELLED)
+-- Para OS 7 (CANCELLED)
 INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, cancelled_at)
-VALUES (5, 7, 1, 100.00, 'CANCELLED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+VALUES (21, 7, 1, 100.00, 'CANCELLED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
 SELECT setval(pg_get_serial_sequence('service_orders', 'service_order_id'), (SELECT COALESCE(MAX(service_order_id), 0) FROM service_orders));
 SELECT setval(pg_get_serial_sequence('services', 'service_id'), (SELECT COALESCE(MAX(service_id), 0) FROM services));

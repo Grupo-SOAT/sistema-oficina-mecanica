@@ -34,7 +34,7 @@ public class UsersController implements UsersApi {
 
         var clientResponse = mapper.toClientResponse(domainResponse);
 
-        return ResponseEntity.ok(clientResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientResponse);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class UsersController implements UsersApi {
 
         System.out.println("Request para resetar a senha do usuario recebida. id: " + id);
 
-        userUseCase.resetUserPassoword(id);
+        userUseCase.resetUserPassword(id);
 
         var response = new OneTimePassword("[message]: senha resetada com sucesso. O usuário com id " +
             id + " está utilizando a senha default do sistema."
