@@ -141,22 +141,62 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
 
   # === PROGRESSO DA ORDEM DE SERVIÇO ===
 
-  Esquema do Cenário: Registrar ações de progresso da ordem de serviço
+  Cenário: Registrar ação START_INSPECTION
     Dado que eu esteja devidamente logado
     E que o id da ordem de serviço seja 1
     E que o corpo da ação de progresso da ordem de serviço seja:
-      | action   | additionalInfo   | relatedServiceId   |
-      | <action> | <additionalInfo> | <relatedServiceId> |
+      | action           | additionalInfo      | relatedServiceId |
+      | START_INSPECTION | Recebida na recepcao|                  |
     Quando eu registrar o progresso da ordem de serviço
     Então devo receber uma resposta com status "202"
-    Exemplos:
-      | action              | additionalInfo          | relatedServiceId |
-      | START_INSPECTION    | Recebida na recepcao    |                  |
-      | COMPLETE_INSPECTION | Inspecao finalizada     |                  |
-      | START_SERVICE       | Inicio da troca de oleo | 1                |
-      | COMPLETE_SERVICE    | Serviço concluido       | 1                |
-      | CANCEL_SERVICE      | Serviço cancelado       | 1                |
-      | DELIVER_VEHICLE     | Veiculo entregue        |                  |
+
+  Cenário: Registrar ação COMPLETE_INSPECTION
+    Dado que eu esteja devidamente logado
+    E que o id da ordem de serviço seja 2
+    E que o corpo da ação de progresso da ordem de serviço seja:
+      | action              | additionalInfo      | relatedServiceId |
+      | COMPLETE_INSPECTION | Inspecao finalizada |                  |
+    Quando eu registrar o progresso da ordem de serviço
+    Então devo receber uma resposta com status "202"
+
+  Cenário: Registrar ação START_SERVICE
+    Dado que eu esteja devidamente logado
+    E que o id da ordem de serviço seja 4
+    E que o id do serviço da ordem de serviço seja 1
+    E que o corpo da ação de progresso da ordem de serviço seja:
+      | action        | additionalInfo          | relatedServiceId |
+      | START_SERVICE | Inicio da troca de oleo | 1                |
+    Quando eu registrar o progresso da ordem de serviço
+    Então devo receber uma resposta com status "202"
+
+  Cenário: Registrar ação COMPLETE_SERVICE
+    Dado que eu esteja devidamente logado
+    E que o id da ordem de serviço seja 5
+    E que o id do serviço da ordem de serviço seja 2
+    E que o corpo da ação de progresso da ordem de serviço seja:
+      | action           | additionalInfo    | relatedServiceId |
+      | COMPLETE_SERVICE | Serviço concluido | 2                |
+    Quando eu registrar o progresso da ordem de serviço
+    Então devo receber uma resposta com status "202"
+
+  Cenário: Registrar ação CANCEL_SERVICE
+    Dado que eu esteja devidamente logado
+    E que o id da ordem de serviço seja 5
+    E que o id do serviço da ordem de serviço seja 3
+    E que o corpo da ação de progresso da ordem de serviço seja:
+      | action        | additionalInfo     | relatedServiceId |
+      | CANCEL_SERVICE | Serviço cancelado  | 3                |
+    Quando eu registrar o progresso da ordem de serviço
+    Então devo receber uma resposta com status "202"
+
+  Cenário: Registrar ação DELIVER_VEHICLE
+    Dado que eu esteja devidamente logado
+    E que o id da ordem de serviço seja 6
+    E que o corpo da ação de progresso da ordem de serviço seja:
+      | action          | additionalInfo     | relatedServiceId |
+      | DELIVER_VEHICLE | Veiculo entregue   |                  |
+    Quando eu registrar o progresso da ordem de serviço
+    Então devo receber uma resposta com status "202"
 
   Cenário: Progresso em ordem de serviço inexistente
     Dado que eu esteja devidamente logado
@@ -171,7 +211,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
   # === ORCAMENTO DA ORDEM DE SERVIÇO ===
 
   Esquema do Cenário: Registrar decisão do cliente sobre o orçamento
-    Dado que o orçamento da ordem de serviço de ID "1" foi enviado ao cliente
+    Dado que o orçamento da ordem de serviço de ID "3" foi enviado ao cliente
     E que a decisão do cliente seja "<decision>"
     E que a observação da decisão seja "<comment>"
     E que os serviços rejeitados sejam "<rejectedServiceIds>"
@@ -182,7 +222,15 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
       | APPROVE          | Orçamento aprovado            |                    |
       | CANCEL           | Cliente desistiu              |                    |
       | REJECT           | Cliente recusou integralmente |                    |
-      | PARTIALLY_REJECT | Cliente aceitou apenas parte  | 1                  |
+
+  Cenário: Registrar rejeição parcial do orçamento (não implementado)
+    Dado que o orçamento da ordem de serviço de ID "3" foi enviado ao cliente
+    E que a decisão do cliente seja "PARTIALLY_REJECT"
+    E que a observação da decisão seja "Cliente aceitou apenas parte"
+    E que os serviços rejeitados sejam "1"
+    Quando eu registrar a decisão do cliente sobre o orçamento da ordem de serviço
+    Então devo receber uma resposta com status "501"
+    E a resposta deve conter o campo reason com valor "PARTIAL_BUDGET_REJECTION_NOT_IMPLEMENTED"
 
   Cenário: Decisão de orçamento para ordem de serviço inexistente
     Dado que a decisão do cliente seja "APPROVE"

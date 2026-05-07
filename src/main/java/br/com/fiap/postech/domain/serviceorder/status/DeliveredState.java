@@ -10,5 +10,4 @@ public class DeliveredState extends ServiceOrderState {
     public DeliveredState() {
         super(ServiceOrderStatus.DELIVERED);
     }
-    // No overrides — all transitions fall through to default denial
 }
