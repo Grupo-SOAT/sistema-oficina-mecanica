@@ -58,9 +58,9 @@ class ServiceUseCaseTest {
                 .cursor("1")
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(1L, null, null, null, 10, "0")).thenReturn(expected);
+        when(persistencePort.scroll(1L, null, null, 10, "0")).thenReturn(expected);
 
-        ScrollPage<Service> actual = useCase.scroll(1L, null, null, null, 10, "0");
+        ScrollPage<Service> actual = useCase.scroll(1L, null, null, 10, "0");
 
         assertThat(actual).isSameAs(expected);
     }
@@ -74,9 +74,9 @@ class ServiceUseCaseTest {
                 .cursor(null)
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(99L, null, null, null, 10, null)).thenReturn(empty);
+        when(persistencePort.scroll(99L, null, null, 10, null)).thenReturn(empty);
 
-        assertThatThrownBy(() -> useCase.scroll(99L, null, null, null, 10, null))
+        assertThatThrownBy(() -> useCase.scroll(99L, null, null, 10, null))
                 .isInstanceOf(NoMatchingServicesException.class)
                 .hasMessage("No matching services for service order id: 99");
     }
@@ -194,7 +194,7 @@ class ServiceUseCaseTest {
     void should_throw_when_service_order_not_found_on_scroll() {
         when(serviceOrderPersistencePort.findById(99L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> useCase.scroll(99L, null, null, null, 10, null))
+        assertThatThrownBy(() -> useCase.scroll(99L, null, null, 10, null))
                 .isInstanceOf(br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException.class);
     }
 
@@ -246,25 +246,9 @@ class ServiceUseCaseTest {
                 .cursor(null)
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(1L, 5L, null, null, 10, "0")).thenReturn(expected);
+        when(persistencePort.scroll(1L, 5L, null, 10, "0")).thenReturn(expected);
 
-        ScrollPage<Service> actual = useCase.scroll(1L, 5L, null, null, 10, "0");
-
-        assertThat(actual).isSameAs(expected);
-    }
-
-    @Test
-    void should_handle_scroll_with_name_filter() {
-        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
-        ScrollPage<Service> expected = ScrollPage.<Service>builder()
-                .data(List.of(ServiceEntity.builder().id(1L).build()))
-                .isLast(true)
-                .cursor(null)
-                .pageSize(10)
-                .build();
-        when(persistencePort.scroll(1L, null, "Oil Change", null, 10, "0")).thenReturn(expected);
-
-        ScrollPage<Service> actual = useCase.scroll(1L, null, "Oil Change", null, 10, "0");
+        ScrollPage<Service> actual = useCase.scroll(1L, 5L, null, 10, "0");
 
         assertThat(actual).isSameAs(expected);
     }
@@ -278,9 +262,9 @@ class ServiceUseCaseTest {
                 .cursor(null)
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(1L, null, null, "COMPLETED", 10, "0")).thenReturn(expected);
+        when(persistencePort.scroll(1L, null, "COMPLETED", 10, "0")).thenReturn(expected);
 
-        ScrollPage<Service> actual = useCase.scroll(1L, null, null, "COMPLETED", 10, "0");
+        ScrollPage<Service> actual = useCase.scroll(1L, null, "COMPLETED", 10, "0");
 
         assertThat(actual).isSameAs(expected);
     }
@@ -294,9 +278,9 @@ class ServiceUseCaseTest {
                 .cursor(null)
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll(1L, 5L, "Oil Change", "COMPLETED", 10, "0")).thenReturn(expected);
+        when(persistencePort.scroll(1L, 5L, "COMPLETED", 10, "0")).thenReturn(expected);
 
-        ScrollPage<Service> actual = useCase.scroll(1L, 5L, "Oil Change", "COMPLETED", 10, "0");
+        ScrollPage<Service> actual = useCase.scroll(1L, 5L, "COMPLETED", 10, "0");
 
         assertThat(actual).isSameAs(expected);
     }

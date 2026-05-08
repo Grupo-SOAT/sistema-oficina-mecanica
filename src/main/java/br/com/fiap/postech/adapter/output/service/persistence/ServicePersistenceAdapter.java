@@ -27,14 +27,13 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
     private final ServiceRepository repository;
     private final CatalogServicesRepository catalogServicesRepository;
 
-
     @Override
-    public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String name, String status, Integer pageSize, String cursor) {
+    public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String status, Integer pageSize, String cursor) {
         return Scroller.scroll(
                 cursor,
                 pageSize,
                 (parsedCursor, pageable) -> repository.findAll(
-                                buildSpecification(serviceOrderId, serviceId, name, status, parsedCursor),
+                                buildSpecification(serviceOrderId, serviceId, status, parsedCursor),
                                 pageable
                         )
                         .getContent()
@@ -44,7 +43,7 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
         );
     }
 
-    private Specification<ServiceEntity> buildSpecification(Long serviceOrderId, Long serviceId, String name, String status, Long cursor) {
+    private Specification<ServiceEntity> buildSpecification(Long serviceOrderId, Long serviceId, String status, Long cursor) {
         return (root, query, criteriaBuilder) -> {
             query.distinct(true);
             query.orderBy(criteriaBuilder.asc(root.get("id")));
@@ -57,15 +56,6 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
 
             if (serviceId != null) {
                 predicates.add(criteriaBuilder.equal(root.get("id"), serviceId));
-            }
-
-            if (name != null && !name.isBlank()) {
-                predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("name")),
-                                name.toLowerCase() + "%"
-                        )
-                );
             }
 
             if (status != null && !status.isBlank()) {

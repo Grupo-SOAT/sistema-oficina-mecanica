@@ -54,7 +54,7 @@ class ServicePersistenceAdapterTest {
         when(repository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(first, second, third)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, null, null, 2, "0");
+        ScrollPage<Service> page = adapter.scroll(10L, null, null, 2, "0");
 
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(2);
@@ -67,7 +67,7 @@ class ServicePersistenceAdapterTest {
         when(repository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(entity)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, 5L, null, null, 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, 5L, null, 10, null);
 
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
@@ -75,35 +75,11 @@ class ServicePersistenceAdapterTest {
     }
 
     @Test
-    void should_scroll_by_name_when_filter_provided() {
-        ServiceEntity entity = ServiceEntity.builder().id(1L).serviceOrderId(10L).build();
-        when(repository.findAll(any(Specification.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(entity)));
-
-        ScrollPage<Service> page = adapter.scroll(10L, null, "troca", null, 10, null);
-
-        verify(repository).findAll(any(Specification.class), any(Pageable.class));
-        assertThat(page.data()).hasSize(1);
-    }
-
-    @Test
-    void should_scroll_by_service_id_and_name_when_both_filters_provided() {
-        ServiceEntity entity = ServiceEntity.builder().id(5L).serviceOrderId(10L).build();
-        when(repository.findAll(any(Specification.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(entity)));
-
-        ScrollPage<Service> page = adapter.scroll(10L, 5L, "troca", null, 10, null);
-
-        verify(repository).findAll(any(Specification.class), any(Pageable.class));
-        assertThat(page.data()).hasSize(1);
-    }
-
-    @Test
     void should_return_empty_page_when_no_results() {
         when(repository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of()));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, null, null, 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, null, null, 10, null);
 
         assertThat(page.data()).isEmpty();
         assertThat(page.isLast()).isTrue();
@@ -295,7 +271,7 @@ class ServicePersistenceAdapterTest {
         when(repository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(entity)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, null, "COMPLETED", 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, null, null, 10, null);
 
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
@@ -307,7 +283,7 @@ class ServicePersistenceAdapterTest {
         when(repository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(entity)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, 5L, null, "COMPLETED", 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, 5L, null, 10, null);
 
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
@@ -319,7 +295,7 @@ class ServicePersistenceAdapterTest {
         when(repository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(entity)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, "troca", "COMPLETED", 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, null, "troca", 10, null);
 
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
@@ -331,7 +307,7 @@ class ServicePersistenceAdapterTest {
         when(repository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(entity)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, 5L, "troca", "COMPLETED", 10, null);
+        ScrollPage<Service> page = adapter.scroll(10L, 5L, "troca", 10, null);
 
         verify(repository).findAll(any(Specification.class), any(Pageable.class));
         assertThat(page.data()).hasSize(1);
@@ -341,11 +317,11 @@ class ServicePersistenceAdapterTest {
     void should_handle_cursor_pagination_correctly() {
         ServiceEntity first = ServiceEntity.builder().id(1L).serviceOrderId(10L).build();
         ServiceEntity second = ServiceEntity.builder().id(2L).serviceOrderId(10L).build();
-        
+
         when(repository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(first, second)));
 
-        ScrollPage<Service> page = adapter.scroll(10L, null, null, null, 1, "abc123");
+        ScrollPage<Service> page = adapter.scroll(10L, null, null, 1, "abc123");
 
         assertThat(page.data()).hasSize(1);
         assertThat(page.isLast()).isFalse();
