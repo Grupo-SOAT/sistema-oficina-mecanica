@@ -7,9 +7,12 @@ import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.Scroller;
 import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,25 +22,51 @@ public class CatalogServicesPersistenceAdapter implements CatalogServicesPersist
     private final CatalogServicesRepository repository;
 
     @Override
-    public ScrollPage<CatalogServices> scroll(String name, Integer pageSize, String cursor) {
+    public ScrollPage<CatalogServices> scroll(Long id, String name, Integer pageSize, String cursor) {
         return Scroller.scroll(
                 cursor,
                 pageSize,
-                (parsedCursor, pageable) -> {
-                    List<CatalogServicesEntity> results = (name == null || name.isBlank())
-                            ? repository.findAllAfterCursor(parsedCursor, pageable)
-                            : repository.findByNameAfterCursor(name, parsedCursor, pageable);
-
-                    return results.stream().map(item -> (CatalogServices) item).toList();
-                }
+                (parsedCursor, pageable) -> repository.findAll(buildSpecification(id, name, parsedCursor), pageable)
+                        .getContent()
+                        .stream()
+                        .map(item -> (CatalogServices) item)
+                        .toList()
         );
+    }
+
+    private Specification<CatalogServicesEntity> buildSpecification(Long id, String name, Long cursor) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            query.orderBy(criteriaBuilder.asc(root.get("id")));
+
+            final var predicates = new ArrayList<Predicate>();
+
+            if (id != null) {
+                predicates.add(criteriaBuilder.equal(root.get("id"), id));
+            }
+
+            if (name != null && !name.isBlank()) {
+                predicates.add(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("name")),
+                                "%" + name.toLowerCase() + "%"
+                        )
+                );
+            }
+
+            if (cursor > 0) {
+                predicates.add(criteriaBuilder.greaterThan(root.get("id"), cursor));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     @Override
     public CatalogServices save(CatalogServices catalogServices) {
         CatalogServicesEntity entity;
 
-        if (catalogServices instanceof CatalogServicesEntity catalogServicesEntity){
+        if (catalogServices instanceof CatalogServicesEntity catalogServicesEntity) {
             entity = catalogServicesEntity;
         } else {
             entity = new CatalogServicesEntity();

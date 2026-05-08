@@ -5,8 +5,9 @@ import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.Cata
 import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.NeededSupplyEntity;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.supply.persistence.entity.SupplyEntity;
-import br.com.fiap.postech.domain.catalogservices.exception.CatalogServicesNotFoundException;
-import br.com.fiap.postech.domain.catalogservices.exception.DuplicatedCatalogServicesException;
+import br.com.fiap.postech.domain.catalogservices.exception.CatalogServiceNotFoundException;
+import br.com.fiap.postech.domain.catalogservices.exception.DuplicatedCatalogServiceException;
+import br.com.fiap.postech.domain.catalogservices.exception.NoMatchingCatalogServiceException;
 import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
 import br.com.fiap.postech.domain.catalogservices.usecase.CatalogServicesUseCase;
 import org.junit.jupiter.api.Test;
@@ -47,9 +48,9 @@ public class CatalogServicesControllerTest {
                 .pageSize(10)
                 .cursor(null)
                 .isLast(true);
-        when(catalogServicesUseCase.scroll("Pneu", 10, "0")).thenReturn(emptyPage);
+        when(catalogServicesUseCase.scroll(null, "Pneu", 10, "0")).thenReturn(emptyPage);
 
-        ResponseEntity<PaginatedCatalogServiceResponse> response = controller.listCatalogServices(Long.valueOf(2), "Pneu", 10, "0");
+        ResponseEntity<PaginatedCatalogServiceResponse> response = controller.listCatalogServices(null, "Pneu", 10, "0");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody())
@@ -114,7 +115,7 @@ public class CatalogServicesControllerTest {
                                 .basePrice(BigDecimal.valueOf(5000.6))
                                 .neededSupplies(neededSupplyDataTwo)
                 ));
-        when(catalogServicesUseCase.scroll(null, 2, null)).thenReturn(page);
+        when(catalogServicesUseCase.scroll(null, null, 2, null)).thenReturn(page);
 
         ResponseEntity<PaginatedCatalogServiceResponse> response = controller.listCatalogServices(null, null, 2, null);
 
@@ -257,7 +258,7 @@ public class CatalogServicesControllerTest {
 
     @Test
     void should_handle_no_matching_supplies_with_no_content() {
-        ResponseEntity<ErrorResponse> response = controller.handleNoMatchingCatalogServices();
+        ResponseEntity<Void> response = controller.handleNoMatchingCatalogServices(new NoMatchingCatalogServiceException("name"));
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(response.getBody()).isNull();
@@ -265,7 +266,7 @@ public class CatalogServicesControllerTest {
 
     @Test
     void should_handle_not_found_exception() {
-        final var exception = new CatalogServicesNotFoundException(-1L);
+        final var exception = new CatalogServiceNotFoundException(-1L);
         final var expectedHttpStatus = HttpStatus.NOT_FOUND;
         final var expectedResponseBody = new ErrorResponse()
                 .code(expectedHttpStatus.value())
@@ -283,7 +284,7 @@ public class CatalogServicesControllerTest {
 
     @Test
     void should_handle_conflict_exception() {
-        final var exception = new DuplicatedCatalogServicesException("123");
+        final var exception = new DuplicatedCatalogServiceException("123");
         final var expectedHttpStatus = HttpStatus.CONFLICT;
         final var expectedResponseBody = new ErrorResponse()
                 .code(expectedHttpStatus.value())

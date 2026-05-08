@@ -2,6 +2,7 @@ package br.com.fiap.postech.adapter.output.user.persistence.repository;
 
 import br.com.fiap.postech.adapter.output.user.persistence.entity.UserEntity;
 
+import br.com.fiap.postech.domain.user.model.UserDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,19 +19,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByUsername(String username);
-
-    @Transactional
-    @Modifying
-    @Query("""
-                UPDATE UserEntity u
-                SET u.username = COALESCE(:username, u.username),
-                    u.roles = :roles
-                WHERE u.id = :id
-            """)
-    int updateUser(
-            @Param("id") Long id,
-            @Param("username") String username,
-            @Param("roles") String[] roles);
 
     @Query("SELECT s FROM UserEntity s WHERE s.id > :cursor ORDER BY s.id ASC")
     List<UserEntity> findAllAfterCursor(

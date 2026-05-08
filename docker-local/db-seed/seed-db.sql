@@ -1,1 +1,0 @@
-# TODO: script de seed

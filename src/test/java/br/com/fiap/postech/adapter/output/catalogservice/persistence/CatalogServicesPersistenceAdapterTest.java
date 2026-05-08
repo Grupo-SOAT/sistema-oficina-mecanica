@@ -11,7 +11,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,22 +34,19 @@ public class CatalogServicesPersistenceAdapterTest {
     private CatalogServicesPersistenceAdapter adapter;
 
     @Test
-    void should_scroll_without_name_filter_using_find_all_after_cursor() {
+    void should_scroll_without_name_filter_using_specification() {
         CatalogServicesEntity first = CatalogServicesEntity.builder().id(1L).name("A").build();
         CatalogServicesEntity second = CatalogServicesEntity.builder().id(2L).name("B").build();
         CatalogServicesEntity third = CatalogServicesEntity.builder().id(3L).name("C").build();
 
-        when(repository.findAllAfterCursor(anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(first, second, third));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(first, second, third)));
 
-        ScrollPage<CatalogServices> page = adapter.scroll(null, 2, "10");
+        ScrollPage<CatalogServices> page = adapter.scroll(null, null, 2, "10");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
         ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-        verify(repository).findAllAfterCursor(cursorCaptor.capture(), pageableCaptor.capture());
-        verify(repository, never()).findByNameAfterCursor(any(), anyLong(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), pageableCaptor.capture());
 
-        assertThat(cursorCaptor.getValue()).isEqualTo(10L);
         assertThat(pageableCaptor.getValue().getPageNumber()).isZero();
         assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(3);
 
@@ -57,17 +56,15 @@ public class CatalogServicesPersistenceAdapterTest {
     }
 
     @Test
-    void should_scroll_with_name_filter_using_find_by_name_after_cursor() {
+    void should_scroll_with_name_filter_using_specification() {
         CatalogServicesEntity only = CatalogServicesEntity.builder().id(1L).name("Servico").build();
-        when(repository.findByNameAfterCursor(eq("Servi"), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(only));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(only)));
 
-        ScrollPage<CatalogServices> page = adapter.scroll("Servi", 2, "invalid-cursor");
+        ScrollPage<CatalogServices> page = adapter.scroll(null, "Servi", 2, "invalid-cursor");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
-        verify(repository).findByNameAfterCursor(eq("Servi"), cursorCaptor.capture(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
 
-        assertThat(cursorCaptor.getValue()).isZero();
         assertThat(page.data()).hasSize(1);
         assertThat(page.isLast()).isTrue();
         assertThat(page.cursor()).isNull();

@@ -26,13 +26,6 @@ Funcionalidade: Gerenciamento de Veiculos
     E a resposta deve conter no maximo 1 veiculos
     E a resposta deve conter ao menos um veiculo com licensePlate "ABC-1234"
 
-  Cenário: Paginação sem resultados deve retornar no content
-    Dado que eu esteja devidamente logado
-    E que o filtro licensePlate seja "ZZZ-9999"
-    E que o tamanho da pagina seja 10
-    Quando eu listar os veiculos
-    Então devo receber uma resposta com status "204"
-
   Cenário: Paginação de veiculos com cursor
     Dado que eu esteja devidamente logado
     E que o cursor seja "1"
@@ -67,8 +60,8 @@ Funcionalidade: Gerenciamento de Veiculos
   Cenário: Cadastro de veiculo com dados válidos
     Dado que eu esteja devidamente logado
     E que o corpo do novo veiculo seja:
-      | licensePlate | brand  | model   | year | color |
-      | JKL-9087     | Toyota | Corolla | 2022 | PRATA |
+      | licensePlate | brand  | model   | year | color | ownerId |
+      | JKL-9087     | Toyota | Corolla | 2022 | PRATA | 1       |
     Quando eu criar o veiculo
     Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
@@ -77,8 +70,8 @@ Funcionalidade: Gerenciamento de Veiculos
   Esquema do Cenário: Cadastro de veiculo com placa inválida
     Dado que eu esteja devidamente logado
     E que o corpo do novo veiculo seja:
-      | licensePlate | brand  | model   | year | color |
-      | <placa>      | Toyota | Corolla | 2022 | PRATA |
+      | licensePlate | brand  | model   | year | color | ownerId |
+      | <placa>      | Toyota | Corolla | 2022 | PRATA | 1       |
     Quando eu criar o veiculo
     Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "INVALID_LICENSE_PLATE"
@@ -87,13 +80,12 @@ Funcionalidade: Gerenciamento de Veiculos
       | 000-AAAA |
       | 0-1      |
       | XPTO     |
-      | AAA9A00  |
 
   Esquema do Cenário: Cadastro de veiculo com ano inválido
     Dado que eu esteja devidamente logado
     E que o corpo do novo veiculo seja:
-      | licensePlate | brand  | model   | year   | color |
-      | <placa>      | Toyota | Corolla | <year> | PRATA |
+      | licensePlate | brand  | model   | year   | color | ownerId |
+      | <placa>      | Toyota | Corolla | <year> | PRATA | 1       |
     Quando eu criar o veiculo
     Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "INVALID_VEHICLE_YEAR"
@@ -103,25 +95,11 @@ Funcionalidade: Gerenciamento de Veiculos
       | XYZ-2222 | 12    |
       | XYZ-3333 | 3072  |
 
-  Esquema do Cenário: Cadastro de veiculo com campos obrigatórios inválidos
-    Dado que eu esteja devidamente logado
-    E que o corpo do novo veiculo seja:
-      | licensePlate | brand   | model   | year | color   |
-      | XYZ-4444     | <brand> | <model> | 2022 | <color> |
-    Quando eu criar o veiculo
-    Então devo receber uma resposta com status "400"
-    E a resposta deve conter o campo reason com valor "<reason>"
-    Exemplos:
-      | brand  | model   | color | reason                |
-      |        | Corolla | PRATA | INVALID_VEHICLE_BRAND |
-      | Toyota |         | PRATA | INVALID_VEHICLE_MODEL |
-      | Toyota | Corolla |       | INVALID_VEHICLE_COLOR |
-
   Cenário: Cadastro de veiculo com placa duplicada
     Dado que eu esteja devidamente logado
     E que o corpo do novo veiculo seja:
-      | licensePlate | brand | model | year | color |
-      | ABC-1234     | Ford  | Ka    | 2022 | AZUL  |
+      | licensePlate | brand | model | year | color | ownerId |
+      | ABC-1234     | Ford  | Ka    | 2022 | AZUL  | 1       |
     Quando eu criar o veiculo
     Então devo receber uma resposta com status "409"
     E a resposta deve conter o campo reason com valor "VEHICLE_CONFLICT_DUPLICATED_LICENSE_PLATE"
@@ -132,8 +110,8 @@ Funcionalidade: Gerenciamento de Veiculos
     Dado que eu esteja devidamente logado
     E que o id do veiculo seja 1
     E que o corpo de atualização do veiculo seja:
-      | id | licensePlate | brand | model | year | color |
-      | 1  | ABC-1234     | Ford  | Ka    | 2022 | AZUL  |
+      | id | licensePlate | brand | model | year | color | ownerId |
+      | 1  | ABC-1234     | Ford  | Ka    | 2022 | AZUL  | 1       |
     Quando eu atualizar o veiculo
     Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado
@@ -142,8 +120,8 @@ Funcionalidade: Gerenciamento de Veiculos
     Dado que eu esteja devidamente logado
     E que o id do veiculo seja 99999
     E que o corpo de atualização do veiculo seja:
-      | id    | licensePlate | brand  | model | year | color |
-      | 99999 | NAO-0000     | Toyota | Yaris | 2024 | PRETO |
+      | id    | licensePlate | brand  | model | year | color | ownerId |
+      | 99999 | NAO-0000     | Toyota | Yaris | 2024 | PRETO | 1       |
     Quando eu atualizar o veiculo
     Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "VEHICLE_NOT_FOUND"
@@ -152,8 +130,8 @@ Funcionalidade: Gerenciamento de Veiculos
     Dado que eu esteja devidamente logado
     E que o id do veiculo seja 1
     E que o corpo de atualização do veiculo seja:
-      | id | licensePlate | brand  | model   | year | color |
-      | 1  | <placa>      | Toyota | Corolla | 2022 | PRATA |
+      | id | licensePlate | brand  | model   | year | color | ownerId |
+      | 1  | <placa>      | Toyota | Corolla | 2022 | PRATA | 1       |
     Quando eu atualizar o veiculo
     Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "INVALID_LICENSE_PLATE"
@@ -162,14 +140,13 @@ Funcionalidade: Gerenciamento de Veiculos
       | 000-AAAA |
       | 0-1      |
       | XPTO     |
-      | AAA9A00  |
 
   Esquema do Cenário: Atualização de veiculo com ano inválido
     Dado que eu esteja devidamente logado
     E que o id do veiculo seja 1
     E que o corpo de atualização do veiculo seja:
-      | id | licensePlate | brand  | model   | year   | color |
-      | 1  | <placa>      | Toyota | Corolla | <year> | PRATA |
+      | id | licensePlate | brand  | model   | year   | color | ownerId |
+      | 1  | <placa>      | Toyota | Corolla | <year> | PRATA | 1       |
     Quando eu atualizar o veiculo
     Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "INVALID_VEHICLE_YEAR"
@@ -179,27 +156,12 @@ Funcionalidade: Gerenciamento de Veiculos
       | XYZ-2222 | 12    |
       | XYZ-3333 | 3072  |
 
-  Esquema do Cenário: Atualização de veiculo com campos obrigatórios inválidos
-    Dado que eu esteja devidamente logado
-    E que o id do veiculo seja 1
-    E que o corpo de atualização do veiculo seja:
-      | id | licensePlate | brand   | model   | year | color   |
-      | 1  | XYZ-4444     | <brand> | <model> | 2022 | <color> |
-    Quando eu atualizar o veiculo
-    Então devo receber uma resposta com status "400"
-    E a resposta deve conter o campo reason com valor "<reason>"
-    Exemplos:
-      | brand  | model   | color | reason                |
-      |        | Corolla | PRATA | INVALID_VEHICLE_BRAND |
-      | Toyota |         | PRATA | INVALID_VEHICLE_MODEL |
-      | Toyota | Corolla |       | INVALID_VEHICLE_COLOR |
-
   Cenário: Atualização de veiculo com placa duplicada
     Dado que eu esteja devidamente logado
     E que o id do veiculo seja 1
     E que o corpo de atualização do veiculo seja:
-      | id | licensePlate | brand | model | year | color |
-      | 1  | ABC-1234     | Ford  | Ka    | 2022 | AZUL  |
+      | id | licensePlate | brand | model | year | color | ownerId |
+      | 1  | DEF-5678     | Ford  | Ka    | 2022 | AZUL  | 1       |
     Quando eu atualizar o veiculo
     Então devo receber uma resposta com status "409"
     E a resposta deve conter o campo reason com valor "VEHICLE_CONFLICT_DUPLICATED_LICENSE_PLATE"

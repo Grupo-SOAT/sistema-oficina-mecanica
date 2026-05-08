@@ -18,11 +18,23 @@ import java.util.List;
 public class ServiceMapper {
 
     public static Service fromApiRequest(@NonNull ServiceRequest request) {
-        return ServiceEntity.builder()
+        ServiceEntity entity = ServiceEntity.builder()
                 .catalogServiceId(request.getCatalogServiceId())
                 .price(request.getPrice())
                 .neededSupplyEntities(Collections.emptyList())
                 .build();
+
+        if (request.getNeededSupplies() != null) {
+            entity.setNeededSupplies(request.getNeededSupplies().stream()
+                    .map(n -> NeededSupply.builder()
+                            .idSupply(n.getIdSupply())
+                            .note(n.getNote())
+                            .quantity(n.getQuantity())
+                            .build())
+                    .toList());
+        }
+
+        return entity;
     }
 
     public static Service fromApiData(@NonNull ServiceData data) {
@@ -30,7 +42,8 @@ public class ServiceMapper {
                 .id(data.getId())
                 .catalogServiceId(data.getCatalogServiceId())
                 .price(data.getPrice())
-                .status(data.getStatus() != null ? data.getStatus().getValue() : null)
+                // IMPORTANTE: status é ignorado em updates normais - alterações só via endpoints de progresso
+                .status(null)
                 .neededSupplyEntities(Collections.emptyList())
                 .build();
 

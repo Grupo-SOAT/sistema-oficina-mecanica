@@ -9,6 +9,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
 
   Cenário: Listagem de serviços da ordem de serviço
     Dado que eu esteja devidamente logado
+    E que o id da ordem de serviço seja 1
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços da ordem de serviço
     Então devo receber uma resposta com status "200"
@@ -19,15 +20,16 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
 
   Cenário: Busca de serviços da ordem de serviço por nome
     Dado que eu esteja devidamente logado
-    E que o filtro name seja "troca"
+    E que o id da ordem de serviço seja 1
+    E que o filtro serviceId seja 1
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços da ordem de serviço
     Então devo receber uma resposta com status "200"
     E a resposta deve conter no maximo 1 serviços da ordem de serviço
-    E a resposta deve conter ao menos um serviço da ordem de serviço com name "troca-oleo"
 
   Cenário: Paginação sem resultados de serviços da ordem de serviço deve retornar no content
     Dado que eu esteja devidamente logado
+    E que o id da ordem de serviço seja 1
     E que o filtro serviceId seja 99999
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços da ordem de serviço
@@ -35,6 +37,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
 
   Cenário: Paginação de serviços da ordem de serviço com cursor
     Dado que eu esteja devidamente logado
+    E que o id da ordem de serviço seja 1
     E que o cursor seja "1"
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços da ordem de serviço
@@ -77,8 +80,8 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     Dado que eu esteja devidamente logado
     E que o id da ordem de serviço seja 1
     E que o corpo do novo serviço da ordem de serviço seja:
-      | serviceOrderId | catalogServiceId | price  | neededSupplies         |
-      | 1              | 1                | 150.00 | sku=SKU-001,quantity=1 |
+      | serviceOrderId | catalogServiceId | price  | neededSupplies                                           |
+      | 1              | 1                | 150.00 | [{"idSupply":1,"quantity":1}]                          |
     Quando eu incluir o serviço na ordem de serviço
     Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
@@ -94,14 +97,14 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     Então devo receber uma resposta com status "<code>"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
-      | serviceOrderId | catalogServiceId | price | neededSupplies          | reason                         | code |
-      | 99999          | 1                | 10.00 | ,                       | SERVICE_ORDER_NOT_FOUND        | 404  |
-      | 1              | 99999            | 10.00 | ,                       | CATALOG_SERVICE_NOT_FOUND      | 404  |
-      | 1              | 1                | 0.00  | ,                       | INVALID_PRICE                  | 400  |
-      | 1              | 1                | -1.00 | ,                       | INVALID_PRICE                  | 400  |
-      | 1              | 1                | 10.00 | sku=SKU-999,quantity=1  | NEEDED_SUPPLY_NOT_FOUND        | 400  |
-      | 1              | 1                | 10.00 | sku=SKU-001,quantity=0  | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
-      | 1              | 1                | 10.00 | sku=SKU-001,quantity=-1 | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
+      | serviceOrderId | catalogServiceId | price | neededSupplies                  | reason                         | code |
+      | 99999          | 1                | 10.00 | []                              | SERVICE_ORDER_NOT_FOUND        | 404  |
+      | 1              | 99999            | 10.00 | []                              | CATALOG_SERVICE_NOT_FOUND      | 404  |
+      | 1              | 1                | 0.00  | []                              | INVALID_PRICE                  | 400  |
+      | 1              | 1                | -1.00 | []                              | INVALID_PRICE                  | 400  |
+      | 1              | 1                | 10.00 | [{"idSupply":999,"quantity":1}] | NEEDED_SUPPLY_NOT_FOUND        | 400  |
+      | 1              | 1                | 10.00 | [{"idSupply":1,"quantity":0}]   | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
+      | 1              | 1                | 10.00 | [{"idSupply":1,"quantity":-1}]  | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
 
   # === ATUALIZAÇÃO ===
 
@@ -110,8 +113,8 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o id da ordem de serviço seja 1
     E que o id do serviço da ordem de serviço seja 1
     E que o corpo de atualização do serviço da ordem de serviço seja:
-      | id | serviceOrderId | catalogServiceId | price  | status      |
-      | 1  | 1              | 1                | 160.00 | IN_PROGRESS |
+      | id | serviceOrderId | catalogServiceId | price  | status              | neededSupplies |
+      | 1  | 1              | 1                | 160.00 | AWAITING_APPROVAL   | []             |
     Quando eu atualizar o serviço da ordem de serviço
     Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado
@@ -143,21 +146,21 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E que o id da ordem de serviço seja <serviceOrderId>
     E que o id do serviço da ordem de serviço seja <id>
     E que o corpo de atualização do serviço da ordem de serviço seja:
-      | serviceOrderId   | catalogServiceId   | price   | neededSupplies   |
-      | <serviceOrderId> | <catalogServiceId> | <price> | <neededSupplies> |
+      | id   | serviceOrderId   | catalogServiceId   | price   | status              | neededSupplies   |
+      | <id> | <serviceOrderId> | <catalogServiceId> | <price> | AWAITING_APPROVAL   | <neededSupplies> |
     Quando eu atualizar o serviço da ordem de serviço
     Então devo receber uma resposta com status "<code>"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
-      | id    | serviceOrderId | catalogServiceId | price | neededSupplies          | reason                         | code |
-      | 99999 | 1              | 1                | 10.00 | ,                       | SERVICE_NOT_FOUND              | 404  |
-      | 1     | 99999          | 1                | 10.00 | ,                       | SERVICE_ORDER_NOT_FOUND        | 404  |
-      | 1     | 1              | 99999            | 10.00 | ,                       | CATALOG_SERVICE_NOT_FOUND      | 404  |
-      | 1     | 1              | 1                | 0.00  | ,                       | INVALID_PRICE                  | 400  |
-      | 1     | 1              | 1                | -1.00 | ,                       | INVALID_PRICE                  | 400  |
-      | 1     | 1              | 1                | 10.00 | sku=SKU-999,quantity=1  | NEEDED_SUPPLY_NOT_FOUND        | 400  |
-      | 1     | 1              | 1                | 10.00 | sku=SKU-001,quantity=0  | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
-      | 1     | 1              | 1                | 10.00 | sku=SKU-001,quantity=-1 | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
+      | id    | serviceOrderId | catalogServiceId | price | neededSupplies                  | reason                         | code |
+      | 99999 | 1              | 1                | 10.00 | []                              | SERVICE_NOT_FOUND              | 404  |
+      | 1     | 99999          | 1                | 10.00 | []                              | SERVICE_ORDER_NOT_FOUND        | 404  |
+      | 1     | 1              | 99999            | 10.00 | []                              | CATALOG_SERVICE_NOT_FOUND      | 404  |
+      | 1     | 1              | 1                | 0.00  | []                              | INVALID_PRICE                  | 400  |
+      | 1     | 1              | 1                | -1.00 | []                              | INVALID_PRICE                  | 400  |
+      | 1     | 1              | 1                | 10.00 | [{"idSupply":999,"quantity":1}] | NEEDED_SUPPLY_NOT_FOUND        | 400  |
+      | 1     | 1              | 1                | 10.00 | [{"idSupply":1,"quantity":0}]   | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
+      | 1     | 1              | 1                | 10.00 | [{"idSupply":1,"quantity":-1}]  | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
 
   # === EXCLUSÃO ===
 

@@ -8,19 +8,19 @@ import br.com.fiap.postech.domain.user.model.UserDTO;
 
 public interface UserPort {
 
-    Optional<User> encontrarUsuarioPorUsername(String username);
+    Optional<User> findByUsername(String username);
 
-    Optional<User> encontrarUsuarioPorId(Long id);
+    Optional<User> findById(Long id);
 
-    User criarUsuario(UserDTO userDTO, String senhaDefault);
+    User createUser(UserDTO userDTO, String senhaDefault);
 
-    void deletarUsuario(Long id);
+    void deleteUser(Long id);
 
-    int atualizarUsuario(Long id, UserDTO userDTO);
+    User updateUser(Long id, UserDTO userDTO);
 
     ScrollPage<User> scroll(String username, Integer pageSize, String cursor);
 
-    void resetarSenhaUsuario(Long id);
+    void resetUserPassword(Long id);
 
-    String getSenhaDefault();
+    String getDefaultPassword();
 }

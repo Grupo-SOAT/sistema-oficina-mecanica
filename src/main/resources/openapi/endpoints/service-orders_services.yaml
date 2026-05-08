@@ -15,10 +15,6 @@ get:
       description: ID do Serviço
       schema: { type: integer, format: int64 }
     - in: query
-      name: name
-      description: Início do nome do Serviço
-      schema: { type: string }
-    - in: query
       name: status
       description: Status do Serviço
       schema: { $ref: '../schemas/ServiceStatus.yaml' }

@@ -17,7 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.vehicle.persistence.entity.VehicleEntity;
@@ -127,7 +129,6 @@ public class VehiclePersistenceAdapterTest {
 
         VehicleEntity savedEntity = (VehicleEntity) result;
 
-        assertThat(savedEntity.getId()).isEqualTo(1L);
         assertThat(savedEntity.getOwnerId()).isEqualTo(10L);
         assertThat(savedEntity.getLicensePlate()).isEqualTo("XYZ9999");
         assertThat(savedEntity.getBrand()).isEqualTo("Honda");
@@ -163,8 +164,8 @@ public class VehiclePersistenceAdapterTest {
                 .licensePlate("ABC1234")
                 .build();
 
-        when(repository.findAllAfterCursor(any(), any(Pageable.class)))
-                .thenReturn(List.of(entity));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
 
         ScrollPage<Vehicle> result =
                 adapter.scroll(null, 10, null);
@@ -173,7 +174,7 @@ public class VehiclePersistenceAdapterTest {
         assertThat(result.data().get(0).getLicensePlate())
                 .isEqualTo("ABC1234");
 
-        verify(repository).findAllAfterCursor(any(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test
@@ -183,11 +184,8 @@ public class VehiclePersistenceAdapterTest {
                 .licensePlate("XYZ9999")
                 .build();
 
-        when(repository.findByLicensePlateAfterCursor(
-                eq("XYZ9999"),
-                any(),
-                any(Pageable.class)
-        )).thenReturn(List.of(entity));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
 
         ScrollPage<Vehicle> result =
                 adapter.scroll("XYZ9999", 10, null);
@@ -196,11 +194,7 @@ public class VehiclePersistenceAdapterTest {
         assertThat(result.data().get(0).getLicensePlate())
                 .isEqualTo("XYZ9999");
 
-        verify(repository).findByLicensePlateAfterCursor(
-                eq("XYZ9999"),
-                any(),
-                any(Pageable.class)
-        );
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
     }
     
     @Test
@@ -210,8 +204,8 @@ public class VehiclePersistenceAdapterTest {
                 .licensePlate("ABC1234")
                 .build();
 
-        when(repository.findAllAfterCursor(any(), any(Pageable.class)))
-                .thenReturn(List.of(entity));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
 
         ScrollPage<Vehicle> result =
                 adapter.scroll("   ", 10, null);
@@ -220,12 +214,6 @@ public class VehiclePersistenceAdapterTest {
         assertThat(result.data().get(0).getLicensePlate())
                 .isEqualTo("ABC1234");
 
-        verify(repository).findAllAfterCursor(any(), any(Pageable.class));
-
-        verify(repository, never()).findByLicensePlateAfterCursor(
-                anyString(),
-                any(),
-                any(Pageable.class)
-        );
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
     }
 }

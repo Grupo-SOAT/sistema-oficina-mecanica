@@ -6,9 +6,12 @@ import br.com.fiap.postech.adapter.output.supply.persistence.entity.SupplyEntity
 import br.com.fiap.postech.adapter.output.supply.persistence.repository.SupplyRepository;
 import br.com.fiap.postech.domain.supply.model.Supply;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +25,36 @@ public class SupplyPersistenceAdapter implements SupplyPersistencePort {
         return Scroller.scroll(
                 cursor,
                 pageSize,
-                (parsedCursor, pageable) -> {
-                    List<SupplyEntity> results = (sku == null || sku.isBlank())
-                            ? repository.findAllAfterCursor(parsedCursor, pageable)
-                            : repository.findBySkuAfterCursor(sku, parsedCursor, pageable);
-
-                    return results.stream().map(item -> (Supply) item).toList();
-                }
+                (parsedCursor, pageable) -> repository.findAll(buildSpecification(sku, parsedCursor), pageable)
+                        .getContent()
+                        .stream()
+                        .map(item -> (Supply) item)
+                        .toList()
         );
+    }
+
+    private Specification<SupplyEntity> buildSpecification(String sku, Long cursor) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            query.orderBy(criteriaBuilder.asc(root.get("id")));
+
+            final var predicates = new ArrayList<Predicate>();
+
+            if (sku != null && !sku.isBlank()) {
+                predicates.add(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("sku")),
+                                "%" + sku.toLowerCase() + "%"
+                        )
+                );
+            }
+
+            if (cursor > 0) {
+                predicates.add(criteriaBuilder.greaterThan(root.get("id"), cursor));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     @Override

@@ -44,7 +44,8 @@ class ServiceMapperTest {
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getCatalogServiceId()).isEqualTo(5L);
         assertThat(result.getPrice()).isEqualByComparingTo(new BigDecimal("200.00"));
-        assertThat(result.getStatus()).isEqualTo("APPROVED");
+        // Status é ignorado em updates normais - alterações só via endpoints de progresso
+        assertThat(result.getStatus()).isNull();
     }
 
     @Test

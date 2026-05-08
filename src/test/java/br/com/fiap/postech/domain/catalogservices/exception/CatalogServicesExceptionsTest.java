@@ -1,8 +1,5 @@
 package br.com.fiap.postech.domain.catalogservices.exception;
 
-import br.com.fiap.postech.domain.supply.exception.DuplicatedSupplyException;
-import br.com.fiap.postech.domain.supply.exception.NoMatchingSuppliesException;
-import br.com.fiap.postech.domain.supply.exception.SupplyNotFoundException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,8 +20,8 @@ public class CatalogServicesExceptionsTest {
 
     static Stream<Arguments> exceptionCases() {
         return Stream.of(
-                arguments(new CatalogServicesNotFoundException(10L), "Catalog services not found for id: 10"),
-                arguments(new DuplicatedCatalogServicesException("Pintura"), "Catalog services already exists for name: Pintura"),
+                arguments(new CatalogServiceNotFoundException(10L), "Catalog services not found for id: 10"),
+                arguments(new DuplicatedCatalogServiceException("Pintura"), "Catalog services already exists for name: Pintura"),
                 arguments(new NoMatchingCatalogServiceException("Troca de oleo"), "No matching catalog service for name: Troca de oleo")
         );
     }

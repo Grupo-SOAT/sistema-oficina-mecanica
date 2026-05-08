@@ -9,16 +9,14 @@ import br.com.fiap.postech.adapter.output.service.persistence.repository.Service
 import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -34,29 +32,54 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
         return Scroller.scroll(
                 cursor,
                 pageSize,
-                (parsedCursor, pageable) -> {
-                    boolean hasServiceId = serviceId != null;
-                    boolean hasStatus = status != null && !status.isBlank();
-
-                    List<ServiceEntity> results;
-                    if (hasServiceId && hasStatus) {
-                        results = repository.findByServiceOrderIdAndServiceIdAndStatus(serviceOrderId, serviceId, status, parsedCursor, pageable);
-                    } else if (hasServiceId) {
-                        results = repository.findByServiceOrderIdAndServiceId(serviceOrderId, serviceId, parsedCursor, pageable);
-                    } else if (hasStatus) {
-                        results = repository.findByServiceOrderIdAndStatus(serviceOrderId, status, parsedCursor, pageable);
-                    } else {
-                        results = repository.findAllByServiceOrderId(serviceOrderId, parsedCursor, pageable);
-                    }
-
-                    return results.stream().map(item -> (Service) item).toList();
-                }
+                (parsedCursor, pageable) -> repository.findAll(
+                                buildSpecification(serviceOrderId, serviceId, status, parsedCursor),
+                                pageable
+                        )
+                        .getContent()
+                        .stream()
+                        .map(item -> (Service) item)
+                        .toList()
         );
+    }
+
+    private Specification<ServiceEntity> buildSpecification(Long serviceOrderId, Long serviceId, String status, Long cursor) {
+        return (root, query, criteriaBuilder) -> {
+            query.distinct(true);
+            query.orderBy(criteriaBuilder.asc(root.get("id")));
+
+            final var predicates = new ArrayList<Predicate>();
+
+            if (serviceOrderId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("serviceOrderId"), serviceOrderId));
+            }
+
+            if (serviceId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("id"), serviceId));
+            }
+
+            if (status != null && !status.isBlank()) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            }
+
+            if (cursor > 0) {
+                predicates.add(criteriaBuilder.greaterThan(root.get("id"), cursor));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     @Override
     public Optional<Service> findByIdAndServiceOrderId(Long id, Long serviceOrderId) {
         return repository.findByIdAndServiceOrderId(id, serviceOrderId).map(item -> (Service) item);
+    }
+
+    @Override
+    public List<Service> findAllByServiceOrderId(Long serviceOrderId) {
+        return repository.findAllByServiceOrderId(serviceOrderId).stream()
+                .map(item -> (Service) item)
+                .toList();
     }
 
     @Override

@@ -37,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("test")
 @WithMockUser(roles = {"MECHANIC"})
+@org.springframework.test.context.ContextConfiguration(initializers = br.com.fiap.postech.config.PostgresContainerInitializer.class)
 class ServicesControllerIntegrationTest {
 
     @Autowired

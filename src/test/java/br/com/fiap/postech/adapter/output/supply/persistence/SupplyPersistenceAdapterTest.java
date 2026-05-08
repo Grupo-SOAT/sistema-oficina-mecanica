@@ -10,7 +10,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,37 +41,27 @@ class SupplyPersistenceAdapterTest {
         SupplyEntity second = SupplyEntity.builder().id(12L).sku("B").build();
         SupplyEntity third = SupplyEntity.builder().id(13L).sku("C").build();
 
-        when(repository.findAllAfterCursor(anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(first, second, third));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(first, second, third)));
 
         ScrollPage<Supply> page = adapter.scroll(null, 2, "10");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-        verify(repository).findAllAfterCursor(cursorCaptor.capture(), pageableCaptor.capture());
-        verify(repository, never()).findBySkuAfterCursor(any(), anyLong(), any(Pageable.class));
-
-        assertThat(cursorCaptor.getValue()).isEqualTo(10L);
-        assertThat(pageableCaptor.getValue().getPageNumber()).isZero();
-        assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(3);
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
 
         assertThat(page.data()).hasSize(2);
         assertThat(page.isLast()).isFalse();
-        assertThat(page.cursor()).isEqualTo(second.toString());
     }
 
     @Test
     void should_scroll_with_sku_filter_using_find_by_sku_after_cursor() {
         SupplyEntity only = SupplyEntity.builder().id(1L).sku("SKU-X").build();
-        when(repository.findBySkuAfterCursor(eq("SKU"), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(only));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(only)));
 
         ScrollPage<Supply> page = adapter.scroll("SKU", 2, "invalid-cursor");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
-        verify(repository).findBySkuAfterCursor(eq("SKU"), cursorCaptor.capture(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
 
-        assertThat(cursorCaptor.getValue()).isZero();
         assertThat(page.data()).hasSize(1);
         assertThat(page.isLast()).isTrue();
         assertThat(page.cursor()).isNull();

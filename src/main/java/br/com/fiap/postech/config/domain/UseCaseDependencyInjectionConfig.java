@@ -3,10 +3,10 @@ package br.com.fiap.postech.config.domain;
 import br.com.fiap.postech.domain.authentication.AuthenticationUseCase;
 import br.com.fiap.postech.domain.catalogservices.usecase.CatalogServicesUseCase;
 import br.com.fiap.postech.domain.owner.usecase.OwnerUseCase;
-import br.com.fiap.postech.domain.reporting.model.ServiceCalculatedAverageTime;
 import br.com.fiap.postech.domain.reporting.usecase.ServiceReportingUseCase;
 import br.com.fiap.postech.domain.reporting.usecase.impl.ServiceReportingUseCaseImpl;
 import br.com.fiap.postech.domain.service.usecase.ServiceUseCase;
+import br.com.fiap.postech.domain.serviceorder.usecase.ServiceOrderUseCase;
 import br.com.fiap.postech.domain.supply.usecase.SupplyUseCase;
 import br.com.fiap.postech.domain.user.UserUseCase;
 import br.com.fiap.postech.domain.vehicle.usecase.VehicleUseCase;
@@ -14,16 +14,12 @@ import br.com.fiap.postech.port.authentication.AuthenticationPort;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
 import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
 import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
 import br.com.fiap.postech.port.user.UserPort;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.LongStream;
 
 @Configuration
 public class UseCaseDependencyInjectionConfig {
@@ -33,8 +29,18 @@ public class UseCaseDependencyInjectionConfig {
     }
 
     @Bean
-    public ServiceUseCase serviceUseCase(ServicePersistencePort persistencePort) {
-        return new ServiceUseCase(persistencePort);
+    public ServiceUseCase serviceUseCase(
+            ServicePersistencePort persistencePort,
+            ServiceOrderPersistencePort serviceOrderPersistencePort,
+            CatalogServicesPersistencePort catalogServicesPersistencePort,
+            SupplyPersistencePort supplyPersistencePort
+    ) {
+        return new ServiceUseCase(
+                persistencePort,
+                serviceOrderPersistencePort,
+                catalogServicesPersistencePort,
+                supplyPersistencePort
+        );
     }
 
     @Bean
@@ -43,8 +49,20 @@ public class UseCaseDependencyInjectionConfig {
     }
 
     @Bean
-    public CatalogServicesUseCase catalogServicesUseCase(CatalogServicesPersistencePort persistencePort) {
-        return new CatalogServicesUseCase(persistencePort);
+    public CatalogServicesUseCase catalogServicesUseCase(
+            CatalogServicesPersistencePort persistencePort,
+            SupplyPersistencePort supplyPersistencePort
+    ) {
+        return new CatalogServicesUseCase(persistencePort, supplyPersistencePort);
+    }
+
+    @Bean
+    public ServiceOrderUseCase serviceOrderUseCase(
+            ServiceOrderPersistencePort persistencePort,
+            OwnerPersistencePort ownerPersistencePort,
+            VehiclePersistencePort vehiclePersistencePort
+    ) {
+        return new ServiceOrderUseCase(persistencePort, ownerPersistencePort, vehiclePersistencePort);
     }
 
     @Bean

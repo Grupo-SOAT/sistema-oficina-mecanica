@@ -47,7 +47,7 @@ class UserAdapterTest {
     // =========================
     @Test
     void shouldReturnDefaultPassword() {
-        assertEquals("123", adapter.getSenhaDefault());
+        assertEquals("123", adapter.getDefaultPassword());
     }
 
     // =========================
@@ -60,7 +60,7 @@ class UserAdapterTest {
         when(userRepository.findByUsername("andre"))
                 .thenReturn(Optional.of(entity));
 
-        Optional<User> result = adapter.encontrarUsuarioPorUsername("andre");
+        Optional<User> result = adapter.findByUsername("andre");
 
         assertTrue(result.isPresent());
         assertEquals("andre", result.get().username());
@@ -71,7 +71,7 @@ class UserAdapterTest {
         when(userRepository.findByUsername("andre"))
                 .thenReturn(Optional.empty());
 
-        assertTrue(adapter.encontrarUsuarioPorUsername("andre").isEmpty());
+        assertTrue(adapter.findByUsername("andre").isEmpty());
     }
 
     // =========================
@@ -84,7 +84,7 @@ class UserAdapterTest {
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(entity));
 
-        Optional<User> result = adapter.encontrarUsuarioPorId(1L);
+        Optional<User> result = adapter.findById(1L);
 
         assertTrue(result.isPresent());
         assertEquals(1L, result.get().id());
@@ -105,7 +105,7 @@ class UserAdapterTest {
                     return e;
                 });
 
-        User result = adapter.criarUsuario(dto, "123");
+        User result = adapter.createUser(dto, "123");
 
         assertEquals("andre", result.username());
         assertEquals(List.of(Roles.ADMIN), result.roles());
@@ -119,7 +119,7 @@ class UserAdapterTest {
     // =========================
     @Test
     void shouldDeleteUser() {
-        adapter.deletarUsuario(1L);
+        adapter.deleteUser(1L);
 
         verify(userRepository).deleteById(1L);
     }
@@ -129,15 +129,25 @@ class UserAdapterTest {
     // =========================
     @Test
     void shouldUpdateUser() {
-        UserDTO dto = new UserDTO("andre", List.of(Roles.ADMIN));
+        UserDTO dto = new UserDTO("joao", List.of(Roles.ATTENDANT));
+        UserEntity existing = buildEntity();
+        UserEntity updated = buildEntity();
+        updated.setUsername("joao");
+        updated.setRolesList(List.of("ATTENDANT"));
 
-        when(userRepository.updateUser(eq(1L), eq("andre"), any()))
-                .thenReturn(1);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(userRepository.save(any(UserEntity.class))).thenAnswer(invocation -> {
+            UserEntity e = invocation.getArgument(0);
+            // Simula o que o banco retorna após salvar
+            return updated;
+        });
 
-        int result = adapter.atualizarUsuario(1L, dto);
+        User result = adapter.updateUser(1L, dto);
 
-        assertEquals(1, result);
-        verify(userRepository).updateUser(eq(1L), eq("andre"), any());
+        assertEquals("joao", result.username());
+        assertEquals(List.of(Roles.ATTENDANT), result.roles());
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(any(UserEntity.class));
     }
 
     // =========================
@@ -149,12 +159,16 @@ class UserAdapterTest {
 
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(entity));
+        when(userRepository.save(any()))
+                .thenReturn(entity);
 
         when(passwordEncoder.encode("123")).thenReturn("encoded");
 
-        adapter.resetarSenhaUsuario(1L);
+        adapter.resetUserPassword(1L);
 
         assertEquals("encoded", entity.getPassword());
+        verify(userRepository).findById(any());
+        verify(userRepository).save(any(UserEntity.class));
     }
 
     @Test
@@ -163,7 +177,7 @@ class UserAdapterTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(Exception.class,
-                () -> adapter.resetarSenhaUsuario(1L));
+                () -> adapter.resetUserPassword(1L));
     }
 
     // =========================

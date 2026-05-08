@@ -6,7 +6,7 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 
-public class SuppliersStepDefinitions extends FeatureStepSupport {
+public class SuppliersStepDefinitions extends BaseStepDefinition {
     private Long supplierId;
 
     @Before

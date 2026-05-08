@@ -53,15 +53,15 @@ class UsersControllerTest {
         request.setRoles(List.of(Role.ADMIN));
 
         when(mapper.toDomain(request.getRoles())).thenReturn(List.of(Roles.ADMIN));
-        when(userUseCase.criarUsuario(any(UserDTO.class))).thenReturn(user);
+        when(userUseCase.createUser(any(UserDTO.class))).thenReturn(user);
         when(mapper.toClientResponse(user)).thenReturn(userData);
 
         ResponseEntity<UserData> response = controller.createUser(request);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(userData, response.getBody());
 
-        verify(userUseCase).criarUsuario(any(UserDTO.class));
+        verify(userUseCase).createUser(any(UserDTO.class));
     }
 
     @Test
@@ -69,12 +69,12 @@ class UsersControllerTest {
         ResponseEntity<Void> response = controller.deleteUser(1L);
 
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        verify(userUseCase).deletarUsuario(1L);
+        verify(userUseCase).deleteUser(1L);
     }
 
     @Test
     void shouldGetUserById() {
-        when(userUseCase.obterUsuarioPorId(1L)).thenReturn(user);
+        when(userUseCase.getUserById(1L)).thenReturn(user);
         when(mapper.toClientResponse(user)).thenReturn(userData);
 
         ResponseEntity<UserData> response = controller.getUserById(1L);
@@ -105,13 +105,13 @@ class UsersControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().getPassword().contains("senha resetada"));
 
-        verify(userUseCase).resetarSenhaUsuario(1L);
+        verify(userUseCase).resetUserPassword(1L);
     }
 
     @Test
     void shouldUpdateUser() {
         when(mapper.toDomain(userData.getRoles())).thenReturn(List.of(Roles.ADMIN));
-        when(userUseCase.atualizarUsuarioPorId(eq(1L), any(UserDTO.class))).thenReturn(user);
+        when(userUseCase.updateUser(eq(1L), any(UserDTO.class))).thenReturn(user);
         when(mapper.toClientResponse(user)).thenReturn(userData);
 
         ResponseEntity<UserData> response = controller.updateUser(1L, userData);

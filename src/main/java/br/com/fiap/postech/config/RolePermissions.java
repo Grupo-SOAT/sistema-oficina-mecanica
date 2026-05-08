@@ -17,7 +17,7 @@ public class RolePermissions {
             // =========================
             Map.entry("GET_/users", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_STOREKEEPER")),
             Map.entry("POST_/users", List.of("ROLE_ADMIN")),
-            Map.entry("GET_/users/:id", List.of("ROLE_ADMIN")),
+            Map.entry("GET_/users/:id", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_STOREKEEPER")),
             Map.entry("PATCH_/users/:id", List.of("ROLE_ADMIN")),
             Map.entry("DELETE_/users/:id", List.of("ROLE_ADMIN")),
 
@@ -42,11 +42,11 @@ public class RolePermissions {
             // =========================
             // SERVICES
             // =========================
-            Map.entry("GET_/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
-            Map.entry("POST_/services", List.of("ROLE_ADMIN")),
-            Map.entry("GET_/services/:id", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
-            Map.entry("PATCH_/services/:id", List.of("ROLE_ADMIN")),
-            Map.entry("DELETE_/services/:id", List.of("ROLE_ADMIN")),
+            Map.entry("GET_/catalog/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("POST_/catalog/services", List.of("ROLE_ADMIN")),
+            Map.entry("GET_/catalog/services/:id", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT", "ROLE_CHATBOT")),
+            Map.entry("PATCH_/catalog/services/:id", List.of("ROLE_ADMIN")),
+            Map.entry("DELETE_/catalog/services/:id", List.of("ROLE_ADMIN")),
 
             // =========================
             // SUPPLIES
@@ -93,11 +93,11 @@ public class RolePermissions {
             // =========================
             // SERVICE ORDER - SERVICES
             // =========================
-            Map.entry("GET_/service-orders/:id/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
+            Map.entry("GET_/service-orders/:id/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT")),
             Map.entry("POST_/service-orders/:id/services", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
-            Map.entry("GET_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
-            Map.entry("PATCH_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN")),
-            Map.entry("DELETE_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN")),
+            Map.entry("GET_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN", "ROLE_MECHANIC", "ROLE_ATTENDANT")),
+            Map.entry("PATCH_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
+            Map.entry("DELETE_/service-orders/:id/services/:serviceId", List.of("ROLE_ADMIN", "ROLE_MECHANIC")),
 
             // =========================
             // SERVICE ORDER - PROGRESS / BUDGET
@@ -120,6 +120,7 @@ public class RolePermissions {
         String[] segments = uri.split("/");
 
         StringBuilder normalized = new StringBuilder();
+        String lastSegment = null;
 
         for (String segment : segments) {
 
@@ -130,8 +131,17 @@ public class RolePermissions {
 
             if (STATIC_SEGMENTS.contains(segment)) {
                 normalized.append(segment);
+                lastSegment = segment;
             } else {
-                normalized.append(":id");
+                // Este é um ID. Determinar qual ID:
+                // Se o segmento anterior é "services", este é um :serviceId
+                if ("services".equals(lastSegment)) {
+                    normalized.append(":serviceId");
+                } else {
+                    // Default para IDs simples
+                    normalized.append(":id");
+                }
+                lastSegment = null;  // Reset após processar ID
             }
         }
 
@@ -139,6 +149,7 @@ public class RolePermissions {
     }
 
     private static final List<String> STATIC_SEGMENTS = List.of(
+            "catalog",
             "users",
             "owners",
             "vehicles",

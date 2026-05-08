@@ -18,8 +18,8 @@ public class OwnersController implements OwnersApi {
     private final OwnerUseCase ownerUseCase;
     
     @Override
-    public ResponseEntity<PaginatedOwnerResponse> listOwners(String email, Integer pageSize, String cursor) {
-        final var pageResult = ownerUseCase.scroll(email, pageSize, cursor);
+    public ResponseEntity<PaginatedOwnerResponse> listOwners(String document, Integer pageSize, String cursor) {
+        final var pageResult = ownerUseCase.scroll(document, pageSize, cursor);
         final var responseBody = OwnerMapper.toPaginatedResponse(pageResult);
 
         return ResponseEntity.ok(responseBody);

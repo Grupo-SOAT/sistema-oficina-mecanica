@@ -35,7 +35,7 @@ public class SecurityConfig {
 
         boolean isMockProfile = environment.matchesProfiles("mock");
 
-        
+
         if (isMockProfile) {
             return http
                     .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
@@ -45,7 +45,7 @@ public class SecurityConfig {
                     .build();
         }
 
-        
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
 

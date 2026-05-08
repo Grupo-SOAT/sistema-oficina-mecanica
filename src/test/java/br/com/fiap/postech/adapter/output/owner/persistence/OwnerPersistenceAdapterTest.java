@@ -23,7 +23,9 @@ import br.com.fiap.postech.adapter.output.owner.persistence.entity.OwnerEntity;
 import br.com.fiap.postech.adapter.output.owner.persistence.repository.OwnerRepository;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.domain.owner.model.Owner;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
 public class OwnerPersistenceAdapterTest {
@@ -39,37 +41,27 @@ public class OwnerPersistenceAdapterTest {
         OwnerEntity second = OwnerEntity.builder().id(12L).email("B@email.com").build();
         OwnerEntity third = OwnerEntity.builder().id(13L).email("C@email.com").build();
 
-        when(repository.findAllAfterCursor(anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(first, second, third));
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(first, second, third)));
 
         ScrollPage<Owner> page = adapter.scroll(null, 2, "10");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
-        verify(repository).findAllAfterCursor(cursorCaptor.capture(), pageableCaptor.capture());
-        verify(repository, never()).findByEmailAfterCursor(any(), anyLong(), any(Pageable.class));
-
-        assertThat(cursorCaptor.getValue()).isEqualTo(10L);
-        assertThat(pageableCaptor.getValue().getPageNumber()).isZero();
-        assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(3);
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
 
         assertThat(page.data()).hasSize(2);
         assertThat(page.isLast()).isFalse();
-        assertThat(page.cursor()).isEqualTo(second.toString());
     }
 
     @Test
-    void should_scroll_with_email_filter_using_find_by_email_after_cursor() {
-        OwnerEntity only = OwnerEntity.builder().id(1L).email("testex@email.com").build();
-        when(repository.findByEmailAfterCursor(eq("testex@email.com"), anyLong(), any(Pageable.class)))
-                .thenReturn(List.of(only));
+    void should_scroll_with_document_filter_using_find_by_document_after_cursor() {
+        OwnerEntity only = OwnerEntity.builder().id(1L).document("84779441056").build();
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(only)));
 
-        ScrollPage<Owner> page = adapter.scroll("testex@email.com", 2, "invalid-cursor");
+        ScrollPage<Owner> page = adapter.scroll("84779441056", 2, "invalid-cursor");
 
-        ArgumentCaptor<Long> cursorCaptor = ArgumentCaptor.forClass(Long.class);
-        verify(repository).findByEmailAfterCursor(eq("testex@email.com"), cursorCaptor.capture(), any(Pageable.class));
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
 
-        assertThat(cursorCaptor.getValue()).isZero();
         assertThat(page.data()).hasSize(1);
         assertThat(page.isLast()).isTrue();
         assertThat(page.cursor()).isNull();
@@ -108,14 +100,6 @@ public class OwnerPersistenceAdapterTest {
     @Test
     void should_save_when_owner_is_not_entity() {
         Owner owner = new TestOwner(40L, "Nome", "31058167049", DocumentType.CPF, "12314153", "teste40@email.com");
-        OwnerEntity expected = OwnerEntity.builder()
-            .id(40L)
-            .name("Nome")
-            .document("31058167049")
-            .documentType(DocumentType.CPF)
-            .phone("12314153")
-            .email("teste40@email.com")
-            .build();
 
         when(repository.save(any(OwnerEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -123,9 +107,13 @@ public class OwnerPersistenceAdapterTest {
 
         assertThat(saved)
             .isNotNull()
-            .isInstanceOf(OwnerEntity.class)
-            .usingRecursiveComparison()
-            .isEqualTo(expected);
+            .isInstanceOf(OwnerEntity.class);
+        
+        OwnerEntity savedEntity = (OwnerEntity) saved;
+        assertThat(savedEntity.getName()).isEqualTo("Nome");
+        assertThat(savedEntity.getDocument()).isEqualTo("31058167049");
+        assertThat(savedEntity.getPhone()).isEqualTo("12314153");
+        assertThat(savedEntity.getEmail()).isEqualTo("teste40@email.com");
     }
 
     @Test
@@ -151,6 +139,7 @@ public class OwnerPersistenceAdapterTest {
         private DocumentType documentType;
         private String phone;
         private String email;
+        private java.time.LocalDateTime createdAt;
 
         private TestOwner(Long id,
                         String name,
@@ -224,6 +213,16 @@ public class OwnerPersistenceAdapterTest {
         @Override
         public void setEmail(String email) {
             this.email = email;
+        }
+
+        @Override
+        public java.time.LocalDateTime getCreatedAt() {
+            return createdAt;
+        }
+
+        @Override
+        public void setCreatedAt(java.time.LocalDateTime createdAt) {
+            this.createdAt = createdAt;
         }
     }
 

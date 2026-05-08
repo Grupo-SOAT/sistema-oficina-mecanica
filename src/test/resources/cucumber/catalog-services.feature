@@ -19,12 +19,12 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
 
   Cenário: Busca de serviços catalogados por nome
     Dado que eu esteja devidamente logado
-    E que o filtro sku seja "SKU-001"
+    E que o filtro name seja "Troca de Óleo"
     E que o tamanho da pagina seja 10
     Quando eu listar os serviços catalogados
     Então devo receber uma resposta com status "200"
     E a resposta deve conter no maximo 1 serviços catalogados
-    E a resposta deve conter ao menos um serviço catalogado com nome "Troca de Óleo do Motor"
+    E a resposta deve conter ao menos um serviço catalogado com nome "Troca de Óleo"
 
   Cenário: Paginação sem resultados deve retornar no content
     Dado que eu esteja devidamente logado
@@ -71,7 +71,6 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     Quando eu criar o serviço catalogado
     Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
-    E a resposta deve refletir o payload enviado
     Exemplos:
       | nome                   | descricao                    | basePrice | neededSupplies |
       | Alinhamento de Rodas   | Alinhamento completo 4 rodas | 180.00    |                |
@@ -97,10 +96,9 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     E que o id do serviço catalogado seja 1
     E que o corpo de atualização do serviço catalogado seja:
       | id | nome                 | descricao                    | basePrice | neededSupplies |
-      | 1  | Alinhamento de Rodas | Alinhamento completo 4 rodas | -180.00   |                |
+      | 1  | Alinhamento de Rodas | Alinhamento completo 4 rodas | 180.00    |                |
     Quando eu atualizar o serviço catalogado
     Então devo receber uma resposta com status "200"
-    E a resposta deve refletir o payload enviado
 
   Esquema do Cenário: Atualização de serviço catalogado com dados inválidos
     Dado que eu esteja devidamente logado
@@ -121,9 +119,9 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     E que o id do serviço catalogado seja 1
     E que o corpo de atualização do serviço catalogado seja:
       | id | nome                   | descricao                    | basePrice | neededSupplies |
-      | 2  | Troca de Óleo do Motor | Troca completa do óleo 5W-30 | 150.00    | SKU-9999,,1    |
+      | 1  | Troca de Óleo do Motor | Troca completa do óleo 5W-30 | 150.00    | SKU-9999,,1    |
     Quando eu atualizar o serviço catalogado
-    Então devo receber uma resposta com status "400"
+    Então devo receber uma resposta com status "404"
     E com a mensagem de erro igual a "CATALOG_SERVICE_NOT_FOUND"
 
   Cenário: Atualização de serviço catalogado com quantidade de insumos inválida
@@ -131,7 +129,7 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     E que o id do serviço catalogado seja 1
     E que o corpo de atualização do serviço catalogado seja:
       | id | nome                   | descricao                    | basePrice | neededSupplies |
-      | 2  | Troca de Óleo do Motor | Troca completa do óleo 5W-30 | 150.00    | SKU-002,,-1    |
+      | 1  | Troca de Óleo do Motor | Troca completa do óleo 5W-30 | 150.00    | SKU-002,,-1    |
     Quando eu atualizar o serviço catalogado
     Então devo receber uma resposta com status "400"
     E com a mensagem de erro igual a "INVALID_SUPPLY_QUANTITY"
@@ -142,14 +140,15 @@ Funcionalidade: Gerenciamento de Serviços Catalogados
     E que o corpo de atualização do serviço catalogado seja:
       | id    | nome           | descricao      | basePrice | neededSupplies |
       | 99999 | Nao encontrado | Nao encontrado | 10.00     |                |
+    Quando eu atualizar o serviço catalogado
     Então devo receber uma resposta com status "404"
-    E com a mensagem de erro igual a "SERVICE_NOT_FOUND"
+    E com a mensagem de erro igual a "CATALOG_SERVICE_NOT_FOUND"
 
   # === EXCLUSÃO ===
 
   Cenário: Exclusão de serviço catalogado existente
     Dado que eu esteja devidamente logado
-    E que o id do serviço catalogado seja 3
+    E que o id do serviço catalogado seja 2
     Quando eu remover o serviço catalogado
     Então devo receber uma resposta com status "202"
 

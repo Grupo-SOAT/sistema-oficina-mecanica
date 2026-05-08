@@ -1,6 +1,7 @@
 package br.com.fiap.postech.domain.owner.model;
 
 import br.com.fiap.postech.adapter.input.api.model.DocumentType;
+import java.time.LocalDateTime;
 
 public interface Owner {
     Long getId();
@@ -26,5 +27,8 @@ public interface Owner {
     String getEmail();
 
     void setEmail(String email);
+
+    LocalDateTime getCreatedAt();
+
+    void setCreatedAt(LocalDateTime createdAt);
 }
-    

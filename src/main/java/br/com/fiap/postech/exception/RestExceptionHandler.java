@@ -11,138 +11,125 @@ import br.com.fiap.postech.domain.owner.exception.InvalidDocumentException;
 import br.com.fiap.postech.domain.owner.exception.InvalidEmailException;
 import br.com.fiap.postech.domain.owner.exception.NoMatchingOwnersException;
 import br.com.fiap.postech.domain.owner.exception.OwnerNotFoundException;
-import br.com.fiap.postech.domain.user.exception.IdUsuarioInexistenteException;
+import br.com.fiap.postech.domain.user.exception.UserNotFoundException;
 import br.com.fiap.postech.domain.user.exception.NoMatchingUsersException;
 import br.com.fiap.postech.domain.user.exception.SameUsernameException;
 import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
 import br.com.fiap.postech.domain.vehicle.excecption.InvalidLicensePlateException;
+import br.com.fiap.postech.domain.vehicle.excecption.InvalidVehicleYearException;
 import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
 import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
-import br.com.fiap.postech.domain.authentication.exception.ChatBotApiKeyInvalidaException;
-import br.com.fiap.postech.domain.authentication.exception.SenhaInvalidaException;
-import br.com.fiap.postech.domain.user.exception.UsuarioNaoEncontradoPorUsernameException;
+import br.com.fiap.postech.domain.authentication.exception.InvalidChatbotApiKeyException;
+import br.com.fiap.postech.domain.authentication.exception.InvalidPasswordException;
+import br.com.fiap.postech.domain.user.exception.UsernameNotFoundException;
 
 
 @RestControllerAdvice
 public class RestExceptionHandler {
 
     @ExceptionHandler(SameUsernameException.class)
-    public ResponseEntity<Object> handleSameUsernameException(SameUsernameException ex) {
-        
-        var response = new ErrorResponse(400, "USER_ALREADY_EXISTS" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleSameUsernameException(SameUsernameException ex) {
+        final var httpStatus = HttpStatus.CONFLICT;
+        final var response = new ErrorResponse(httpStatus.value(), "USER_CONFLICT_DUPLICATED_USERNAME", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
-    @ExceptionHandler(IdUsuarioInexistenteException.class)
-    public ResponseEntity<Object> handleIdUsuarioInexistenteException(IdUsuarioInexistenteException ex) {
-        
-        var response = new ErrorResponse(400, "ID_NOT_FOUND" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        final var httpStatus = HttpStatus.NOT_FOUND;
+        var response = new ErrorResponse(httpStatus.value(), "USER_NOT_FOUND", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @ExceptionHandler(NoMatchingUsersException.class)
-    public ResponseEntity<Object> handleNoMatchingUsersException(NoMatchingUsersException ex) {
-        
-        var response = new ErrorResponse(400, "USERNAME_NOT_FOUND_PAGINATION" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleNoMatchingUsersException(NoMatchingUsersException ex) {
+        return ResponseEntity.noContent().build();
     }
-    
-    @ExceptionHandler(NoMatchingVehiclesException.class)
-    public ResponseEntity<Object> handleNoMatchingVehiclesException(NoMatchingVehiclesException ex) {
-        
-        var response = new ErrorResponse(400, "VEHICLE_NOT_FOUND_PAGINATION" , ex.getMessage());
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(NoMatchingVehiclesException.class)
+    public ResponseEntity<ErrorResponse> handleNoMatchingVehiclesException(NoMatchingVehiclesException ex) {
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(DuplicatedVehicleException.class)
-    public ResponseEntity<Object> handleDuplicatedVehicleException(DuplicatedVehicleException ex) {
-        
-        var response = new ErrorResponse(400, "VEHICLE_ALREADY_EXISTS" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleDuplicatedVehicleException(DuplicatedVehicleException ex) {
+        final var httpStatus = HttpStatus.CONFLICT;
+        final var response = new ErrorResponse(httpStatus.value(), "VEHICLE_CONFLICT_DUPLICATED_LICENSE_PLATE", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @ExceptionHandler(VehicleNotFoundException.class)
-    public ResponseEntity<Object> handleVehicleNotFoundException(VehicleNotFoundException ex) {
-        
-        var response = new ErrorResponse(400, "VEHICLE_NOT_FOUND" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleVehicleNotFoundException(VehicleNotFoundException ex) {
+        final var httpStatus = HttpStatus.NOT_FOUND;
+        final var response = new ErrorResponse(httpStatus.value(), "VEHICLE_NOT_FOUND", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @ExceptionHandler(NoMatchingOwnersException.class)
-    public ResponseEntity<Object> handleNoMatchingOwnersException(NoMatchingOwnersException ex) {
-        
-        var response = new ErrorResponse(400, "OWNER_NOT_FOUND_PAGINATION" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleNoMatchingOwnersException(NoMatchingOwnersException ex) {
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(DuplicatedOwnerException.class)
-    public ResponseEntity<Object> handleDuplicatedOwnerException(DuplicatedOwnerException ex) {
-        
-        var response = new ErrorResponse(400, "OWNER_ALREADY_EXISTS" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleDuplicatedOwnerException(DuplicatedOwnerException ex) {
+        final var httpStatus = HttpStatus.CONFLICT;
+        final var response = new ErrorResponse(httpStatus.value(), "OWNER_ALREADY_EXISTS", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
-  
+
     @ExceptionHandler(OwnerNotFoundException.class)
-    public ResponseEntity<Object> handleOwnerNotFoundException(OwnerNotFoundException ex) {
-        
-        var response = new ErrorResponse(400, "OWNER_NOT_FOUND" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-  
-    @ExceptionHandler(UsuarioNaoEncontradoPorUsernameException.class)
-    public ResponseEntity<Object> handleUsuarioNaoEncontradoPorUsernameException(UsuarioNaoEncontradoPorUsernameException ex) {
-        
-        var response = new ErrorResponse(400, "USERNAME_NOT_FOUND" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleOwnerNotFoundException(OwnerNotFoundException ex) {
+        final var httpStatus = HttpStatus.NOT_FOUND;
+        final var response = new ErrorResponse(httpStatus.value(), "OWNER_NOT_FOUND", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
-    @ExceptionHandler(SenhaInvalidaException.class)
-    public ResponseEntity<Object> handleSenhaInvalidaException(SenhaInvalidaException ex) {
-        
-        var response = new ErrorResponse(400, "SENHA_INVALIDA" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        var response = new ErrorResponse(httpStatus.value(), "USERNAME_NOT_FOUND", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
-    @ExceptionHandler(ChatBotApiKeyInvalidaException.class)
-    public ResponseEntity<Object> handleChatBotApiKeyInvalidaException(ChatBotApiKeyInvalidaException ex) {
-        
-        var response = new ErrorResponse(400, "API_KEY_CHATBOT_INVALIDA" , ex.getMessage());
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPasswordException(InvalidPasswordException ex) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        final var response = new ErrorResponse(httpStatus.value(), "INVALID_PASSWORD", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
+    }
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(InvalidChatbotApiKeyException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidChatbotApiKeyException(InvalidChatbotApiKeyException ex) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        var response = new ErrorResponse(httpStatus.value(), "INVALID_CHATBOT_API_KEY", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @ExceptionHandler(InvalidDocumentException.class)
-    public ResponseEntity<Object> handleInvalidDocumentException(InvalidDocumentException ex) {
-        
-        var response = new ErrorResponse(400, "DOCUMENT_INVALID" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleInvalidDocumentException(InvalidDocumentException ex) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        final var response = new ErrorResponse(httpStatus.value(), "INVALID_DOCUMENT", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @ExceptionHandler(InvalidEmailException.class)
-    public ResponseEntity<Object> handleInvalidEmailException(InvalidEmailException ex) {
-        
-        var response = new ErrorResponse(400, "EMAIL_INVALID" , ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleInvalidEmailException(InvalidEmailException ex) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        final var response = new ErrorResponse(httpStatus.value(), "INVALID_EMAIL", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 
     @ExceptionHandler(InvalidLicensePlateException.class)
-    public ResponseEntity<Object> handleInvalidLicensePlateException(InvalidLicensePlateException ex) {
-        
-        var response = new ErrorResponse(400, "LICENSE_PLATE_INVALID" , ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleInvalidLicensePlateException(InvalidLicensePlateException ex) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        final var response = new ErrorResponse(httpStatus.value(), "INVALID_LICENSE_PLATE", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
+    }
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(InvalidVehicleYearException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidVehicleYearException(InvalidVehicleYearException ex) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        final var response = new ErrorResponse(httpStatus.value(), "INVALID_VEHICLE_YEAR", ex.getMessage());
+        return new ResponseEntity<>(response, httpStatus);
     }
 }

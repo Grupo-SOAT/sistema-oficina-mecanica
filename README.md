@@ -8,8 +8,8 @@ Um sistema planejado para facilitar a criação e acompanhamento de Ordens de Se
 
 ## Tecnologias
 
-- [Java 25](https://www.oracle.com/java/technologies/javase/25-relnote-issues.html)
-- [Gradle 9.3.0](https://docs.gradle.org/9.3.0/release-notes.html)
+- [Java 21](https://www.oracle.com/java/technologies/javase/21-relnote-issues.html)
+- [Maven 3.9.9](https://maven.apache.org/docs/3.9.9/release-notes.html)
 - [Spring Framework 7.0](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-7.0-Release-Notes)
 
 ## Infraestrutura

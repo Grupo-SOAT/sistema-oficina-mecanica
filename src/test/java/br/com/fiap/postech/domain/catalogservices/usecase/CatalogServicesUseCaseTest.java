@@ -3,16 +3,12 @@ package br.com.fiap.postech.domain.catalogservices.usecase;
 import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.CatalogServicesEntity;
 import br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.NeededSupplyEntity;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
-import br.com.fiap.postech.adapter.output.supply.persistence.entity.SupplyEntity;
-import br.com.fiap.postech.domain.catalogservices.exception.CatalogServicesNotFoundException;
-import br.com.fiap.postech.domain.catalogservices.exception.DuplicatedCatalogServicesException;
+import br.com.fiap.postech.domain.catalogservices.exception.CatalogServiceNotFoundException;
+import br.com.fiap.postech.domain.catalogservices.exception.DuplicatedCatalogServiceException;
 import br.com.fiap.postech.domain.catalogservices.exception.NoMatchingCatalogServiceException;
 import br.com.fiap.postech.domain.catalogservices.model.CatalogServices;
-import br.com.fiap.postech.domain.supply.exception.DuplicatedSupplyException;
-import br.com.fiap.postech.domain.supply.exception.NoMatchingSuppliesException;
-import br.com.fiap.postech.domain.supply.exception.SupplyNotFoundException;
-import br.com.fiap.postech.domain.supply.model.Supply;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
+import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,9 +43,9 @@ public class CatalogServicesUseCaseTest {
                 .cursor("1")
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll("ser", 10, "5")).thenReturn(expected);
+        when(persistencePort.scroll(null, "ser", 10, "5")).thenReturn(expected);
 
-        ScrollPage<CatalogServices> actual = useCase.scroll("ser", 10, "5");
+        ScrollPage<CatalogServices> actual = useCase.scroll(null, "ser", 10, "5");
 
         assertThat(actual).isSameAs(expected);
     }
@@ -61,9 +58,9 @@ public class CatalogServicesUseCaseTest {
                 .cursor(null)
                 .pageSize(10)
                 .build();
-        when(persistencePort.scroll("ser", 10, "5")).thenReturn(empty);
+        when(persistencePort.scroll(null, "ser", 10, "5")).thenReturn(empty);
 
-        assertThatThrownBy(() -> useCase.scroll("ser", 10, "5"))
+        assertThatThrownBy(() -> useCase.scroll(null, "ser", 10, "5"))
                 .isInstanceOf(NoMatchingCatalogServiceException.class)
                 .hasMessage("No matching catalog service for name: ser");
     }
@@ -101,17 +98,17 @@ public class CatalogServicesUseCaseTest {
         when(persistencePort.findById(9L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> useCase.getById(9L))
-                .isInstanceOf(CatalogServicesNotFoundException.class)
+                .isInstanceOf(CatalogServiceNotFoundException.class)
                 .hasMessage("Catalog services not found for id: 9");
     }
 
     @Test
     void should_throw_when_creating_duplicated_service_name() {
-        CatalogServicesEntity supply = CatalogServicesEntity.builder().name("Servico").build();
+        CatalogServicesEntity supply = CatalogServicesEntity.builder().name("Servico").basePrice(BigDecimal.TEN).build();
         when(persistencePort.findByName("Servico")).thenReturn(Optional.of(CatalogServicesEntity.builder().name("Servico").build()));
 
         assertThatThrownBy(() -> useCase.create(supply))
-                .isInstanceOf(DuplicatedCatalogServicesException.class)
+                .isInstanceOf(DuplicatedCatalogServiceException.class)
                 .hasMessage("Catalog services already exists for name: Servico");
 
         verify(persistencePort, never()).save(any());
@@ -119,11 +116,11 @@ public class CatalogServicesUseCaseTest {
 
     @Test
     void should_throw_when_updating_non_existing_catalog_services() {
-        CatalogServicesEntity incoming = CatalogServicesEntity.builder().name("Servico").build();
+        CatalogServicesEntity incoming = CatalogServicesEntity.builder().name("Servico").basePrice(BigDecimal.TEN).build();
         when(persistencePort.findById(10L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> useCase.update(10L, incoming))
-                .isInstanceOf(CatalogServicesNotFoundException.class)
+                .isInstanceOf(CatalogServiceNotFoundException.class)
                 .hasMessage("Catalog services not found for id: 10");
     }
 
@@ -141,7 +138,7 @@ public class CatalogServicesUseCaseTest {
         when(persistencePort.existsById(2L)).thenReturn(false);
 
         assertThatThrownBy(() -> useCase.delete(2L))
-                .isInstanceOf(CatalogServicesNotFoundException.class)
+                .isInstanceOf(CatalogServiceNotFoundException.class)
                 .hasMessage("Catalog services not found for id: 2");
 
         verify(persistencePort, never()).deleteById(22L);

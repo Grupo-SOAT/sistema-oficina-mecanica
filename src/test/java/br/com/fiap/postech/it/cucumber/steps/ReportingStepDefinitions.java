@@ -32,14 +32,14 @@ public class ReportingStepDefinitions extends BaseStepDefinition {
     public void initialize() {
         context.reset();
         resetReportingData();
-        mockMvc = webAppContextSetup(webContext)
+        setMockMvc(webAppContextSetup(webContext)
                 .apply(springSecurity())
-                .build();
+                .build());
     }
 
     private void resetReportingData() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("db/reporting-seed.sql"));
+        populator.addScript(new ClassPathResource("db/seed/canonical-seed.sql"));
         populator.execute(dataSource);
     }
 

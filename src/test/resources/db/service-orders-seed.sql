@@ -1,76 +1,67 @@
--- Limpar dados usados pela feature de ordens de serviço
-DELETE
-FROM service_needed_supplies
-WHERE service_id IN (SELECT service_id FROM services);
-DELETE
-FROM services
-WHERE service_id > 0;
-DELETE
-FROM catalog_services
-WHERE catalog_service_id > 0;
-DELETE
-FROM service_orders
-WHERE service_order_id > 0;
-DELETE
-FROM vehicles
-WHERE vehicle_id > 0;
-DELETE
-FROM owners
-WHERE owner_id > 0;
+-- Seed mínimo para cenários de Service Orders (Cucumber)
+-- Cria múltiplas ServiceOrders em diferentes estados para suportar testes isolados
 
--- Reset sequences
-ALTER TABLE owners
-    ALTER COLUMN owner_id RESTART WITH 1;
-ALTER TABLE vehicles
-    ALTER COLUMN vehicle_id RESTART WITH 1;
-ALTER TABLE catalog_services
-    ALTER COLUMN catalog_service_id RESTART WITH 1;
-ALTER TABLE service_orders
-    ALTER COLUMN service_order_id RESTART WITH 1;
+DELETE FROM services;
+DELETE FROM service_orders;
 
--- Clientes
-INSERT INTO owners (owner_id, document, document_type, name, email, phone, created_at, updated_at)
-VALUES (1, '12345678901', 'CPF', 'João Silva', 'joao@email.com', '11987654321', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- ID 1: PENDING (para testar START_INSPECTION)
+INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, status, estimated_amount, created_at, updated_at)
+VALUES (1, 1, 1, 'Troca de óleo e filtro', 'PENDING', 120.00, CURRENT_TIMESTAMP - INTERVAL '3 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
-INSERT INTO owners (owner_id, document, document_type, name, email, phone, created_at, updated_at)
-VALUES (2, '98765432100', 'CPF', 'Maria Souza', 'maria@email.com', '11999998888', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- ID 2: IN_INSPECTION (para testar COMPLETE_INSPECTION)
+INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, status, estimated_amount, created_at, updated_at, inspected_at)
+VALUES (2, 2, 2, 'Revisão preventiva', 'IN_INSPECTION', 250.00, CURRENT_TIMESTAMP - INTERVAL '2 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
--- Veículos
-INSERT INTO vehicles (vehicle_id, owner_id, license_plate, plate, brand, model, vehicle_year, vin, color, fuel_type,
-                      created_at, updated_at)
-VALUES (1, 1, 'ABC1234', 'ABC1234', 'Toyota', 'Corolla', 2020, 'VIN123456789', 'Prata', 'GASOLINE',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- ID 3: AWAITING_APPROVAL (para testar APPROVE e CANCEL via budget)
+INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, status, estimated_amount, created_at, updated_at)
+VALUES (3, 1, 1, 'Troca de bateria', 'AWAITING_APPROVAL', 180.00, CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
-INSERT INTO vehicles (vehicle_id, owner_id, license_plate, plate, brand, model, vehicle_year, vin, color, fuel_type,
-                      created_at, updated_at)
-VALUES (2, 2, 'DEF5678', 'DEF5678', 'Honda', 'Civic', 2021, 'VIN987654321', 'Preto', 'GASOLINE', CURRENT_TIMESTAMP,
-        CURRENT_TIMESTAMP);
+-- ID 4: APPROVED (para testar START_SERVICE)
+INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, status, estimated_amount, created_at, updated_at, approved_at)
+VALUES (4, 2, 2, 'Alinhamento', 'APPROVED', 200.00, CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
--- Serviços de catálogo
-INSERT INTO catalog_services (catalog_service_id, name, description, created_at, updated_at)
-VALUES (1, 'Troca de Óleo', 'Troca de óleo e filtro do motor', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- ID 5: IN_PROGRESS (para testar COMPLETE_SERVICE e CANCEL_SERVICE)
+INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, status, estimated_amount, created_at, updated_at, started_at)
+VALUES (5, 1, 1, 'Troca de óleo completa', 'IN_PROGRESS', 150.00, CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
-INSERT INTO catalog_services (catalog_service_id, name, description, created_at, updated_at)
-VALUES (2, 'Alinhamento', 'Alinhamento de rodas', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- ID 6: COMPLETED (para testar DELIVER_VEHICLE)
+INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, status, estimated_amount, created_at, updated_at, completed_at)
+VALUES (6, 2, 2, 'Revisão completa', 'COMPLETED', 300.00, CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
--- Ordens de serviço
-INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, estimated_amount, status, created_at,
-                            updated_at, approved_at)
-VALUES (1, 1, 1, 'Troca de óleo e filtro', 150.00, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL);
+-- ID 7: CANCELLED (para testar DELIVER_VEHICLE de estado CANCELLED)
+INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, status, estimated_amount, created_at, updated_at, cancelled_at)
+VALUES (7, 1, 1, 'Revisão cancelada', 'CANCELLED', 100.00, CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
-INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, estimated_amount, status, created_at,
-                            updated_at, approved_at, started_at, completed_at)
-VALUES (2, 2, 2, 'Alinhamento e revisão', 200.00, 'APPROVED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
-        '2024-01-02 09:00:00'::timestamp,
-        '2024-01-02 09:30:00'::timestamp,
-        '2024-01-02 11:00:00'::timestamp);
+-- Services para testes
+-- IMPORTANTE: Service IDs segregados por contexto de teste
+--           OS 1: service 1 (usado por @services para testes de CRUD)
+--           OS 4: service 10 (usado por @serviceOrders para START_SERVICE)
+--           OS 5: services 11, 12 (usado por @serviceOrders para COMPLETE/CANCEL_SERVICE)
 
--- Reajustar sequência
-ALTER TABLE owners
-    ALTER COLUMN owner_id RESTART WITH 3;
-ALTER TABLE vehicles
-    ALTER COLUMN vehicle_id RESTART WITH 3;
-ALTER TABLE catalog_services
-    ALTER COLUMN catalog_service_id RESTART WITH 3;
-ALTER TABLE service_orders
-    ALTER COLUMN service_order_id RESTART WITH 3;
+-- Para OS 1 (PENDING) - testes de CRUD de services com service IDs 1, 2, 3
+INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at)
+VALUES 
+  (1, 1, 1, 120.00, 'AWAITING_APPROVAL', CURRENT_TIMESTAMP - INTERVAL '3 day', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  (4, 1, 2, 150.00, 'AWAITING_APPROVAL', CURRENT_TIMESTAMP - INTERVAL '2 day', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  (5, 1, 3, 100.00, 'AWAITING_APPROVAL', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+-- Para OS 4 (APPROVED) - testar START_SERVICE com service ID 10
+INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, approved_at)
+VALUES (10, 4, 1, 120.00, 'APPROVED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+-- Para OS 5 (IN_PROGRESS) - testar COMPLETE_SERVICE e CANCEL_SERVICE com services IDs 11 e 12
+INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, started_at)
+VALUES 
+  (11, 5, 2, 150.00, 'IN_PROGRESS', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  (12, 5, 3, 100.00, 'IN_PROGRESS', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+-- Para OS 6 (COMPLETED)
+INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, completed_at)
+VALUES (20, 6, 1, 300.00, 'COMPLETED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+-- Para OS 7 (CANCELLED)
+INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, cancelled_at)
+VALUES (21, 7, 1, 100.00, 'CANCELLED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+SELECT setval(pg_get_serial_sequence('service_orders', 'service_order_id'), (SELECT COALESCE(MAX(service_order_id), 0) FROM service_orders));
+SELECT setval(pg_get_serial_sequence('services', 'service_id'), (SELECT COALESCE(MAX(service_id), 0) FROM services));
