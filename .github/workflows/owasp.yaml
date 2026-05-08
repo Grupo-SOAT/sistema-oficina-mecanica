@@ -107,28 +107,28 @@ jobs:
       # -------------------------
       # Hash do ADMIN (ANTES do insert)
       # -------------------------
-      - name: Generate BCrypt hash
-        run: |
-          HASH=$(htpasswd -bnBC 10 "" dummyAdminPassword | tr -d ':\n')
-          echo "ADMIN_HASH=$HASH" >> $GITHUB_ENV
+      # - name: Generate BCrypt hash
+      #   run: |
+      #     HASH=$(htpasswd -bnBC 10 "" dummyAdminPassword | tr -d ':\n')
+      #     echo "ADMIN_HASH=$HASH" >> $GITHUB_ENV
 
       # -------------------------
       # Schema + ADMIN
       # -------------------------
       - name: Run DB schema
         run: |
-          docker exec -i postgres psql -U admin -d workshop < docker-local/db-seed/create-db.sql
+          docker exec -i postgres psql -U admin -d workshop < src/main/resources/db/seed/canonical-seed.sql
 
-      - name: Create admin user
-        run: |
-          docker exec -i postgres psql -U admin -d workshop <<EOF
-          INSERT INTO users (user_name, password, role)
-          VALUES (
-            'dummyAdmin',
-            '${ADMIN_HASH}',
-            ARRAY['ADMIN']
-          );
-          EOF
+      # - name: Create admin user
+      #   run: |
+      #     docker exec -i postgres psql -U admin -d workshop <<EOF
+      #     INSERT INTO users (user_name, password, role)
+      #     VALUES (
+      #       'dummyAdmin',
+      #       '${ADMIN_HASH}',
+      #       ARRAY['ADMIN']
+      #     );
+      #     EOF
 
       # -------------------------
       # APP
