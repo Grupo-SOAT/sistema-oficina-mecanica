@@ -15,5 +15,5 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "br.com.fiap.postech.it.cucumber")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, summary")
 //@ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@serviceOrders or @services")
-public class CucumberIT {
+public class CucumberTest {
 }

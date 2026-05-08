@@ -244,4 +244,127 @@ class ServiceOrderUseCaseTest {
 
         verify(persistencePort, never()).deleteById(any());
     }
+
+    // Testes adicionais para cobertura de branches - scroll com filtros
+    @Test
+    void should_scroll_by_status_when_filter_provided() {
+        ScrollPage<ServiceOrder> expected = ScrollPage.<ServiceOrder>builder()
+                .data(List.of(ServiceOrderEntity.builder().id(1L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll("PENDING", null, null, 10, "0")).thenReturn(expected);
+
+        ScrollPage<ServiceOrder> actual = useCase.scroll("PENDING", null, null, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_scroll_by_client_id_when_filter_provided() {
+        ScrollPage<ServiceOrder> expected = ScrollPage.<ServiceOrder>builder()
+                .data(List.of(ServiceOrderEntity.builder().id(1L).clientId(5L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll(null, 5L, null, 10, "0")).thenReturn(expected);
+
+        ScrollPage<ServiceOrder> actual = useCase.scroll(null, 5L, null, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_scroll_by_vehicle_id_when_filter_provided() {
+        ScrollPage<ServiceOrder> expected = ScrollPage.<ServiceOrder>builder()
+                .data(List.of(ServiceOrderEntity.builder().id(1L).vehicleId(10L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll(null, null, 10L, 10, "0")).thenReturn(expected);
+
+        ScrollPage<ServiceOrder> actual = useCase.scroll(null, null, 10L, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_scroll_by_client_id_and_vehicle_id_when_both_provided() {
+        ScrollPage<ServiceOrder> expected = ScrollPage.<ServiceOrder>builder()
+                .data(List.of(ServiceOrderEntity.builder().id(1L).clientId(5L).vehicleId(10L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll(null, 5L, 10L, 10, "0")).thenReturn(expected);
+
+        ScrollPage<ServiceOrder> actual = useCase.scroll(null, 5L, 10L, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_scroll_by_client_id_and_status_when_both_provided() {
+        ScrollPage<ServiceOrder> expected = ScrollPage.<ServiceOrder>builder()
+                .data(List.of(ServiceOrderEntity.builder().id(1L).clientId(5L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll("PENDING", 5L, null, 10, "0")).thenReturn(expected);
+
+        ScrollPage<ServiceOrder> actual = useCase.scroll("PENDING", 5L, null, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_scroll_by_vehicle_id_and_status_when_both_provided() {
+        ScrollPage<ServiceOrder> expected = ScrollPage.<ServiceOrder>builder()
+                .data(List.of(ServiceOrderEntity.builder().id(1L).vehicleId(10L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll("PENDING", null, 10L, 10, "0")).thenReturn(expected);
+
+        ScrollPage<ServiceOrder> actual = useCase.scroll("PENDING", null, 10L, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_scroll_with_all_filters_when_provided() {
+        ScrollPage<ServiceOrder> expected = ScrollPage.<ServiceOrder>builder()
+                .data(List.of(ServiceOrderEntity.builder().id(1L).clientId(5L).vehicleId(10L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll("PENDING", 5L, 10L, 10, "0")).thenReturn(expected);
+
+        ScrollPage<ServiceOrder> actual = useCase.scroll("PENDING", 5L, 10L, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_throw_no_matching_when_scroll_result_is_empty_with_all_filters() {
+        ScrollPage<ServiceOrder> empty = ScrollPage.<ServiceOrder>builder()
+                .data(List.of())
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll("PENDING", 5L, 10L, 10, "0")).thenReturn(empty);
+
+        assertThatThrownBy(() -> useCase.scroll("PENDING", 5L, 10L, 10, "0"))
+                .isInstanceOf(NoMatchingServiceOrdersException.class)
+                .hasMessageStartingWith("No matching service orders");
+
+        verify(persistencePort, never()).save(any());
+    }
 }

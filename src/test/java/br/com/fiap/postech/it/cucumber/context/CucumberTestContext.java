@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.test.web.servlet.MockMvc;
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CucumberTestContext {
     private static final CucumberTestContext INSTANCE = new CucumberTestContext();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    public CucumberTestContext() {
+    }
 
     private String currentUser;
     private String currentRole;
@@ -81,5 +81,141 @@ public class CucumberTestContext {
         }
 
         return lastResponseBody.toString();
+    }
+
+    public String getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public String getCurrentRole() {
+        return currentRole;
+    }
+
+    public void setCurrentRole(String currentRole) {
+        this.currentRole = currentRole;
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+
+    public String getCurrentApiKey() {
+        return currentApiKey;
+    }
+
+    public void setCurrentApiKey(String currentApiKey) {
+        this.currentApiKey = currentApiKey;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public int getLastStatusCode() {
+        return lastStatusCode;
+    }
+
+    public void setLastStatusCode(int lastStatusCode) {
+        this.lastStatusCode = lastStatusCode;
+    }
+
+    public String getLastErrorMessage() {
+        return lastErrorMessage;
+    }
+
+    public void setLastErrorMessage(String lastErrorMessage) {
+        this.lastErrorMessage = lastErrorMessage;
+    }
+
+    public JsonNode getLastResponseBody() {
+        return lastResponseBody;
+    }
+
+    public void setLastResponseBody(JsonNode lastResponseBody) {
+        this.lastResponseBody = lastResponseBody;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public String getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(String cursor) {
+        this.cursor = cursor;
+    }
+
+    public String getFilterName() {
+        return filterName;
+    }
+
+    public void setFilterName(String filterName) {
+        this.filterName = filterName;
+    }
+
+    public String getFilterValue() {
+        return filterValue;
+    }
+
+    public void setFilterValue(String filterValue) {
+        this.filterValue = filterValue;
+    }
+
+    public String getRequestBody() {
+        return requestBody;
+    }
+
+    public void setRequestBody(String requestBody) {
+        this.requestBody = requestBody;
+    }
+
+    public String getLastResponseContentType() {
+        return lastResponseContentType;
+    }
+
+    public void setLastResponseContentType(String lastResponseContentType) {
+        this.lastResponseContentType = lastResponseContentType;
+    }
+
+    public String getLastResponseContentDisposition() {
+        return lastResponseContentDisposition;
+    }
+
+    public void setLastResponseContentDisposition(String lastResponseContentDisposition) {
+        this.lastResponseContentDisposition = lastResponseContentDisposition;
+    }
+
+    public Long getCatalogServiceId() {
+        return catalogServiceId;
+    }
+
+    public void setCatalogServiceId(Long catalogServiceId) {
+        this.catalogServiceId = catalogServiceId;
+    }
+
+    public MockMvc getMockMvc() {
+        return mockMvc;
+    }
+
+    public void setMockMvc(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
     }
 }

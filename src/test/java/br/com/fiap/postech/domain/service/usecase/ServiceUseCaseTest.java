@@ -188,4 +188,133 @@ class ServiceUseCaseTest {
 
         verify(persistencePort, never()).deleteById(any());
     }
+
+    // Testes adicionais para cobertura de branches
+    @Test
+    void should_throw_when_service_order_not_found_on_scroll() {
+        when(serviceOrderPersistencePort.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> useCase.scroll(99L, null, null, null, 10, null))
+                .isInstanceOf(br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException.class);
+    }
+
+    @Test
+    void should_throw_when_service_order_not_found_on_get_by_id() {
+        when(serviceOrderPersistencePort.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> useCase.getById(99L, 5L))
+                .isInstanceOf(br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException.class);
+    }
+
+    @Test
+    void should_throw_when_catalog_service_not_found_on_update() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
+        when(catalogServicesPersistencePort.findById(10L)).thenReturn(Optional.empty());
+        ServiceEntity existing = ServiceEntity.builder().id(5L).serviceOrderId(1L).build();
+        ServiceEntity incoming = ServiceEntity.builder().catalogServiceId(10L).price(new BigDecimal("200.00")).build();
+        when(persistencePort.findByIdAndServiceOrderId(5L, 1L)).thenReturn(Optional.of(existing));
+
+        assertThatThrownBy(() -> useCase.update(1L, 5L, incoming))
+                .isInstanceOf(CatalogServiceNotFoundException.class);
+
+        verify(persistencePort, never()).save(any());
+    }
+
+    @Test
+    void should_throw_when_service_order_not_found_on_update() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.empty());
+        ServiceEntity incoming = ServiceEntity.builder().catalogServiceId(10L).price(new BigDecimal("200.00")).build();
+
+        assertThatThrownBy(() -> useCase.update(1L, 5L, incoming))
+                .isInstanceOf(br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException.class);
+    }
+
+    @Test
+    void should_throw_when_service_order_not_found_on_delete() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> useCase.delete(1L, 5L))
+                .isInstanceOf(br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException.class);
+    }
+
+    @Test
+    void should_handle_scroll_with_service_id_filter() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
+        ScrollPage<Service> expected = ScrollPage.<Service>builder()
+                .data(List.of(ServiceEntity.builder().id(5L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll(1L, 5L, null, null, 10, "0")).thenReturn(expected);
+
+        ScrollPage<Service> actual = useCase.scroll(1L, 5L, null, null, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_handle_scroll_with_name_filter() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
+        ScrollPage<Service> expected = ScrollPage.<Service>builder()
+                .data(List.of(ServiceEntity.builder().id(1L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll(1L, null, "Oil Change", null, 10, "0")).thenReturn(expected);
+
+        ScrollPage<Service> actual = useCase.scroll(1L, null, "Oil Change", null, 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_handle_scroll_with_status_filter() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
+        ScrollPage<Service> expected = ScrollPage.<Service>builder()
+                .data(List.of(ServiceEntity.builder().id(1L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll(1L, null, null, "COMPLETED", 10, "0")).thenReturn(expected);
+
+        ScrollPage<Service> actual = useCase.scroll(1L, null, null, "COMPLETED", 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_handle_scroll_with_multiple_filters() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
+        ScrollPage<Service> expected = ScrollPage.<Service>builder()
+                .data(List.of(ServiceEntity.builder().id(1L).build()))
+                .isLast(true)
+                .cursor(null)
+                .pageSize(10)
+                .build();
+        when(persistencePort.scroll(1L, 5L, "Oil Change", "COMPLETED", 10, "0")).thenReturn(expected);
+
+        ScrollPage<Service> actual = useCase.scroll(1L, 5L, "Oil Change", "COMPLETED", 10, "0");
+
+        assertThat(actual).isSameAs(expected);
+    }
+
+    @Test
+    void should_throw_when_create_service_with_null_price() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
+        when(catalogServicesPersistencePort.findById(10L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.catalogservices.model.CatalogServices.class)));
+
+        ServiceEntity input = ServiceEntity.builder()
+                .catalogServiceId(10L)
+                .price(null)
+                .build();
+
+        assertThatThrownBy(() -> useCase.create(1L, input))
+                .isInstanceOf(ServiceUseCase.InvalidServiceException.class)
+                .hasMessage("INVALID_PRICE");
+
+        verify(persistencePort, never()).save(any(Service.class));
+    }
 }

@@ -288,4 +288,110 @@ class ServicePersistenceAdapterTest {
                 .build();
     }
 
+    // Testes adicionais para cobertura de branches - filtros de scroll
+    @Test
+    void should_scroll_by_status_when_filter_provided() {
+        ServiceEntity entity = ServiceEntity.builder().id(1L).serviceOrderId(10L).status("COMPLETED").build();
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
+
+        ScrollPage<Service> page = adapter.scroll(10L, null, null, "COMPLETED", 10, null);
+
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+        assertThat(page.data()).hasSize(1);
+    }
+
+    @Test
+    void should_scroll_by_service_id_and_status_when_both_provided() {
+        ServiceEntity entity = ServiceEntity.builder().id(5L).serviceOrderId(10L).status("COMPLETED").build();
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
+
+        ScrollPage<Service> page = adapter.scroll(10L, 5L, null, "COMPLETED", 10, null);
+
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+        assertThat(page.data()).hasSize(1);
+    }
+
+    @Test
+    void should_scroll_by_name_and_status_when_both_provided() {
+        ServiceEntity entity = ServiceEntity.builder().id(1L).serviceOrderId(10L).status("COMPLETED").build();
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
+
+        ScrollPage<Service> page = adapter.scroll(10L, null, "troca", "COMPLETED", 10, null);
+
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+        assertThat(page.data()).hasSize(1);
+    }
+
+    @Test
+    void should_scroll_with_all_filters_when_provided() {
+        ServiceEntity entity = ServiceEntity.builder().id(5L).serviceOrderId(10L).status("COMPLETED").build();
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(entity)));
+
+        ScrollPage<Service> page = adapter.scroll(10L, 5L, "troca", "COMPLETED", 10, null);
+
+        verify(repository).findAll(any(Specification.class), any(Pageable.class));
+        assertThat(page.data()).hasSize(1);
+    }
+
+    @Test
+    void should_handle_cursor_pagination_correctly() {
+        ServiceEntity first = ServiceEntity.builder().id(1L).serviceOrderId(10L).build();
+        ServiceEntity second = ServiceEntity.builder().id(2L).serviceOrderId(10L).build();
+        
+        when(repository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(first, second)));
+
+        ScrollPage<Service> page = adapter.scroll(10L, null, null, null, 1, "abc123");
+
+        assertThat(page.data()).hasSize(1);
+        assertThat(page.isLast()).isFalse();
+        assertThat(page.cursor()).isNotNull();
+    }
+
+    @Test
+    void should_save_non_entity_service_model() {
+        Service service = new Service() {
+            @Override public Long getId() { return 1L; }
+            @Override public void setId(Long id) { }
+            @Override public Long getServiceOrderId() { return 10L; }
+            @Override public void setServiceOrderId(Long serviceOrderId) { }
+            @Override public Long getCatalogServiceId() { return 5L; }
+            @Override public void setCatalogServiceId(Long catalogServiceId) { }
+            @Override public BigDecimal getPrice() { return new BigDecimal("100.00"); }
+            @Override public void setPrice(BigDecimal price) { }
+            @Override public java.util.List<br.com.fiap.postech.domain.service.model.NeededSupply> getNeededSupplies() { return null; }
+            @Override public void setNeededSupplies(java.util.List<br.com.fiap.postech.domain.service.model.NeededSupply> neededSupplies) { }
+            @Override public String getStatus() { return "AWAITING_APPROVAL"; }
+            @Override public void setStatus(String status) { }
+            @Override public LocalDateTime getCreatedAt() { return LocalDateTime.now(); }
+            @Override public void setCreatedAt(LocalDateTime createdAt) { }
+            @Override public LocalDateTime getUpdatedAt() { return LocalDateTime.now(); }
+            @Override public void setUpdatedAt(LocalDateTime updatedAt) { }
+            @Override public LocalDateTime getRejectedAt() { return null; }
+            @Override public void setRejectedAt(LocalDateTime rejectedAt) { }
+            @Override public LocalDateTime getCancelledAt() { return null; }
+            @Override public void setCancelledAt(LocalDateTime cancelledAt) { }
+            @Override public LocalDateTime getApprovedAt() { return null; }
+            @Override public void setApprovedAt(LocalDateTime approvedAt) { }
+            @Override public LocalDateTime getStartedAt() { return null; }
+            @Override public void setStartedAt(LocalDateTime startedAt) { }
+            @Override public LocalDateTime getCompletedAt() { return null; }
+            @Override public void setCompletedAt(LocalDateTime completedAt) { }
+        };
+
+        ServiceEntity entity = ServiceEntity.builder()
+                .id(1L).serviceOrderId(10L).catalogServiceId(5L)
+                .price(new BigDecimal("100.00")).status("AWAITING_APPROVAL").build();
+
+        when(repository.save(any(ServiceEntity.class))).thenReturn(entity);
+
+        Service saved = adapter.save(service);
+
+        assertThat(saved).isNotNull();
+    }
+
 }
