@@ -46,6 +46,14 @@
         <openapi.useSpringBoot4>true</openapi.useSpringBoot4>
         <openapi.useJackson3>true</openapi.useJackson3>
         <openapi.dateLibrary>java8</openapi.dateLibrary>
+
+        <!-- Sonar Exclusions -->
+        <sonar.exclusions>
+            **/config/**,
+            **/port/**,
+            **/adapter/input/api/model/**,
+            **/port/api/**
+        </sonar.exclusions>
     </properties>
 
     <dependencies>
@@ -326,6 +334,12 @@
                     <format>ALL</format> <!-- HTML, XML, JSON -->
                     <failBuildOnCVSS>7</failBuildOnCVSS> <!-- opcional: falha se CVSS >= 7 -->
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.11.0.3922</version>
             </plugin>
         </plugins>
     </build>
