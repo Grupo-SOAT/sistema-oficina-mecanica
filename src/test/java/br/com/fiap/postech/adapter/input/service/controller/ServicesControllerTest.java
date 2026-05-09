@@ -74,7 +74,7 @@ class ServicesControllerTest {
 
         when(serviceUseCase.create(eq(10L), any(Service.class))).thenReturn(created);
 
-        ResponseEntity<ServiceData> response = controller.includeService(request);
+        ResponseEntity<ServiceData> response = controller.includeService(10L, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotNull();
