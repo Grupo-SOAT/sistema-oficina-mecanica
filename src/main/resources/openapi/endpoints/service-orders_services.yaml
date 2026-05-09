@@ -1,19 +1,19 @@
-parameters:
-  - in: path
-    name: id
-    description: ID da OS
-    required: true
-    schema:
-      type: integer
-      format: int64
-
 get:
   tags: [ Services ]
   summary: Listar serviços de uma OS (paginado)
   operationId: listServices
   security:
     - SessionToken: [ ]
+
   parameters:
+    - in: path
+      name: id
+      description: ID da OS
+      required: true
+      schema:
+        type: integer
+        format: int64
+
     - in: query
       name: serviceId
       description: ID do Serviço
@@ -71,6 +71,15 @@ post:
   operationId: includeService
   security:
     - SessionToken: [ ]
+
+  parameters:
+    - in: path
+      name: id
+      description: ID da OS
+      required: true
+      schema:
+        type: integer
+        format: int64
 
   requestBody:
     required: true
