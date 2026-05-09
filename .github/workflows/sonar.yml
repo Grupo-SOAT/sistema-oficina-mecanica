@@ -3,6 +3,9 @@ name: SonarCloud Quality Analysis
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   sonarcloud:
     name: SonarCloud Analysis
@@ -21,15 +24,12 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build project
-        run: mvn clean verify
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v7
+      - name: Run Sonar Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=Grupo-SOAT_sistema-oficina-mecanica
-            -Dsonar.organization=grupo-soat
+        run: |
+          mvn clean verify \
+            org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar \
+            -Dsonar.projectKey=Grupo-SOAT_sistema-oficina-mecanica \
+            -Dsonar.organization=grupo-soat \
             -Dsonar.host.url=https://sonarcloud.io
