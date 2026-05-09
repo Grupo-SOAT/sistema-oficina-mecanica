@@ -23,7 +23,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-
+# sonar
       - name: Run Sonar Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
