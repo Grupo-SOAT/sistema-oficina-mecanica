@@ -32,4 +32,12 @@ jobs:
             org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar \
             -Dsonar.projectKey=Grupo-SOAT_sistema-oficina-mecanica \
             -Dsonar.organization=grupo-soat \
-            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+
+      - name: Upload Surefire Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports
