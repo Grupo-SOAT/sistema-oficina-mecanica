@@ -22,8 +22,8 @@ echo "🔐 Login ADMIN..."
 ADMIN_RESPONSE=$(curl -s -X POST $APP_URL/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "username": "dummyAdmin",
-    "password": "dummyAdminPassword"
+    "username": "admin",
+    "password": "admin"
   }')
 
 echo $ADMIN_RESPONSE
