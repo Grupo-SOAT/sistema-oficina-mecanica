@@ -44,13 +44,15 @@ for ROLE in "${ROLES[@]}"; do
 
   echo "👤 Criando usuário $USERNAME"
 
-  curl -s -X POST $APP_URL/users \
-    -H "Authorization: Bearer $ADMIN_TOKEN" \
-    -H "Content-Type: application/json" \
-    -d "{
-      \"username\": \"$USERNAME\",
-      \"roles\": [\"$ROLE\"]
-    }" > /dev/null
+  CREATE_RESPONSE=$(curl -s -w "\nSTATUS:%{http_code}" -X POST $APP_URL/users \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"username\": \"$USERNAME\",
+    \"roles\": [\"$ROLE\"]
+  }")
+
+  echo "$CREATE_RESPONSE"
 
   USER_RESPONSE=$(curl -s -X POST $APP_URL/auth/login \
     -H "Content-Type: application/json" \
