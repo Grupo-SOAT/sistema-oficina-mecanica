@@ -115,9 +115,9 @@ jobs:
       # -------------------------
       # Schema + ADMIN
       # -------------------------
-      # - name: Run DB schema
-      #   run: |
-      #     docker exec -i postgres psql -U admin -d workshop < src/main/resources/db/seed/canonical-seed.sql
+      - name: Run DB schema
+        run: |
+          docker exec -i postgres psql -U admin -d workshop < src/main/resources/db/seed/ci-seed.sql
 
       # - name: Create admin user
       #   run: |
