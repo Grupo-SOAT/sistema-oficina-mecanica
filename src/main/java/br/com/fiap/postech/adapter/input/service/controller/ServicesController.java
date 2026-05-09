@@ -40,7 +40,7 @@ public class ServicesController implements ServicesApi {
     }
 
     @Override
-    public ResponseEntity<ServiceData> includeService(ServiceRequest serviceRequest) {
+    public ResponseEntity<ServiceData> includeService(Long id, ServiceRequest serviceRequest) {
         final var newService = ServiceMapper.fromApiRequest(serviceRequest);
         final var created = serviceUseCase.create(serviceRequest.getServiceOrderId(), newService);
         final var responseBody = ServiceMapper.toApiData(created);
