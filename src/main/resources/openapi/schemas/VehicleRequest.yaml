@@ -1,9 +1,10 @@
 title: Request de veículo
-description: Dados para criar ou atualizar um veículo
+description: Dados para criar ou atualizar um veículo (`ownerId` sempre tem prioridade sobre `owner`)
 type: object
-required: [ licensePlate, ownerId, brand, model, year, color ]
+required: [ licensePlate, brand, model, year, color ]
 properties:
   licensePlate: { type: string }
+  owner: { $ref: './OwnerRequest.yaml' }
   ownerId: { type: integer, format: int64 }
   brand: { type: string }
   model: { type: string }

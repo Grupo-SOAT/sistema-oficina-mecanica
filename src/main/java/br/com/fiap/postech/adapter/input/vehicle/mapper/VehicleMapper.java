@@ -3,10 +3,13 @@ package br.com.fiap.postech.adapter.input.vehicle.mapper;
 import br.com.fiap.postech.adapter.input.api.model.PaginatedVehicleResponse;
 import br.com.fiap.postech.adapter.input.api.model.VehicleData;
 import br.com.fiap.postech.adapter.input.api.model.VehicleRequest;
+import br.com.fiap.postech.adapter.input.owner.mapper.OwnerMapper;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.vehicle.persistence.entity.VehicleEntity;
 import br.com.fiap.postech.domain.vehicle.model.Vehicle;
 
+import br.com.fiap.postech.domain.vehicle.model.VehicleCascadeCreationCommand;
+import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.NonNull;
 
 public class VehicleMapper {
@@ -20,6 +23,15 @@ public class VehicleMapper {
                 .year(request.getYear())
                 .color(request.getColor())
                 .build();
+    }
+
+    public static VehicleCascadeCreationCommand buildCascadeCreationCommand(@NotNull VehicleRequest request) {
+        final var vehicle = fromApiRequest(request);
+        final var owner = (request.getOwner() != null)
+                ? OwnerMapper.fromApiRequest(request.getOwner())
+                : null;
+
+        return new VehicleCascadeCreationCommand(owner, vehicle);
     }
 
     public static Vehicle fromApiData(@NonNull VehicleData data) {

@@ -100,7 +100,6 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
       | serviceOrderId | catalogServiceId | price | neededSupplies                  | reason                         | code |
       | 99999          | 1                | 10.00 | []                              | SERVICE_ORDER_NOT_FOUND        | 404  |
       | 1              | 99999            | 10.00 | []                              | CATALOG_SERVICE_NOT_FOUND      | 404  |
-      | 1              | 1                | 0.00  | []                              | INVALID_PRICE                  | 400  |
       | 1              | 1                | -1.00 | []                              | INVALID_PRICE                  | 400  |
       | 1              | 1                | 10.00 | [{"idSupply":999,"quantity":1}] | NEEDED_SUPPLY_NOT_FOUND        | 400  |
       | 1              | 1                | 10.00 | [{"idSupply":1,"quantity":0}]   | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |
@@ -156,7 +155,6 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
       | 99999 | 1              | 1                | 10.00 | []                              | SERVICE_NOT_FOUND              | 404  |
       | 1     | 99999          | 1                | 10.00 | []                              | SERVICE_ORDER_NOT_FOUND        | 404  |
       | 1     | 1              | 99999            | 10.00 | []                              | CATALOG_SERVICE_NOT_FOUND      | 404  |
-      | 1     | 1              | 1                | 0.00  | []                              | INVALID_PRICE                  | 400  |
       | 1     | 1              | 1                | -1.00 | []                              | INVALID_PRICE                  | 400  |
       | 1     | 1              | 1                | 10.00 | [{"idSupply":999,"quantity":1}] | NEEDED_SUPPLY_NOT_FOUND        | 400  |
       | 1     | 1              | 1                | 10.00 | [{"idSupply":1,"quantity":0}]   | INVALID_NEEDED_SUPPLY_QUANTITY | 400  |

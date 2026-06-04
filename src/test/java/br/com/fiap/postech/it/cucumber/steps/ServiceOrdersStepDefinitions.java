@@ -9,6 +9,8 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class ServiceOrdersStepDefinitions extends BaseStepDefinition {
     private Long serviceOrderId;
     private Long serviceId;
@@ -143,6 +145,16 @@ public class ServiceOrdersStepDefinitions extends BaseStepDefinition {
         executeRequest("POST", "/service-orders", context.getRequestBody(), null);
     }
 
+    @Quando("eu criar a ordem de serviço em cascata")
+    public void createServiceOrderCascade() {
+        executeRequest("POST", "/service-orders/cascade", context.getRequestBody(), null);
+    }
+
+    @Quando("eu criar a ordem de servio em cascata")
+    public void createServiceOrderCascadeWithoutCedilla() {
+        createServiceOrderCascade();
+    }
+
     @Quando("eu atualizar a ordem de serviço")
     public void updateServiceOrder() {
         executeRequest("PATCH", "/service-orders/" + serviceOrderId, context.getRequestBody(), null);
@@ -221,6 +233,20 @@ public class ServiceOrdersStepDefinitions extends BaseStepDefinition {
     @Então("a resposta deve conter ao menos um serviço da ordem de serviço com name {string}")
     public void verifyServiceName(String expectedName) throws Exception {
         assertHasItemWithField("name", expectedName, "serviço da ordem de serviço");
+    }
+
+    @Então("a resposta deve conter o id do novo veículo")
+    public void verifyNewVehicleIdInResponse() {
+        JsonNode root = context.getLastResponseBody();
+        assertTrue(root.has("vehicleId"), "Campo vehicleId ausente");
+        assertTrue(root.get("vehicleId").asLong() > 0, "vehicleId deve ser maior que zero");
+    }
+
+    @Então("a resposta deve conter o id do novo cliente")
+    public void verifyNewClientIdInResponse() {
+        JsonNode root = context.getLastResponseBody();
+        assertTrue(root.has("clientId"), "Campo clientId ausente");
+        assertTrue(root.get("clientId").asLong() > 0, "clientId deve ser maior que zero");
     }
 
     private String normalizeNeededSupplies(String body) throws Exception {

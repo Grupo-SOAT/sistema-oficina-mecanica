@@ -117,4 +117,48 @@ class ServiceMapperTest {
         assertThat(result.getNeededSupplies().get(0).getIdSupply()).isEqualTo(2);
         assertThat(result.getNeededSupplies().get(0).getQuantity()).isEqualTo(3);
     }
+
+    @Test
+    void should_create_service_from_catalog_service_id() {
+        Service result = ServiceMapper.fromCatalogServiceId(5L);
+
+        assertThat(result).isInstanceOf(ServiceEntity.class);
+        assertThat(result.getCatalogServiceId()).isEqualTo(5L);
+        assertThat(result.getPrice()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(result.getNeededSupplies()).isEmpty();
+    }
+
+    @Test
+    void should_initialize_price_as_zero_when_creating_from_catalog_service_id() {
+        Service result = ServiceMapper.fromCatalogServiceId(10L);
+
+        assertThat(result.getPrice()).isZero();
+    }
+
+    @Test
+    void should_initialize_needed_supplies_as_empty_list_when_creating_from_catalog_service_id() {
+        Service result = ServiceMapper.fromCatalogServiceId(1L);
+
+        assertThat(result.getNeededSupplies()).isNotNull().isEmpty();
+    }
+
+    @Test
+    void should_create_service_with_large_catalog_service_id() {
+        long largeId = 9999999L;
+
+        Service result = ServiceMapper.fromCatalogServiceId(largeId);
+
+        assertThat(result.getCatalogServiceId()).isEqualTo(largeId);
+        assertThat(result.getPrice()).isZero();
+    }
+
+    @Test
+    void should_create_service_with_minimum_catalog_service_id() {
+        Service result = ServiceMapper.fromCatalogServiceId(1L);
+
+        assertThat(result.getCatalogServiceId()).isEqualTo(1L);
+        assertThat(result.getPrice()).isZero();
+        assertThat(result.getNeededSupplies()).isEmpty();
+    }
+
 }

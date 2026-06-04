@@ -100,6 +100,8 @@ paths:
 
   /service-orders:
     $ref: './endpoints/service-orders.yaml'
+  /service-orders/cascade:
+    $ref: './endpoints/service-orders_cascade.yaml'
   /service-orders/{id}:
     $ref: './endpoints/service-orders_id.yaml'
   /service-orders/{id}/services:

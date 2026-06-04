@@ -13,13 +13,21 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
-@RequiredArgsConstructor
 public class ChangeServiceStatusUseCase {
 
     private final ServicePersistencePort servicePersistencePort;
     private final ServiceOrderPersistencePort serviceOrderPersistencePort;
     private final SupplyPersistencePort supplyPersistencePort;
+
+    public ChangeServiceStatusUseCase(
+            ServicePersistencePort servicePersistencePort,
+            ServiceOrderPersistencePort serviceOrderPersistencePort,
+            SupplyPersistencePort supplyPersistencePort
+    ) {
+        this.servicePersistencePort = servicePersistencePort;
+        this.serviceOrderPersistencePort = serviceOrderPersistencePort;
+        this.supplyPersistencePort = supplyPersistencePort;
+    }
 
     /**
      * Handle START_SERVICE action: mark service as IN_PROGRESS, update OS if first service,

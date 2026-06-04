@@ -93,7 +93,7 @@ public class ServiceUseCase {
             throw new CatalogServiceNotFoundException(service.getCatalogServiceId());
         }
 
-        if (service.getPrice() == null || service.getPrice().compareTo(ZERO) <= 0) {
+        if (service.getPrice() == null || service.getPrice().compareTo(ZERO) < 0) {
             throw new InvalidServiceException(ServiceExceptionReason.INVALID_PRICE);
         }
 
