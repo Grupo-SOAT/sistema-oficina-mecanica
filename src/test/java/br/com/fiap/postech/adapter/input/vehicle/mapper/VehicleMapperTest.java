@@ -167,11 +167,9 @@ public class VehicleMapperTest {
 
             VehicleCascadeCreationCommand result = VehicleMapper.buildCascadeCreationCommand(request);
 
-            System.out.println("Result: " + result.vehicle());
-            System.out.println("Simsalabim: " + expectedVehicle);
             assertThat(result).isNotNull();
             assertThat(result.vehicle())
-                    .usingRecursiveAssertion()
+                    .usingRecursiveComparison()
                     .isEqualTo(expectedVehicle);
             assertThat(result.owner()).isSameAs(ownerEntity);
         }
@@ -203,11 +201,9 @@ public class VehicleMapperTest {
 
             VehicleCascadeCreationCommand result = VehicleMapper.buildCascadeCreationCommand(request);
 
-            System.out.println("Result: " + result.vehicle());
-            System.out.println("Simsalabim: " + expectedVehicle);
             assertThat(result).isNotNull();
             assertThat(result.vehicle())
-                    .usingRecursiveAssertion()
+                    .usingRecursiveComparison()
                     .isEqualTo(expectedVehicle);
             assertThat(result.owner()).isNull();
         }

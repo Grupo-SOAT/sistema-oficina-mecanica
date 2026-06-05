@@ -15,7 +15,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString
 @Table(name = "vehicles")
 public class VehicleEntity implements Vehicle {
     @Builder.Default
