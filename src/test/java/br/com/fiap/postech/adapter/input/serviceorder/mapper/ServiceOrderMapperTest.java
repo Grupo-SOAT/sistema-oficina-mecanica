@@ -171,7 +171,7 @@ class ServiceOrderMapperTest {
 
     @Test
     void should_build_cascade_creation_command_with_vehicle_and_services() {
-        VehicleRequest vehicleRequest = mock(VehicleRequest.class);
+        VehicleCascadeRequest vehicleRequest = mock(VehicleCascadeRequest.class);
         VehicleCascadeCreationCommand vehicleCascadeCommand = mock(VehicleCascadeCreationCommand.class);
         Service service1 = mock(Service.class);
         Service service2 = mock(Service.class);
@@ -238,7 +238,7 @@ class ServiceOrderMapperTest {
 
     @Test
     void should_build_cascade_creation_command_without_services() {
-        VehicleRequest vehicleRequest = mock(VehicleRequest.class);
+        VehicleCascadeRequest vehicleRequest = mock(VehicleCascadeRequest.class);
         VehicleCascadeCreationCommand vehicleCascadeCommand = mock(VehicleCascadeCreationCommand.class);
 
         ServiceOrderCascadeRequest request = new ServiceOrderCascadeRequest()

@@ -2,7 +2,7 @@ package br.com.fiap.postech.adapter.input.serviceorder.controller;
 
 import br.com.fiap.postech.adapter.input.api.model.OwnerRequest;
 import br.com.fiap.postech.adapter.input.api.model.ServiceOrderCascadeRequest;
-import br.com.fiap.postech.adapter.input.api.model.VehicleRequest;
+import br.com.fiap.postech.adapter.input.api.model.VehicleCascadeRequest;
 import br.com.fiap.postech.adapter.output.owner.persistence.repository.OwnerRepository;
 import br.com.fiap.postech.adapter.output.serviceorder.persistence.repository.ServiceOrderRepository;
 import br.com.fiap.postech.adapter.output.vehicle.persistence.repository.VehicleRepository;
@@ -46,7 +46,7 @@ class ServiceOrdersCascadeTransactionalIntegrationTest {
                 .documentType(CPF)
                 .phone("123456789")
                 .email("dino@sauro.rock");
-        final var vehicle = new VehicleRequest()
+        final var vehicle = new VehicleCascadeRequest()
                 .licensePlate("ABC-1234") // já existe -> duplicata
                 .owner(owner)
                 .model("Fusca")
@@ -80,7 +80,7 @@ class ServiceOrdersCascadeTransactionalIntegrationTest {
                 .documentType(CPF)
                 .phone("123456789")
                 .email("dino@sauro.rock");
-        final var vehicle = new VehicleRequest()
+        final var vehicle = new VehicleCascadeRequest()
                 .licensePlate("KJW-9537")
                 .owner(owner)
                 .model("Fusca")

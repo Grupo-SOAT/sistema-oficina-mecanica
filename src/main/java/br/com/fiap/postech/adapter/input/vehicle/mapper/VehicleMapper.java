@@ -1,6 +1,7 @@
 package br.com.fiap.postech.adapter.input.vehicle.mapper;
 
 import br.com.fiap.postech.adapter.input.api.model.PaginatedVehicleResponse;
+import br.com.fiap.postech.adapter.input.api.model.VehicleCascadeRequest;
 import br.com.fiap.postech.adapter.input.api.model.VehicleData;
 import br.com.fiap.postech.adapter.input.api.model.VehicleRequest;
 import br.com.fiap.postech.adapter.input.owner.mapper.OwnerMapper;
@@ -25,8 +26,15 @@ public class VehicleMapper {
                 .build();
     }
 
-    public static VehicleCascadeCreationCommand buildCascadeCreationCommand(@NotNull VehicleRequest request) {
-        final var vehicle = fromApiRequest(request);
+    public static VehicleCascadeCreationCommand buildCascadeCreationCommand(@NotNull VehicleCascadeRequest request) {
+        final var vehicle = VehicleEntity.builder()
+                .ownerId(request.getOwnerId())
+                .licensePlate(request.getLicensePlate())
+                .brand(request.getBrand())
+                .model(request.getModel())
+                .year(request.getYear())
+                .color(request.getColor())
+                .build();
         final var owner = (request.getOwner() != null)
                 ? OwnerMapper.fromApiRequest(request.getOwner())
                 : null;
