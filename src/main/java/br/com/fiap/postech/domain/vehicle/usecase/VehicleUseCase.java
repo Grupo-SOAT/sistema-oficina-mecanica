@@ -2,11 +2,7 @@ package br.com.fiap.postech.domain.vehicle.usecase;
 
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.domain.owner.exception.OwnerNotFoundException;
-import br.com.fiap.postech.domain.vehicle.excecption.DuplicatedVehicleException;
-import br.com.fiap.postech.domain.vehicle.excecption.InvalidLicensePlateException;
-import br.com.fiap.postech.domain.vehicle.excecption.InvalidVehicleYearException;
-import br.com.fiap.postech.domain.vehicle.excecption.NoMatchingVehiclesException;
-import br.com.fiap.postech.domain.vehicle.excecption.VehicleNotFoundException;
+import br.com.fiap.postech.domain.vehicle.excecption.*;
 import br.com.fiap.postech.domain.vehicle.model.Vehicle;
 import br.com.fiap.postech.domain.vehicle.validation.VehicleLicensePlateValidator;
 import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
@@ -17,12 +13,12 @@ public class VehicleUseCase {
     private final OwnerPersistencePort ownerPersistencePort;
 
     public VehicleUseCase(
-        VehiclePersistencePort persistencePort, 
-        OwnerPersistencePort ownerPersistencePort) 
-        {
-            this.persistencePort = persistencePort;
-            this.ownerPersistencePort = ownerPersistencePort;
-        }
+            VehiclePersistencePort persistencePort,
+            OwnerPersistencePort ownerPersistencePort
+    ) {
+        this.persistencePort = persistencePort;
+        this.ownerPersistencePort = ownerPersistencePort;
+    }
 
     public ScrollPage<Vehicle> scroll(String licensePlate, Integer pageSize, String cursor) {
         final var result = persistencePort.scroll(licensePlate, pageSize, cursor);
@@ -56,13 +52,13 @@ public class VehicleUseCase {
         validateOwnerExists(vehicle.getOwnerId());
 
         persistencePort.findByLicensePlate(vehicle.getLicensePlate())
-            .ifPresent(existingVehicle -> {
-                if (!existingVehicle.getId().equals(id)) {
-                    throw new DuplicatedVehicleException(vehicle.getLicensePlate());
-                }
-            });
+                .ifPresent(existingVehicle -> {
+                    if (!existingVehicle.getId().equals(id)) {
+                        throw new DuplicatedVehicleException(vehicle.getLicensePlate());
+                    }
+                });
 
-        final var existing = persistencePort.findById(id)
+        persistencePort.findById(id)
                 .orElseThrow(() -> new VehicleNotFoundException(id));
         vehicle.setId(id);
 
@@ -86,17 +82,17 @@ public class VehicleUseCase {
 
     private void validateYear(Vehicle vehicle) {
         Integer year = vehicle.getYear();
-        
+
         if (year == null || year < 1900 || year > 2050) {
             throw new InvalidVehicleYearException(year);
         }
     }
 
     private void validateOwnerExists(Long ownerId) {
-
-    ownerPersistencePort.findById(ownerId)
-            .orElseThrow(() ->
-                    new OwnerNotFoundException(ownerId)
-            );
+        ownerPersistencePort.findById(ownerId)
+                .orElseThrow(() ->
+                        new OwnerNotFoundException(ownerId)
+                );
     }
+
 }

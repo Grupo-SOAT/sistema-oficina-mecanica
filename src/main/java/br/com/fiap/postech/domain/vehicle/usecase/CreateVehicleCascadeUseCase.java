@@ -19,6 +19,8 @@ public class CreateVehicleCascadeUseCase {
         final var vehicle = command.vehicle();
         var owner = command.owner();
 
+        if (vehicle == null) return null;
+
         if (vehicle.getOwnerId() == null && owner == null)
             throw new VehicleOwnerDataAbsentException();
 

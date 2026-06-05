@@ -31,6 +31,9 @@ public class CreateServiceOrderCascadeUseCase {
 
         if (serviceOrder.getVehicleId() == null && vehicleCascadeCreationCommand != null) {
             final var newVehicle = createVehicleCascadeUseCase.execute(vehicleCascadeCreationCommand);
+
+            if (newVehicle == null) throw new ServiceOrderVehicleDataAbsentException();
+
             serviceOrder.setVehicleId(newVehicle.getId());
             if (serviceOrder.getClientId() == null) {
                 serviceOrder.setClientId(newVehicle.getOwnerId());

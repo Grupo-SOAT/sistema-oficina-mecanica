@@ -24,7 +24,6 @@ import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
 import br.com.fiap.postech.port.user.UserPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 public class UseCaseDependencyInjectionConfig {
@@ -84,7 +83,6 @@ public class UseCaseDependencyInjectionConfig {
     }
 
     @Bean
-    @Transactional
     public ChangeServiceOrderStatusUseCase changeServiceOrderStatusUseCase(
             ServiceOrderPersistencePort serviceOrderPersistencePort,
             ServicePersistencePort servicePersistencePort,
@@ -124,7 +122,6 @@ public class UseCaseDependencyInjectionConfig {
     }
 
     @Bean
-    @Transactional
     public CreateVehicleCascadeUseCase createVehicleCascadeUseCase(
             OwnerUseCase ownerUseCase,
             VehicleUseCase vehicleUseCase

@@ -150,11 +150,6 @@ public class ServiceOrdersStepDefinitions extends BaseStepDefinition {
         executeRequest("POST", "/service-orders/cascade", context.getRequestBody(), null);
     }
 
-    @Quando("eu criar a ordem de servio em cascata")
-    public void createServiceOrderCascadeWithoutCedilla() {
-        createServiceOrderCascade();
-    }
-
     @Quando("eu atualizar a ordem de serviço")
     public void updateServiceOrder() {
         executeRequest("PATCH", "/service-orders/" + serviceOrderId, context.getRequestBody(), null);
