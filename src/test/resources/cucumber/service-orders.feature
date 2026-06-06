@@ -112,10 +112,10 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Então devo receber uma resposta com status "400"
     E a resposta deve conter o campo reason com valor "<reason>"
     Exemplos:
-      | ownerId | vehicleId | description            | catalogServiceIds | reason                                  |
-      | 99999    | 1         | Troca de óleo e filtro | [1]               | SERVICE_ORDER_CLIENT_NOT_FOUND          |
-      | 1        | 99999     | Troca de óleo e filtro | [1]               | SERVICE_ORDER_VEHICLE_NOT_FOUND         |
-      | 1        | 1         | Troca de óleo e filtro | [99999]           | CATALOG_SERVICE_NOT_FOUND |
+      | ownerId | vehicleId | description            | catalogServiceIds | reason                          |
+      | 99999   | 1         | Troca de óleo e filtro | [1]               | SERVICE_ORDER_CLIENT_NOT_FOUND  |
+      | 1       | 99999     | Troca de óleo e filtro | [1]               | SERVICE_ORDER_VEHICLE_NOT_FOUND |
+      | 1       | 1         | Troca de óleo e filtro | [99999]           | CATALOG_SERVICE_NOT_FOUND       |
 
   Esquema do Cenário: Cadastro de ordem de serviço em cascata com dados duplicados
     Dado que eu esteja devidamente logado
