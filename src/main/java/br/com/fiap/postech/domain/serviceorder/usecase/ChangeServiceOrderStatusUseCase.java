@@ -16,13 +16,21 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
-@RequiredArgsConstructor
 public class ChangeServiceOrderStatusUseCase {
 
     private final ServiceOrderPersistencePort serviceOrderPersistencePort;
     private final ServicePersistencePort servicePersistencePort;
     private final ChangeServiceStatusUseCase changeServiceStatusUseCase;
+
+    public ChangeServiceOrderStatusUseCase(
+            ServiceOrderPersistencePort serviceOrderPersistencePort,
+            ServicePersistencePort servicePersistencePort,
+            ChangeServiceStatusUseCase changeServiceStatusUseCase
+    ) {
+        this.serviceOrderPersistencePort = serviceOrderPersistencePort;
+        this.servicePersistencePort = servicePersistencePort;
+        this.changeServiceStatusUseCase = changeServiceStatusUseCase;
+    }
 
     public ServiceOrder registerProgress(Long id, ServiceOrderAction action) {
         return registerProgress(id, action, null);

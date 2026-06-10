@@ -88,6 +88,66 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
       | 99999    | 1         | Troca de óleo e filtro | SERVICE_ORDER_CLIENT_NOT_FOUND  |
       | 1        | 99999     | Troca de óleo e filtro | SERVICE_ORDER_VEHICLE_NOT_FOUND |
 
+  # === CADASTRO EM CASCATA ===
+
+  Cenário: Cadastro de ordem de serviço em cascata com dados válidos
+    Dado que eu esteja devidamente logado
+    E que o corpo da nova ordem de serviço seja:
+      | vehicle                                                                                                                                                                                                                                    | description            | catalogServiceIds |
+      | {"owner": {"name": "Creuza", "document": "09642137020", "documentType": "CPF", "phone": "(62) 90000-1111", "email": "creuza@email.com"}, "licensePlate": "MSM-9771", "brand": "Geep", "model": "Renegade", "year": 2021, "color": "Prata"} | Troca de óleo e filtro | [1]               |
+    Quando eu criar a ordem de serviço em cascata
+    Então devo receber uma resposta com status "201"
+    E a resposta deve conter o campo "id"
+    E a resposta deve conter o campo "status"
+    E a resposta deve conter o campo "description"
+    E a resposta deve conter o id do novo veículo
+    E a resposta deve conter o id do novo cliente
+
+  Esquema do Cenário: Cadastro de ordem de serviço em cascata com ids inexistentes
+    Dado que eu esteja devidamente logado
+    E que o corpo da nova ordem de serviço seja:
+      | ownerId   | vehicleId   | description   | catalogServiceIds   |
+      | <ownerId> | <vehicleId> | <description> | <catalogServiceIds> |
+    Quando eu criar a ordem de serviço em cascata
+    Então devo receber uma resposta com status "400"
+    E a resposta deve conter o campo reason com valor "<reason>"
+    Exemplos:
+      | ownerId | vehicleId | description            | catalogServiceIds | reason                          |
+      | 99999   | 1         | Troca de óleo e filtro | [1]               | SERVICE_ORDER_CLIENT_NOT_FOUND  |
+      | 1       | 99999     | Troca de óleo e filtro | [1]               | SERVICE_ORDER_VEHICLE_NOT_FOUND |
+      | 1       | 1         | Troca de óleo e filtro | [99999]           | CATALOG_SERVICE_NOT_FOUND       |
+
+  Esquema do Cenário: Cadastro de ordem de serviço em cascata com dados duplicados
+    Dado que eu esteja devidamente logado
+    E que o corpo da nova ordem de serviço seja:
+      | vehicle                                                                                                                                                                                                                                              | description            | catalogServiceIds |
+      | {"owner": {"name": "Creuza", "document": "<ownerDocument>", "documentType": "CPF", "phone": "(62) 90000-1111", "email": "creuza@email.com"}, "licensePlate": "<licensePlate>", "brand": "Geep", "model": "Renegade", "year": 2021, "color": "Prata"} | Troca de óleo e filtro | [1]               |
+    Quando eu criar a ordem de serviço em cascata
+    Então devo receber uma resposta com status "409"
+    E a resposta deve conter o campo reason com valor "<reason>"
+    Exemplos:
+      | ownerDocument | licensePlate | reason                                    |
+      | 64261703050   | DEF-5678     | VEHICLE_CONFLICT_DUPLICATED_LICENSE_PLATE |
+      | 39544511075   | NEX-0666     | OWNER_ALREADY_EXISTS                      |
+
+  Cenário: Cadastro de ordem de serviço em cascata sem dados de veículo
+    Dado que eu esteja devidamente logado
+    E que o corpo da nova ordem de serviço seja:
+      | ownerId | description            | catalogServiceIds |
+      | 1       | Troca de óleo e filtro | [1]               |
+    Quando eu criar a ordem de serviço em cascata
+    Então devo receber uma resposta com status "400"
+    E a resposta deve conter o campo reason com valor "SERVICE_ORDER_VEHICLE_DATA_ABSENT"
+
+  Cenário: Cadastro de ordem de serviço em cascata sem dados de cliente
+    Dado que eu esteja devidamente logado
+    E que o corpo da nova ordem de serviço seja:
+      | vehicle                                                                                            | description            | catalogServiceIds |
+      | {"licensePlate": "KDP-9887", "brand": "Geep", "model": "Renegade", "year": 2021, "color": "Prata"} | Troca de óleo e filtro | [1]               |
+    Quando eu criar a ordem de serviço em cascata
+    Então devo receber uma resposta com status "400"
+    E a resposta deve conter o campo reason com valor "VEHICLE_OWNER_DATA_ABSENT"
+
   # === ATUALIZAÇÃO ===
 
   Cenário: Atualização de ordem de serviço existente
@@ -145,8 +205,8 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Dado que eu esteja devidamente logado
     E que o id da ordem de serviço seja 1
     E que o corpo da ação de progresso da ordem de serviço seja:
-      | action           | additionalInfo      | relatedServiceId |
-      | START_INSPECTION | Recebida na recepcao|                  |
+      | action           | additionalInfo       | relatedServiceId |
+      | START_INSPECTION | Recebida na recepcao |                  |
     Quando eu registrar o progresso da ordem de serviço
     Então devo receber uma resposta com status "202"
 
@@ -184,8 +244,8 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     E que o id da ordem de serviço seja 5
     E que o id do serviço da ordem de serviço seja 12
     E que o corpo da ação de progresso da ordem de serviço seja:
-      | action        | additionalInfo     | relatedServiceId |
-      | CANCEL_SERVICE | Serviço cancelado  | 12               |
+      | action         | additionalInfo    | relatedServiceId |
+      | CANCEL_SERVICE | Serviço cancelado | 12               |
     Quando eu registrar o progresso da ordem de serviço
     Então devo receber uma resposta com status "202"
 
@@ -193,8 +253,8 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Dado que eu esteja devidamente logado
     E que o id da ordem de serviço seja 6
     E que o corpo da ação de progresso da ordem de serviço seja:
-      | action          | additionalInfo     | relatedServiceId |
-      | DELIVER_VEHICLE | Veiculo entregue   |                  |
+      | action          | additionalInfo   | relatedServiceId |
+      | DELIVER_VEHICLE | Veiculo entregue |                  |
     Quando eu registrar o progresso da ordem de serviço
     Então devo receber uma resposta com status "202"
 
@@ -218,10 +278,10 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Quando eu registrar a decisão do cliente sobre o orçamento da ordem de serviço
     Então devo receber uma resposta com status "202"
     Exemplos:
-      | decision         | comment                       | rejectedServiceIds |
-      | APPROVE          | Orçamento aprovado            |                    |
-      | CANCEL           | Cliente desistiu              |                    |
-      | REJECT           | Cliente recusou integralmente |                    |
+      | decision | comment                       | rejectedServiceIds |
+      | APPROVE  | Orçamento aprovado            |                    |
+      | CANCEL   | Cliente desistiu              |                    |
+      | REJECT   | Cliente recusou integralmente |                    |
 
   Cenário: Registrar rejeição parcial do orçamento (não implementado)
     Dado que o orçamento da ordem de serviço de ID "3" foi enviado ao cliente

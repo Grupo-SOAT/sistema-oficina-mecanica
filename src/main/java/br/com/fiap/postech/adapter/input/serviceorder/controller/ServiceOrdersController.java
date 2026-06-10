@@ -2,20 +2,18 @@ package br.com.fiap.postech.adapter.input.serviceorder.controller;
 
 import br.com.fiap.postech.adapter.input.api.model.*;
 import br.com.fiap.postech.adapter.input.serviceorder.mapper.ServiceOrderMapper;
+import br.com.fiap.postech.domain.catalogservices.exception.CatalogServiceNotFoundException;
 import br.com.fiap.postech.domain.service.exception.NegativeSupplyQuantityException;
-import br.com.fiap.postech.domain.serviceorder.exception.NoMatchingServiceOrdersException;
-import br.com.fiap.postech.domain.serviceorder.exception.PartialBudgetRejectionNotImplementedException;
-import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderClientNotFoundException;
-import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException;
-import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderVehicleNotFoundException;
-import br.com.fiap.postech.domain.serviceorder.exception.StatusChangeNotAllowedException;
+import br.com.fiap.postech.domain.serviceorder.exception.*;
 import br.com.fiap.postech.domain.serviceorder.usecase.ChangeServiceOrderStatusUseCase;
+import br.com.fiap.postech.domain.serviceorder.usecase.CreateServiceOrderCascadeUseCase;
 import br.com.fiap.postech.domain.serviceorder.usecase.ServiceOrderUseCase;
+import br.com.fiap.postech.domain.vehicle.excecption.VehicleOwnerDataAbsentException;
 import br.com.fiap.postech.port.api.ServiceOrdersApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +23,7 @@ public class ServiceOrdersController implements ServiceOrdersApi {
 
     private final ServiceOrderUseCase serviceOrderUseCase;
     private final ChangeServiceOrderStatusUseCase changeStatusUseCase;
+    private final CreateServiceOrderCascadeUseCase createServiceOrderCascadeUseCase;
 
     @Override
     public ResponseEntity<PaginatedServiceOrderResponse> listServiceOrders(
@@ -44,6 +43,16 @@ public class ServiceOrdersController implements ServiceOrdersApi {
     public ResponseEntity<ServiceOrderData> createServiceOrder(ServiceOrderRequest serviceOrderRequest) {
         final var newServiceOrder = ServiceOrderMapper.fromApiRequest(serviceOrderRequest);
         final var created = serviceOrderUseCase.create(newServiceOrder);
+        final var responseBody = ServiceOrderMapper.toApiData(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<ServiceOrderData> createServiceOrderCascade(ServiceOrderCascadeRequest serviceOrderCascadeRequest) {
+        final var serviceOrderCascadeCreationCommand =
+                ServiceOrderMapper.buildCascadeCreationCommand(serviceOrderCascadeRequest);
+        final var created = createServiceOrderCascadeUseCase.execute(serviceOrderCascadeCreationCommand);
         final var responseBody = ServiceOrderMapper.toApiData(created);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
     }
@@ -125,6 +134,33 @@ public class ServiceOrdersController implements ServiceOrdersApi {
     @ExceptionHandler(NegativeSupplyQuantityException.class)
     public ResponseEntity<ErrorResponse> handleNegativeSupplyQuantity(NegativeSupplyQuantityException exception) {
         final var httpStatus = HttpStatus.CONFLICT;
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(ServiceOrderVehicleDataAbsentException.class)
+    public ResponseEntity<ErrorResponse> handleServiceOrderVehicleDataAbsentException(
+            ServiceOrderVehicleDataAbsentException exception
+    ) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(CatalogServiceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCatalogServiceNotFoundException(
+            CatalogServiceNotFoundException exception
+    ) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(httpStatus)
+                .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(VehicleOwnerDataAbsentException.class)
+    public ResponseEntity<ErrorResponse> handleVehicleOwnerDataAbsentException(
+            VehicleOwnerDataAbsentException exception
+    ) {
+        final var httpStatus = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(httpStatus)
                 .body(new ErrorResponse(httpStatus.value(), exception.reason.name(), exception.getMessage()));
     }

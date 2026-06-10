@@ -1,15 +1,17 @@
 package br.com.fiap.postech.adapter.input.serviceorder.mapper;
 
-import br.com.fiap.postech.adapter.input.api.model.PaginatedServiceOrderResponse;
-import br.com.fiap.postech.adapter.input.api.model.ServiceOrderData;
-import br.com.fiap.postech.adapter.input.api.model.ServiceOrderRequest;
-import br.com.fiap.postech.adapter.input.api.model.ServiceOrderStatus;
+import br.com.fiap.postech.adapter.input.api.model.*;
+import br.com.fiap.postech.adapter.input.service.mapper.ServiceMapper;
+import br.com.fiap.postech.adapter.input.vehicle.mapper.VehicleMapper;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.serviceorder.persistence.entity.ServiceOrderEntity;
+import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
+import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderCascadeCreationCommand;
 import org.jspecify.annotations.NonNull;
 
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 
 public class ServiceOrderMapper {
 
@@ -19,6 +21,28 @@ public class ServiceOrderMapper {
                 .vehicleId(request.getVehicleId())
                 .description(request.getDescription())
                 .build();
+    }
+
+    public static ServiceOrderCascadeCreationCommand buildCascadeCreationCommand(
+            @NonNull ServiceOrderCascadeRequest request
+    ) {
+        final var serviceOrder = ServiceOrderEntity.builder()
+                .clientId(request.getOwnerId())
+                .vehicleId(request.getVehicleId())
+                .description(request.getDescription())
+                .build();
+        final var vehicleCascadeCreationCommand = (request.getVehicle() != null)
+                ? VehicleMapper.buildCascadeCreationCommand(request.getVehicle())
+                : null;
+        final var services = (request.getCatalogServiceIds() != null)
+                ? request.getCatalogServiceIds().stream().map(ServiceMapper::fromCatalogServiceId).toList()
+                : new ArrayList<Service>();
+
+        return new ServiceOrderCascadeCreationCommand(
+                vehicleCascadeCreationCommand,
+                serviceOrder,
+                services
+        );
     }
 
     public static ServiceOrder fromApiData(@NonNull ServiceOrderData data) {

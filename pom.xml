@@ -14,7 +14,7 @@
     <!-- Dados do projeto -->
     <groupId>br.com.fiap.postech</groupId>
     <artifactId>mechanic-workshop-system</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>Sistema Integrado de Gestão de Oficina Mecânica</name>
 
     <properties>

@@ -11,6 +11,7 @@ import br.com.fiap.postech.domain.service.model.NeededSupply;
 import br.com.fiap.postech.domain.service.model.Service;
 import org.jspecify.annotations.NonNull;
 
+import java.math.BigDecimal;
 import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,14 @@ public class ServiceMapper {
         }
 
         return entity;
+    }
+
+    public static Service fromCatalogServiceId(@NonNull Long catalogServiceId) {
+        return ServiceEntity.builder()
+                .catalogServiceId(catalogServiceId)
+                .price(BigDecimal.ZERO)
+                .neededSupplyEntities(Collections.emptyList())
+                .build();
     }
 
     public static Service fromApiData(@NonNull ServiceData data) {
