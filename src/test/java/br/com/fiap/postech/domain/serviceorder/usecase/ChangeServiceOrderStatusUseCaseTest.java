@@ -14,16 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ChangeServiceOrderStatusUseCaseTest {
@@ -36,6 +33,9 @@ class ChangeServiceOrderStatusUseCaseTest {
 
     @Mock
     private FinalizeInspectionUseCase finalizeInspectionUseCase;
+
+    @Mock
+    private EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase;
 
     @InjectMocks
     private ChangeServiceOrderStatusUseCase useCase;
@@ -69,6 +69,7 @@ class ChangeServiceOrderStatusUseCaseTest {
 
         assertThat(updated.getStatus()).isEqualTo("AWAITING_APPROVAL");
         assertThat(updated.getUpdatedAt()).isNotNull();
+        verify(estimateServiceOrderAmountUseCase).estimate(1L);
     }
 
     @Test
@@ -302,6 +303,7 @@ class ChangeServiceOrderStatusUseCaseTest {
 
         useCase.registerProgress(1L, ServiceOrderAction.COMPLETE_INSPECTION);
 
+        verify(estimateServiceOrderAmountUseCase).estimate(1L);
         verify(finalizeInspectionUseCase).finalizeInspection(1L);
     }
 }

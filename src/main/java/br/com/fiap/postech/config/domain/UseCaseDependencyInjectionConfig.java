@@ -9,6 +9,7 @@ import br.com.fiap.postech.domain.service.usecase.ChangeServiceStatusUseCase;
 import br.com.fiap.postech.domain.service.usecase.ServiceUseCase;
 import br.com.fiap.postech.domain.serviceorder.usecase.ChangeServiceOrderStatusUseCase;
 import br.com.fiap.postech.domain.serviceorder.usecase.CreateServiceOrderCascadeUseCase;
+import br.com.fiap.postech.domain.serviceorder.usecase.EstimateServiceOrderAmountUseCase;
 import br.com.fiap.postech.domain.serviceorder.usecase.FinalizeInspectionUseCase;
 import br.com.fiap.postech.domain.serviceorder.usecase.ProcessBudgetDecisionUseCase;
 import br.com.fiap.postech.domain.serviceorder.usecase.ServiceOrderUseCase;
@@ -92,17 +93,29 @@ public class UseCaseDependencyInjectionConfig {
     }
 
     @Bean
+    public EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase(
+            ServiceOrderPersistencePort serviceOrderPersistencePort,
+            ServicePersistencePort servicePersistencePort,
+            SupplyPersistencePort supplyPersistencePort
+    ) {
+        return new EstimateServiceOrderAmountUseCase(
+                serviceOrderPersistencePort, servicePersistencePort, supplyPersistencePort);
+    }
+
+    @Bean
     public ChangeServiceOrderStatusUseCase changeServiceOrderStatusUseCase(
             ServiceOrderPersistencePort serviceOrderPersistencePort,
             ServicePersistencePort servicePersistencePort,
             ChangeServiceStatusUseCase changeServiceStatusUseCase,
-            FinalizeInspectionUseCase finalizeInspectionUseCase
+            FinalizeInspectionUseCase finalizeInspectionUseCase,
+            EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase
     ) {
         return new ChangeServiceOrderStatusUseCase(
                 serviceOrderPersistencePort,
                 servicePersistencePort,
                 changeServiceStatusUseCase,
-                finalizeInspectionUseCase
+                finalizeInspectionUseCase,
+                estimateServiceOrderAmountUseCase
         );
     }
 

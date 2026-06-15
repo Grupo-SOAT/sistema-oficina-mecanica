@@ -20,17 +20,20 @@ public class ChangeServiceOrderStatusUseCase {
     private final ServicePersistencePort servicePersistencePort;
     private final ChangeServiceStatusUseCase changeServiceStatusUseCase;
     private final FinalizeInspectionUseCase finalizeInspectionUseCase;
+    private final EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase;
 
     public ChangeServiceOrderStatusUseCase(
             ServiceOrderPersistencePort serviceOrderPersistencePort,
             ServicePersistencePort servicePersistencePort,
             ChangeServiceStatusUseCase changeServiceStatusUseCase,
-            FinalizeInspectionUseCase finalizeInspectionUseCase
+            FinalizeInspectionUseCase finalizeInspectionUseCase,
+            EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase
     ) {
         this.serviceOrderPersistencePort = serviceOrderPersistencePort;
         this.servicePersistencePort = servicePersistencePort;
         this.changeServiceStatusUseCase = changeServiceStatusUseCase;
         this.finalizeInspectionUseCase = finalizeInspectionUseCase;
+        this.estimateServiceOrderAmountUseCase = estimateServiceOrderAmountUseCase;
     }
 
     public ServiceOrder registerProgress(Long id, ServiceOrderAction action) {
@@ -59,8 +62,11 @@ public class ChangeServiceOrderStatusUseCase {
     }
 
     private void afterProgressSave(ServiceOrder serviceOrder, ServiceOrderStatus targetStatus) {
-        if (targetStatus == ServiceOrderStatus.AWAITING_APPROVAL && finalizeInspectionUseCase != null) {
-            finalizeInspectionUseCase.finalizeInspection(serviceOrder.getId());
+        if (targetStatus == ServiceOrderStatus.AWAITING_APPROVAL) {
+            estimateServiceOrderAmountUseCase.estimate(serviceOrder.getId());
+            if (finalizeInspectionUseCase != null) {
+                finalizeInspectionUseCase.finalizeInspection(serviceOrder.getId());
+            }
         }
     }
 

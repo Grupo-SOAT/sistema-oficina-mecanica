@@ -314,6 +314,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Então devo receber uma resposta com status "202"
     E um evento deve ser publicado no tópico "budget-approval-request" com o "serviceOrderId" igual a "2"
     E o evento publicado no tópico "budget-approval-request" deve conter o campo "token" com um valor não vazio
+    E o campo decimal "estimatedAmount" da ordem de serviço de ID "2" deve ser "444.60"
 
   @asyncBudget
   Esquema do Cenário: Processar decisão assíncrona de orçamento via Kafka

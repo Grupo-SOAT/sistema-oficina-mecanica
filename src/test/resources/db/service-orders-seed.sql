@@ -1,6 +1,7 @@
 -- Seed mínimo para cenários de Service Orders (Cucumber)
 -- Cria múltiplas ServiceOrders em diferentes estados para suportar testes isolados
 
+DELETE FROM service_needed_supplies;
 DELETE FROM services;
 DELETE FROM service_orders;
 DELETE FROM budget_approval_tokens;
@@ -63,6 +64,19 @@ VALUES (20, 6, 1, 300.00, 'COMPLETED', CURRENT_TIMESTAMP - INTERVAL '1 day', CUR
 -- Para OS 7 (CANCELLED)
 INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at, cancelled_at)
 VALUES (21, 7, 1, 100.00, 'CANCELLED', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+-- Para OS 2 (IN_INSPECTION) — usado pelo @asyncBudget COMPLETE_INSPECTION para validar o cálculo do estimatedAmount
+-- Total esperado: 150.00 + 80.00 + (49.90*2) + 24.90 + 89.90 = 444.60
+INSERT INTO services (service_id, service_order_id, catalog_service_id, price, status, created_at, updated_at)
+VALUES
+  (30, 2, 1, 150.00, 'AWAITING_APPROVAL', CURRENT_TIMESTAMP - INTERVAL '2 day', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+  (31, 2, 2, 80.00, 'AWAITING_APPROVAL', CURRENT_TIMESTAMP - INTERVAL '2 day', CURRENT_TIMESTAMP - INTERVAL '1 day');
+
+INSERT INTO service_needed_supplies (service_id, id_supply, note, quantity)
+VALUES
+  (30, 1, 'Oleo troca completa', 2),
+  (30, 2, 'Filtro original', 1),
+  (31, 3, 'Jogo dianteiro', 1);
 
 SELECT setval(pg_get_serial_sequence('service_orders', 'service_order_id'), (SELECT COALESCE(MAX(service_order_id), 0) FROM service_orders));
 SELECT setval(pg_get_serial_sequence('services', 'service_id'), (SELECT COALESCE(MAX(service_id), 0) FROM services));

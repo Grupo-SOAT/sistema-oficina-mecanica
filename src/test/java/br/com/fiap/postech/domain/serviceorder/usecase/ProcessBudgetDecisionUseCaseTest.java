@@ -37,6 +37,9 @@ class ProcessBudgetDecisionUseCaseTest {
     @Mock
     private FinalizeInspectionUseCase finalizeInspectionUseCase;
 
+    @Mock
+    private EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase;
+
     private ProcessBudgetDecisionUseCase useCase;
 
     @BeforeEach
@@ -45,7 +48,8 @@ class ProcessBudgetDecisionUseCaseTest {
                 serviceOrderPersistencePort,
                 servicePersistencePort,
                 null,
-                finalizeInspectionUseCase
+                finalizeInspectionUseCase,
+                estimateServiceOrderAmountUseCase
         );
         useCase = new ProcessBudgetDecisionUseCase(changeStatusUseCase, budgetApprovalTokenPersistencePort);
     }

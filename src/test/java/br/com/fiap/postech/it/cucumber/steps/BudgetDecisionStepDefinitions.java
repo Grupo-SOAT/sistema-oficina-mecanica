@@ -12,10 +12,12 @@ import io.cucumber.java.pt.Quando;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -119,5 +121,16 @@ public class BudgetDecisionStepDefinitions extends BaseStepDefinition {
         assertTrue(body.has("status"), "Campo status ausente na resposta da OS " + id);
         assertTrue(expectedStatus.equals(body.get("status").asText()),
                 "Status esperado " + expectedStatus + " mas era " + body.get("status").asText());
+    }
+
+    @Então("o campo decimal {string} da ordem de serviço de ID {string} deve ser {string}")
+    public void assertServiceOrderDecimalField(String field, String id, String expectedValue) {
+        executeRequest("GET", "/service-orders/" + id, null, null);
+        assertTrue(context.getLastStatusCode() == 200,
+                "Status HTTP " + context.getLastStatusCode() + " ao consultar OS " + id);
+        JsonNode body = context.getLastResponseBody();
+        assertTrue(body.has(field), "Campo " + field + " ausente na resposta da OS " + id);
+        assertEquals(0, new BigDecimal(expectedValue).compareTo(body.get(field).decimalValue()),
+                "Valor do campo " + field + " divergente: esperado " + expectedValue + " mas era " + body.get(field));
     }
 }
