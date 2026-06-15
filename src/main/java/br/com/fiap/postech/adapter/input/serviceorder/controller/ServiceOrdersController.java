@@ -79,6 +79,7 @@ public class ServiceOrdersController implements ServiceOrdersApi {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> registerProgress(Long id, ServiceOrderActionRequest serviceOrderActionRequest) {
         changeStatusUseCase.registerProgress(id, serviceOrderActionRequest.getAction(),
                 serviceOrderActionRequest.getRelatedServiceId());

@@ -21,15 +21,26 @@ public class ChangeServiceOrderStatusUseCase {
     private final ServiceOrderPersistencePort serviceOrderPersistencePort;
     private final ServicePersistencePort servicePersistencePort;
     private final ChangeServiceStatusUseCase changeServiceStatusUseCase;
+    private final FinalizeInspectionUseCase finalizeInspectionUseCase;
 
     public ChangeServiceOrderStatusUseCase(
             ServiceOrderPersistencePort serviceOrderPersistencePort,
             ServicePersistencePort servicePersistencePort,
             ChangeServiceStatusUseCase changeServiceStatusUseCase
     ) {
+        this(serviceOrderPersistencePort, servicePersistencePort, changeServiceStatusUseCase, null);
+    }
+
+    public ChangeServiceOrderStatusUseCase(
+            ServiceOrderPersistencePort serviceOrderPersistencePort,
+            ServicePersistencePort servicePersistencePort,
+            ChangeServiceStatusUseCase changeServiceStatusUseCase,
+            FinalizeInspectionUseCase finalizeInspectionUseCase
+    ) {
         this.serviceOrderPersistencePort = serviceOrderPersistencePort;
         this.servicePersistencePort = servicePersistencePort;
         this.changeServiceStatusUseCase = changeServiceStatusUseCase;
+        this.finalizeInspectionUseCase = finalizeInspectionUseCase;
     }
 
     public ServiceOrder registerProgress(Long id, ServiceOrderAction action) {
@@ -52,7 +63,15 @@ public class ChangeServiceOrderStatusUseCase {
             applyStatusTransition(serviceOrder, targetStatus);
         }
 
-        return serviceOrderPersistencePort.save(serviceOrder);
+        var saved = serviceOrderPersistencePort.save(serviceOrder);
+        afterProgressSave(saved, targetStatus);
+        return saved;
+    }
+
+    private void afterProgressSave(ServiceOrder serviceOrder, ServiceOrderStatus targetStatus) {
+        if (targetStatus == ServiceOrderStatus.AWAITING_APPROVAL && finalizeInspectionUseCase != null) {
+            finalizeInspectionUseCase.finalizeInspection(serviceOrder.getId());
+        }
     }
 
     private boolean isServiceAction(ServiceOrderAction action) {

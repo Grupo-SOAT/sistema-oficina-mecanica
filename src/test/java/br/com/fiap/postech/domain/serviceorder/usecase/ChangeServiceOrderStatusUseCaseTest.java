@@ -34,6 +34,9 @@ class ChangeServiceOrderStatusUseCaseTest {
     @Mock
     private ServicePersistencePort servicePersistencePort;
 
+    @Mock
+    private FinalizeInspectionUseCase finalizeInspectionUseCase;
+
     @InjectMocks
     private ChangeServiceOrderStatusUseCase useCase;
 
@@ -286,5 +289,19 @@ class ChangeServiceOrderStatusUseCaseTest {
         assertThatThrownBy(() -> useCase.registerProgress(1L, ServiceOrderAction.DELIVER_VEHICLE))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Status change not allowed");
+    }
+
+    @Test
+    void should_delegate_to_finalize_inspection_when_complete_inspection() {
+        var serviceOrder = ServiceOrderEntity.builder()
+                .id(1L)
+                .status("IN_INSPECTION")
+                .build();
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(serviceOrder));
+        when(serviceOrderPersistencePort.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        useCase.registerProgress(1L, ServiceOrderAction.COMPLETE_INSPECTION);
+
+        verify(finalizeInspectionUseCase).finalizeInspection(1L);
     }
 }
