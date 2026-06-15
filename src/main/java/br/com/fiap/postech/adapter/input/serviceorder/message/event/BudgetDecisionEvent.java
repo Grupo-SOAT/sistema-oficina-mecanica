@@ -1,4 +1,4 @@
-package br.com.fiap.postech.adapter.input.message.serviceorder.event;
+package br.com.fiap.postech.adapter.input.serviceorder.message.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

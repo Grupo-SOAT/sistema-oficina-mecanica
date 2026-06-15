@@ -2,17 +2,15 @@ package br.com.fiap.postech.domain.serviceorder.usecase;
 
 import br.com.fiap.postech.adapter.input.api.model.BudgetDecision;
 import br.com.fiap.postech.adapter.input.api.model.ServiceOrderAction;
+import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.service.usecase.ChangeServiceStatusUseCase;
 import br.com.fiap.postech.domain.serviceorder.exception.PartialBudgetRejectionNotImplementedException;
 import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 import br.com.fiap.postech.domain.serviceorder.status.ServiceOrderState;
-import br.com.fiap.postech.domain.service.model.Service;
-import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
 
 import java.time.LocalDateTime;
 
@@ -22,14 +20,6 @@ public class ChangeServiceOrderStatusUseCase {
     private final ServicePersistencePort servicePersistencePort;
     private final ChangeServiceStatusUseCase changeServiceStatusUseCase;
     private final FinalizeInspectionUseCase finalizeInspectionUseCase;
-
-    public ChangeServiceOrderStatusUseCase(
-            ServiceOrderPersistencePort serviceOrderPersistencePort,
-            ServicePersistencePort servicePersistencePort,
-            ChangeServiceStatusUseCase changeServiceStatusUseCase
-    ) {
-        this(serviceOrderPersistencePort, servicePersistencePort, changeServiceStatusUseCase, null);
-    }
 
     public ChangeServiceOrderStatusUseCase(
             ServiceOrderPersistencePort serviceOrderPersistencePort,

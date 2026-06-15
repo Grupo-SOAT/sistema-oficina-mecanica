@@ -2,6 +2,7 @@ package br.com.fiap.postech.adapter.output.message.serviceorder;
 
 import br.com.fiap.postech.port.message.serviceorder.BudgetApprovalRequestPublisherPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -11,14 +12,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class KafkaBudgetApprovalRequestPublisher implements BudgetApprovalRequestPublisherPort {
 
-    private final KafkaTemplate<String, BudgetApprovalRequestEvent> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    private static final String TOPIC = "budget-approval-request";
+    @Value("${app.budget.kafka.topic.request}")
+    private String topic;
 
     @Override
     public void publish(Long serviceOrderId, String token) {
         BudgetApprovalRequestEvent event = new BudgetApprovalRequestEvent(serviceOrderId, token);
-        kafkaTemplate.send(TOPIC, serviceOrderId.toString(), event);
+        kafkaTemplate.send(topic, serviceOrderId.toString(), event);
     }
 
     public record BudgetApprovalRequestEvent(Long serviceOrderId, String token) {

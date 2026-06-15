@@ -3,6 +3,7 @@
 
 DELETE FROM services;
 DELETE FROM service_orders;
+DELETE FROM budget_approval_tokens;
 
 -- ID 1: PENDING (para testar START_INSPECTION)
 INSERT INTO service_orders (service_order_id, client_id, vehicle_id, description, status, estimated_amount, created_at, updated_at)

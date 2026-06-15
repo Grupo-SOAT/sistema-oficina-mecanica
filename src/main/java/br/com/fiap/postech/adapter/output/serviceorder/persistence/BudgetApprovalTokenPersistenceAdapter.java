@@ -16,12 +16,12 @@ public class BudgetApprovalTokenPersistenceAdapter implements BudgetApprovalToke
     private final BudgetApprovalTokenRepository repository;
 
     @Override
-    public BudgetApprovalToken create(BudgetApprovalToken token) {
+    public BudgetApprovalToken create(BudgetApprovalToken domainToken) {
         BudgetApprovalTokenEntity entity = BudgetApprovalTokenEntity.builder()
-                .serviceOrderId(token.getServiceOrderId())
-                .token(token.getToken())
-                .expiresAt(token.getExpiresAt())
-                .createdAt(token.getCreatedAt())
+                .serviceOrderId(domainToken.serviceOrderId())
+                .token(domainToken.token())
+                .expiresAt(domainToken.expiresAt())
+                .createdAt(domainToken.createdAt())
                 .build();
         BudgetApprovalTokenEntity saved = repository.save(entity);
         return toDomain(saved);
@@ -42,14 +42,13 @@ public class BudgetApprovalTokenPersistenceAdapter implements BudgetApprovalToke
     }
 
     private BudgetApprovalToken toDomain(BudgetApprovalTokenEntity entity) {
-        BudgetApprovalToken token = new BudgetApprovalToken(
+        return new BudgetApprovalToken(
+                entity.getId(),
                 entity.getServiceOrderId(),
                 entity.getToken(),
-                entity.getExpiresAt()
+                entity.getExpiresAt(),
+                entity.getCreatedAt(),
+                entity.getUsedAt()
         );
-        token.setId(entity.getId());
-        token.setCreatedAt(entity.getCreatedAt());
-        token.setUsedAt(entity.getUsedAt());
-        return token;
     }
 }

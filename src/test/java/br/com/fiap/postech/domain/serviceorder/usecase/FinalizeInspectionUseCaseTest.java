@@ -57,11 +57,11 @@ class FinalizeInspectionUseCaseTest {
         verify(budgetApprovalTokenPersistencePort).create(tokenCaptor.capture());
 
         BudgetApprovalToken capturedToken = tokenCaptor.getValue();
-        assertThat(capturedToken.getServiceOrderId()).isEqualTo(1L);
-        assertThat(capturedToken.getToken()).isNotBlank();
-        assertThat(capturedToken.getExpiresAt()).isNotNull();
-        assertThat(capturedToken.getCreatedAt()).isNotNull();
+        assertThat(capturedToken.serviceOrderId()).isEqualTo(1L);
+        assertThat(capturedToken.token()).isNotBlank();
+        assertThat(capturedToken.expiresAt()).isNotNull();
+        assertThat(capturedToken.createdAt()).isNotNull();
 
-        verify(budgetApprovalRequestPublisherPort).publish(1L, capturedToken.getToken());
+        verify(budgetApprovalRequestPublisherPort).publish(1L, capturedToken.token());
     }
 }
