@@ -1,4 +1,4 @@
-package br.com.fiap.postech.adapter.output.message.serviceorder;
+package br.com.fiap.postech.adapter.output.serviceorder.message;
 
 import br.com.fiap.postech.port.message.serviceorder.BudgetApprovalRequestPublisherPort;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
