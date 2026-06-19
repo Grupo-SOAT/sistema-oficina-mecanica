@@ -47,8 +47,6 @@ public class ServiceOrderPersistenceAdapter implements ServiceOrderPersistencePo
         final var hasStatusFilter = status != null && !status.isBlank();
 
         return (root, query, criteriaBuilder) -> {
-            query.distinct(true);
-
             final var predicates = new ArrayList<Predicate>();
 
             if (hasStatusFilter) {
