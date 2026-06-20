@@ -14,10 +14,22 @@ resource "null_resource" "minikube" {
   }
 }
 
+resource "null_resource" "update_context" {
+  depends_on = [null_resource.minikube]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      minikube update-context --profile=${var.cluster_name}
+    EOT
+  }
+}
+
+
 resource "null_resource" "wait_cluster" {
 
   depends_on = [
-    null_resource.minikube
+    null_resource.minikube,
+    null_resource.update_context
   ]
 
   provisioner "local-exec" {
