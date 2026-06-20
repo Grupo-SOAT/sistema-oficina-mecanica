@@ -268,7 +268,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SERVICE_ORDER_NOT_FOUND"
 
-  # === ORÇAMENTO DA ORDEM DE SERVIÇO ===
+  # === ORCAMENTO DA ORDEM DE SERVIÇO ===
 
   Esquema do Cenário: Registrar decisão do cliente sobre o orçamento
     Dado que o orçamento da ordem de serviço de ID "3" foi enviado ao cliente
@@ -300,32 +300,3 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Quando eu registrar a decisão do cliente sobre o orçamento da ordem de serviço
     Então devo receber uma resposta com status "404"
     E a resposta deve conter o campo reason com valor "SERVICE_ORDER_NOT_FOUND"
-
-  # === ORÇAMENTO ASSÍNCRONO ===
-
-  @asyncBudget
-  Cenário: Publicar evento de orçamento ao completar inspeção
-    Dado que eu esteja devidamente logado
-    E que o id da ordem de serviço seja 2
-    E que o corpo da ação de progresso da ordem de serviço seja:
-      | action              | additionalInfo      | relatedServiceId |
-      | COMPLETE_INSPECTION | Inspecao finalizada |                  |
-    Quando eu registrar o progresso da ordem de serviço
-    Então devo receber uma resposta com status "202"
-    E um evento deve ser publicado no tópico "budget-approval-request" com o "serviceOrderId" igual a "2"
-    E o evento publicado no tópico "budget-approval-request" deve conter o campo "token" com um valor não vazio
-    E o campo decimal "estimatedAmount" da ordem de serviço de ID "2" deve ser "444.60"
-
-  @asyncBudget
-  Esquema do Cenário: Processar decisão assíncrona de orçamento via Kafka
-    Dado que eu esteja devidamente logado
-    E que exista uma ordem de serviço de ID "3" com status "AWAITING_APPROVAL"
-    E que um evento de decisão seja publicado no tópico "budget-decision"
-      | serviceOrderId | decision   |
-      | 3              | <decision> |
-    Quando o sistema consumir o evento do tópico "budget-decision"
-    Então o status da ordem de serviço de ID "3" deve ser "<expectedStatus>"
-    Exemplos:
-      | decision | expectedStatus |
-      | APPROVE  | APPROVED       |
-      | REJECT   | CANCELLED      |

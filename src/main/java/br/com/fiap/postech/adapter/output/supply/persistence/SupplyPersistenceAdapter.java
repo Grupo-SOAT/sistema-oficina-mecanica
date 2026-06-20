@@ -63,13 +63,6 @@ public class SupplyPersistenceAdapter implements SupplyPersistencePort {
     }
 
     @Override
-    public List<Supply> findAllById(List<Long> ids) {
-        return repository.findAllById(ids).stream()
-                .map(item -> (Supply) item)
-                .toList();
-    }
-
-    @Override
     public Optional<Supply> findBySku(String sku) {
         return repository.findBySku(sku).map(item -> (Supply) item);
     }

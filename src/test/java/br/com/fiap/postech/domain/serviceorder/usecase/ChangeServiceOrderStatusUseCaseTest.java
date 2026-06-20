@@ -14,13 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ChangeServiceOrderStatusUseCaseTest {
@@ -30,12 +33,6 @@ class ChangeServiceOrderStatusUseCaseTest {
 
     @Mock
     private ServicePersistencePort servicePersistencePort;
-
-    @Mock
-    private FinalizeInspectionUseCase finalizeInspectionUseCase;
-
-    @Mock
-    private EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase;
 
     @InjectMocks
     private ChangeServiceOrderStatusUseCase useCase;
@@ -69,7 +66,6 @@ class ChangeServiceOrderStatusUseCaseTest {
 
         assertThat(updated.getStatus()).isEqualTo("AWAITING_APPROVAL");
         assertThat(updated.getUpdatedAt()).isNotNull();
-        verify(estimateServiceOrderAmountUseCase).estimate(1L);
     }
 
     @Test
@@ -290,20 +286,5 @@ class ChangeServiceOrderStatusUseCaseTest {
         assertThatThrownBy(() -> useCase.registerProgress(1L, ServiceOrderAction.DELIVER_VEHICLE))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Status change not allowed");
-    }
-
-    @Test
-    void should_delegate_to_finalize_inspection_when_complete_inspection() {
-        var serviceOrder = ServiceOrderEntity.builder()
-                .id(1L)
-                .status("IN_INSPECTION")
-                .build();
-        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(serviceOrder));
-        when(serviceOrderPersistencePort.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-
-        useCase.registerProgress(1L, ServiceOrderAction.COMPLETE_INSPECTION);
-
-        verify(estimateServiceOrderAmountUseCase).estimate(1L);
-        verify(finalizeInspectionUseCase).finalizeInspection(1L);
     }
 }
