@@ -2,15 +2,17 @@ package br.com.fiap.postech.domain.serviceorder.usecase;
 
 import br.com.fiap.postech.adapter.input.api.model.BudgetDecision;
 import br.com.fiap.postech.adapter.input.api.model.ServiceOrderAction;
-import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.service.usecase.ChangeServiceStatusUseCase;
 import br.com.fiap.postech.domain.serviceorder.exception.PartialBudgetRejectionNotImplementedException;
 import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 import br.com.fiap.postech.domain.serviceorder.status.ServiceOrderState;
-import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
+import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -19,21 +21,15 @@ public class ChangeServiceOrderStatusUseCase {
     private final ServiceOrderPersistencePort serviceOrderPersistencePort;
     private final ServicePersistencePort servicePersistencePort;
     private final ChangeServiceStatusUseCase changeServiceStatusUseCase;
-    private final FinalizeInspectionUseCase finalizeInspectionUseCase;
-    private final EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase;
 
     public ChangeServiceOrderStatusUseCase(
             ServiceOrderPersistencePort serviceOrderPersistencePort,
             ServicePersistencePort servicePersistencePort,
-            ChangeServiceStatusUseCase changeServiceStatusUseCase,
-            FinalizeInspectionUseCase finalizeInspectionUseCase,
-            EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase
+            ChangeServiceStatusUseCase changeServiceStatusUseCase
     ) {
         this.serviceOrderPersistencePort = serviceOrderPersistencePort;
         this.servicePersistencePort = servicePersistencePort;
         this.changeServiceStatusUseCase = changeServiceStatusUseCase;
-        this.finalizeInspectionUseCase = finalizeInspectionUseCase;
-        this.estimateServiceOrderAmountUseCase = estimateServiceOrderAmountUseCase;
     }
 
     public ServiceOrder registerProgress(Long id, ServiceOrderAction action) {
@@ -56,18 +52,7 @@ public class ChangeServiceOrderStatusUseCase {
             applyStatusTransition(serviceOrder, targetStatus);
         }
 
-        var saved = serviceOrderPersistencePort.save(serviceOrder);
-        afterProgressSave(saved, targetStatus);
-        return saved;
-    }
-
-    private void afterProgressSave(ServiceOrder serviceOrder, ServiceOrderStatus targetStatus) {
-        if (targetStatus == ServiceOrderStatus.AWAITING_APPROVAL) {
-            estimateServiceOrderAmountUseCase.estimate(serviceOrder.getId());
-            if (finalizeInspectionUseCase != null) {
-                finalizeInspectionUseCase.finalizeInspection(serviceOrder.getId());
-            }
-        }
+        return serviceOrderPersistencePort.save(serviceOrder);
     }
 
     private boolean isServiceAction(ServiceOrderAction action) {
