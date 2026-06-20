@@ -2,15 +2,8 @@ resource "null_resource" "minikube" {
 
   provisioner "local-exec" {
 
-    command = <<EOT
+  command = "minikube start --driver=docker --cpus=2 --memory=6100"
 
-      minikube start \
-        --driver=docker \
-        --cpus=4 \
-        --memory=8192 \
-        --profile=${var.cluster_name}
-
-    EOT
   }
 }
 
@@ -22,24 +15,8 @@ resource "null_resource" "wait_cluster" {
 
   provisioner "local-exec" {
 
-    command = <<EOT
+      command = "kubectl wait --for=condition=Ready nodes --all --timeout=300s"
 
-      kubectl wait \
-      --for=condition=Ready nodes \
-      --all \
-      --timeout=300s
-
-    EOT
-  }
-}
-
-resource "null_resource" "update_context" {
-  depends_on = [null_resource.wait_cluster]
-
-  provisioner "local-exec" {
-    command = <<EOT
-      minikube update-context --profile=${var.cluster_name}
-    EOT
   }
 }
 
