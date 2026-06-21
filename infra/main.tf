@@ -77,6 +77,15 @@ resource "helm_release" "ingress_nginx" {
   namespace = "ingress-nginx"
 
   create_namespace = true
+
+  timeout = 600
+
+  set = [
+    {
+      name  = "controller.service.type"
+      value = "NodePort"
+    }
+  ]
 }
 
 resource "helm_release" "argocd" {
