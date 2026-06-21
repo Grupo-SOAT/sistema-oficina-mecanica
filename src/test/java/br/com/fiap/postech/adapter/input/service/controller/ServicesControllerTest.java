@@ -41,7 +41,8 @@ class ServicesControllerTest {
     void should_return_ok_with_paginated_data_when_list_has_content() {
         Service one = ServiceEntity.builder()
                 .id(1L).serviceOrderId(10L).catalogServiceId(5L)
-                .price(new BigDecimal("100.00")).status("AWAITING_APPROVAL").build();
+                .price(new BigDecimal("100.00")).status("AWAITING_APPROVAL")
+                .statusLabel("Aguardando Aprovação").build();
         ScrollPage<Service> page = ScrollPage.<Service>builder()
                 .data(List.of(one)).cursor("1").isLast(true).pageSize(10).build();
 
@@ -53,6 +54,7 @@ class ServicesControllerTest {
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getData()).hasSize(1);
         assertThat(response.getBody().getData().get(0).getId()).isEqualTo(1L);
+        assertThat(response.getBody().getData().get(0).getStatusLabel()).isEqualTo("Aguardando Aprovação");
     }
 
     @Test
@@ -70,7 +72,8 @@ class ServicesControllerTest {
 
         ServiceEntity created = ServiceEntity.builder()
                 .id(1L).serviceOrderId(10L).catalogServiceId(5L)
-                .price(new BigDecimal("150.00")).status("AWAITING_APPROVAL").build();
+                .price(new BigDecimal("150.00")).status("AWAITING_APPROVAL")
+                .statusLabel("Aguardando Aprovação").build();
 
         when(serviceUseCase.create(eq(10L), any(Service.class))).thenReturn(created);
 
@@ -80,13 +83,15 @@ class ServicesControllerTest {
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getId()).isEqualTo(1L);
         assertThat(response.getBody().getStatus()).isEqualTo(ServiceStatus.AWAITING_APPROVAL);
+        assertThat(response.getBody().getStatusLabel()).isEqualTo("Aguardando Aprovação");
     }
 
     @Test
     void should_return_ok_when_service_found_by_id() {
         ServiceEntity entity = ServiceEntity.builder()
                 .id(5L).serviceOrderId(10L).catalogServiceId(3L)
-                .price(new BigDecimal("80.00")).status("IN_PROGRESS").build();
+                .price(new BigDecimal("80.00")).status("IN_PROGRESS")
+                .statusLabel("Em Andamento").build();
 
         when(serviceUseCase.getById(10L, 5L)).thenReturn(entity);
 
@@ -95,6 +100,7 @@ class ServicesControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getId()).isEqualTo(5L);
+        assertThat(response.getBody().getStatusLabel()).isEqualTo("Em Andamento");
     }
 
     @Test
@@ -129,7 +135,8 @@ class ServicesControllerTest {
 
         ServiceEntity updated = ServiceEntity.builder()
                 .id(5L).serviceOrderId(10L).catalogServiceId(3L)
-                .price(new BigDecimal("90.00")).status("AWAITING_APPROVAL").build();
+                .price(new BigDecimal("90.00")).status("AWAITING_APPROVAL")
+                .statusLabel("Aguardando Aprovação").build();
 
         when(serviceUseCase.update(eq(10L), eq(5L), any(Service.class))).thenReturn(updated);
 
@@ -138,6 +145,7 @@ class ServicesControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getStatus()).isEqualTo(ServiceStatus.AWAITING_APPROVAL);
+        assertThat(response.getBody().getStatusLabel()).isEqualTo("Aguardando Aprovação");
     }
 
     @Test

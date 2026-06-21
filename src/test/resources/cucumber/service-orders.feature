@@ -25,6 +25,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Então devo receber uma resposta com status "200"
     E a resposta deve conter no maximo 1 ordens de serviço
     E a resposta deve conter ao menos uma ordem de serviço com status "PENDING"
+    E a resposta deve conter ao menos uma ordem de serviço com statusLabel "Recebida"
 
   Cenário: Paginação sem resultados deve retornar no content
     Dado que eu esteja devidamente logado
@@ -53,6 +54,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     E a resposta deve conter o campo "vehicleId"
     E a resposta deve conter o campo "description"
     E a resposta deve conter o campo "status"
+    E a resposta deve conter o campo "statusLabel"
     E a resposta deve conter o campo "estimatedAmount"
 
   Cenário: Detalhamento de ordem de serviço por ID inexistente
@@ -73,6 +75,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
     E a resposta deve conter o campo "status"
+    E o campo "statusLabel" deve ser "Recebida"
     E a resposta deve refletir o payload enviado
 
   Esquema do Cenário: Cadastro de ordem de serviço com ids inexistentes
@@ -102,6 +105,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     E a resposta deve conter o campo "description"
     E a resposta deve conter o id do novo veículo
     E a resposta deve conter o id do novo cliente
+    E o campo "statusLabel" deve ser "Recebida"
 
   Esquema do Cenário: Cadastro de ordem de serviço em cascata com ids inexistentes
     Dado que eu esteja devidamente logado
@@ -159,6 +163,7 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Quando eu atualizar a ordem de serviço
     Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado
+    E o campo "statusLabel" deve ser "Aprovada"
 
   Esquema do Cenário: Atualização de ordem de serviço com payload inválido
     Dado que eu esteja devidamente logado
@@ -325,7 +330,8 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
       | 3              | <decision> |
     Quando o sistema consumir o evento do tópico "budget-decision"
     Então o status da ordem de serviço de ID "3" deve ser "<expectedStatus>"
+    E o statusLabel da ordem de serviço de ID "3" deve ser "<expectedLabel>"
     Exemplos:
-      | decision | expectedStatus |
-      | APPROVE  | APPROVED       |
-      | REJECT   | CANCELLED      |
+      | decision | expectedStatus | expectedLabel |
+      | APPROVE  | APPROVED       | Aprovada      |
+      | REJECT   | CANCELLED      | Cancelada     |

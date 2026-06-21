@@ -8,6 +8,7 @@ import br.com.fiap.postech.domain.service.exception.ServiceNotFoundException;
 import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import br.com.fiap.postech.port.persistence.service.ServiceStatusLabelPort;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,9 @@ class ServiceUseCaseTest {
 
     @Mock
     private SupplyPersistencePort supplyPersistencePort;
+
+    @Mock
+    private ServiceStatusLabelPort statusLabelPort;
 
     @InjectMocks
     private ServiceUseCase useCase;
@@ -111,11 +115,13 @@ class ServiceUseCaseTest {
                 .price(new BigDecimal("150.00"))
                 .build();
         when(persistencePort.save(any(Service.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(statusLabelPort.resolve("AWAITING_APPROVAL")).thenReturn("Aguardando Aprovação");
 
         Service saved = useCase.create(1L, input);
 
         assertThat(saved.getServiceOrderId()).isEqualTo(1L);
         assertThat(saved.getStatus()).isEqualTo("AWAITING_APPROVAL");
+        assertThat(saved.getStatusLabel()).isEqualTo("Aguardando Aprovação");
     }
 
     @Test
