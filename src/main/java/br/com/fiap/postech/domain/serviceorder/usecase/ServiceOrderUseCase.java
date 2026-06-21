@@ -8,6 +8,7 @@ import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderVehicleNotF
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
 import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
+import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderStatusLabelPort;
 import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
 
 public class ServiceOrderUseCase {
@@ -15,15 +16,18 @@ public class ServiceOrderUseCase {
     private final ServiceOrderPersistencePort persistencePort;
     private final OwnerPersistencePort ownerPersistencePort;
     private final VehiclePersistencePort vehiclePersistencePort;
+    private final ServiceOrderStatusLabelPort statusLabelPort;
 
     public ServiceOrderUseCase(
             ServiceOrderPersistencePort persistencePort,
             OwnerPersistencePort ownerPersistencePort,
-            VehiclePersistencePort vehiclePersistencePort
+            VehiclePersistencePort vehiclePersistencePort,
+            ServiceOrderStatusLabelPort statusLabelPort
     ) {
         this.persistencePort = persistencePort;
         this.ownerPersistencePort = ownerPersistencePort;
         this.vehiclePersistencePort = vehiclePersistencePort;
+        this.statusLabelPort = statusLabelPort;
     }
 
     public ScrollPage<ServiceOrder> scroll(String status, Long clientId, Long vehicleId, Integer pageSize, String cursor) {
@@ -33,12 +37,15 @@ public class ServiceOrderUseCase {
             throw new NoMatchingServiceOrdersException(status != null ? "status=" + status : "all");
         }
 
+        result.data().forEach(so -> so.setStatusLabel(statusLabelPort.resolve(so.getStatus())));
         return result;
     }
 
     public ServiceOrder getById(Long id) {
-        return persistencePort.findById(id)
+        var serviceOrder = persistencePort.findById(id)
                 .orElseThrow(() -> new ServiceOrderNotFoundException(id));
+        serviceOrder.setStatusLabel(statusLabelPort.resolve(serviceOrder.getStatus()));
+        return serviceOrder;
     }
 
     public ServiceOrder create(ServiceOrder serviceOrder) {
@@ -46,7 +53,9 @@ public class ServiceOrderUseCase {
         validateVehicleExists(serviceOrder.getVehicleId());
 
         serviceOrder.setStatus("PENDING");
-        return persistencePort.save(serviceOrder);
+        var saved = persistencePort.save(serviceOrder);
+        saved.setStatusLabel(statusLabelPort.resolve(saved.getStatus()));
+        return saved;
     }
 
     public ServiceOrder update(Long id, ServiceOrder serviceOrder) {
@@ -57,7 +66,11 @@ public class ServiceOrderUseCase {
                 .orElseThrow(() -> new ServiceOrderNotFoundException(id));
 
         serviceOrder.setId(id);
-        return persistencePort.save(serviceOrder);
+        var saved = persistencePort.save(serviceOrder);
+        if (saved.getStatus() != null) {
+            saved.setStatusLabel(statusLabelPort.resolve(saved.getStatus()));
+        }
+        return saved;
     }
 
     public void delete(Long id) {

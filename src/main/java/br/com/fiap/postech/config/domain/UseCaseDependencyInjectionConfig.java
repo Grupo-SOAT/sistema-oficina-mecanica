@@ -21,8 +21,10 @@ import br.com.fiap.postech.port.authentication.AuthenticationPort;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
 import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import br.com.fiap.postech.port.persistence.service.ServiceStatusLabelPort;
 import br.com.fiap.postech.port.persistence.serviceorder.BudgetApprovalTokenPersistencePort;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
+import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderStatusLabelPort;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
 import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
 import br.com.fiap.postech.port.message.serviceorder.BudgetApprovalRequestPublisherPort;
@@ -47,13 +49,15 @@ public class UseCaseDependencyInjectionConfig {
             ServicePersistencePort persistencePort,
             ServiceOrderPersistencePort serviceOrderPersistencePort,
             CatalogServicesPersistencePort catalogServicesPersistencePort,
-            SupplyPersistencePort supplyPersistencePort
+            SupplyPersistencePort supplyPersistencePort,
+            ServiceStatusLabelPort statusLabelPort
     ) {
         return new ServiceUseCase(
                 persistencePort,
                 serviceOrderPersistencePort,
                 catalogServicesPersistencePort,
-                supplyPersistencePort
+                supplyPersistencePort,
+                statusLabelPort
         );
     }
 
@@ -61,12 +65,14 @@ public class UseCaseDependencyInjectionConfig {
     public ChangeServiceStatusUseCase changeServiceStatusUseCase(
             ServicePersistencePort servicePersistencePort,
             ServiceOrderPersistencePort serviceOrderPersistencePort,
-            SupplyPersistencePort supplyPersistencePort
+            SupplyPersistencePort supplyPersistencePort,
+            ServiceStatusLabelPort statusLabelPort
     ) {
         return new ChangeServiceStatusUseCase(
                 servicePersistencePort,
                 serviceOrderPersistencePort,
-                supplyPersistencePort
+                supplyPersistencePort,
+                statusLabelPort
         );
     }
 
@@ -87,9 +93,10 @@ public class UseCaseDependencyInjectionConfig {
     public ServiceOrderUseCase serviceOrderUseCase(
             ServiceOrderPersistencePort persistencePort,
             OwnerPersistencePort ownerPersistencePort,
-            VehiclePersistencePort vehiclePersistencePort
+            VehiclePersistencePort vehiclePersistencePort,
+            ServiceOrderStatusLabelPort statusLabelPort
     ) {
-        return new ServiceOrderUseCase(persistencePort, ownerPersistencePort, vehiclePersistencePort);
+        return new ServiceOrderUseCase(persistencePort, ownerPersistencePort, vehiclePersistencePort, statusLabelPort);
     }
 
     @Bean
@@ -108,14 +115,16 @@ public class UseCaseDependencyInjectionConfig {
             ServicePersistencePort servicePersistencePort,
             ChangeServiceStatusUseCase changeServiceStatusUseCase,
             FinalizeInspectionUseCase finalizeInspectionUseCase,
-            EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase
+            EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase,
+            ServiceOrderStatusLabelPort statusLabelPort
     ) {
         return new ChangeServiceOrderStatusUseCase(
                 serviceOrderPersistencePort,
                 servicePersistencePort,
                 changeServiceStatusUseCase,
                 finalizeInspectionUseCase,
-                estimateServiceOrderAmountUseCase
+                estimateServiceOrderAmountUseCase,
+                statusLabelPort
         );
     }
 

@@ -186,6 +186,7 @@ public class ServicePersistenceAdapter implements ServicePersistencePort {
                 .price(service.getPrice())
                 .neededSupplyEntities(supplyEntities)
                 .status(service.getStatus())
+                .statusLabel(service.getStatusLabel())
                 .createdAt(service.getCreatedAt())
                 .updatedAt(service.getUpdatedAt())
                 .rejectedAt(service.getRejectedAt())

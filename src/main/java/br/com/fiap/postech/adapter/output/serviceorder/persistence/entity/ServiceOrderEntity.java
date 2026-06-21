@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,11 +31,10 @@ import java.time.LocalDateTime;
 @Table(name = "service_orders")
 public class ServiceOrderEntity implements ServiceOrder {
 
-    @Builder.Default
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "service_order_id")
-    private Long id = 0L;
+    private Long id;
 
     @Column(name = "client_id", nullable = false)
     private Long clientId;
@@ -47,6 +47,10 @@ public class ServiceOrderEntity implements ServiceOrder {
 
     @Column(name = "status", nullable = false)
     private String status;
+
+    @Transient
+    @Builder.Default
+    private String statusLabel = null;
 
     @Column(name = "estimated_amount")
     private BigDecimal estimatedAmount;

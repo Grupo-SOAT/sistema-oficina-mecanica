@@ -78,6 +78,8 @@ public class ServiceOrderMapper {
             data.setStatus(ServiceOrderStatus.fromValue(serviceOrder.getStatus()));
         }
 
+        data.setStatusLabel(serviceOrder.getStatusLabel());
+
         return data;
     }
 

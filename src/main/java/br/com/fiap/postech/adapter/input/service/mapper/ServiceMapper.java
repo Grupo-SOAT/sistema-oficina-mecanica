@@ -87,6 +87,8 @@ public class ServiceMapper {
             data.setStatus(ServiceStatus.fromValue(service.getStatus()));
         }
 
+        data.setStatusLabel(service.getStatusLabel());
+
         List<NeededSupply> neededSupplies = service.getNeededSupplies();
         if (neededSupplies != null && !neededSupplies.isEmpty()) {
             data.setNeededSupplies(neededSupplies.stream()

@@ -6,10 +6,9 @@ import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import br.com.fiap.postech.port.persistence.service.ServiceStatusLabelPort;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -18,15 +17,18 @@ public class ChangeServiceStatusUseCase {
     private final ServicePersistencePort servicePersistencePort;
     private final ServiceOrderPersistencePort serviceOrderPersistencePort;
     private final SupplyPersistencePort supplyPersistencePort;
+    private final ServiceStatusLabelPort statusLabelPort;
 
     public ChangeServiceStatusUseCase(
             ServicePersistencePort servicePersistencePort,
             ServiceOrderPersistencePort serviceOrderPersistencePort,
-            SupplyPersistencePort supplyPersistencePort
+            SupplyPersistencePort supplyPersistencePort,
+            ServiceStatusLabelPort statusLabelPort
     ) {
         this.servicePersistencePort = servicePersistencePort;
         this.serviceOrderPersistencePort = serviceOrderPersistencePort;
         this.supplyPersistencePort = supplyPersistencePort;
+        this.statusLabelPort = statusLabelPort;
     }
 
     /**
@@ -39,6 +41,7 @@ public class ChangeServiceStatusUseCase {
 
         final var now = LocalDateTime.now();
         service.setStatus("IN_PROGRESS");
+        service.setStatusLabel(statusLabelPort.resolve("IN_PROGRESS"));
         service.setStartedAt(now);
         service.setUpdatedAt(now);
 
@@ -57,7 +60,8 @@ public class ChangeServiceStatusUseCase {
             }
         }
 
-        final var savedService = servicePersistencePort.save(service);
+        var savedService = servicePersistencePort.save(service);
+        savedService.setStatusLabel(statusLabelPort.resolve(savedService.getStatus()));
 
         updateServiceOrderIfFirstServiceStarted(serviceOrderId, serviceId);
 
@@ -76,7 +80,8 @@ public class ChangeServiceStatusUseCase {
         service.setCompletedAt(now);
         service.setUpdatedAt(now);
 
-        final var savedService = servicePersistencePort.save(service);
+        var savedService = servicePersistencePort.save(service);
+        savedService.setStatusLabel(statusLabelPort.resolve(savedService.getStatus()));
 
         updateServiceOrderIfLastServiceCompleted(serviceOrderId);
 
@@ -113,7 +118,9 @@ public class ChangeServiceStatusUseCase {
             }
         }
 
-        return servicePersistencePort.save(service);
+        var saved = servicePersistencePort.save(service);
+        saved.setStatusLabel(statusLabelPort.resolve(saved.getStatus()));
+        return saved;
     }
 
     private void updateServiceOrderIfFirstServiceStarted(Long serviceOrderId, Long currentServiceId) {
