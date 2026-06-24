@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout Repo Code
         uses: actions/checkout@v4
+
+      - name: Debug path
+        run: pwd
       
       - name: Go to /infra directory
         run: cd infra/
