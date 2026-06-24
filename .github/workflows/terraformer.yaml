@@ -17,7 +17,7 @@ jobs:
         run: pwd
       
       - name: Go to /infra directory
-        run: cd infra/
+        run: cd .\infra\
       
       - name: Debug files infra check path
         run: |
