@@ -11,6 +11,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      
+      - name: Set Up Terraform
+        run: terraform init
+        working-directory: infra
 
       - name: Destroy Resources with Terraform
         run: terraform destroy -auto-approve
