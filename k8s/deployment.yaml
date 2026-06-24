@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: workshop-backend
+  namespace: oficina-mecanica
 spec:
   replicas: 1
 
@@ -74,6 +75,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: oficina-mecanica
 spec:
   replicas: 1
 

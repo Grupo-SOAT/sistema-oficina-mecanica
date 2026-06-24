@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: workshop-backend-service
+  namespace: oficina-mecanica
 spec:
   selector:
     app: workshop-backend
@@ -19,6 +20,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
+  namespace: oficina-mecanica
 spec:
   selector:
     app: postgres
