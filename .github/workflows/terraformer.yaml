@@ -25,7 +25,7 @@ jobs:
         working-directory: infra
       
       - name: Create Minikube Cluster
-        run: terraform apply -target=null_resource.minikube
+        run: terraform apply -target=null_resource.minikube -auto-approve
         working-directory: infra
 
       
