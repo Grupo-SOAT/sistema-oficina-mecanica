@@ -1,0 +1,38 @@
+name: Set up Infra | Terraform
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  setup-infra:
+    name: Set up Local Cluster
+    runs-on: maquina-leo
+
+    steps:
+      - name: Checkout Repo Code
+        uses: actions/checkout@v4
+      
+      - name: Go to /infra directory
+        run: cd infra/
+      
+      - name: Set Up Terraform
+        run: terraform init
+      
+      - name: Validate Terraform Code
+        run: terraform validate
+      
+      - name: Plan Terraform Resources
+        run: terraform plan
+      
+      - name: Create Minikube Cluster
+        run: |
+          terraform apply -target=null_resource.minikube -auto-approve
+          echo "Cluster criado com sucesso !! 🚀 ☸️ ☸️🐋"
+      
+      - name: Create Namespaces and Install dependencias with HELM
+        run: |
+          terraform apply -auto-approve
+          echo "Namespaces, metrics server e ingress configurados! ☸️🐋"
+      
+
