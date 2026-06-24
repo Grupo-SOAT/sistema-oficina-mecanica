@@ -19,6 +19,11 @@ jobs:
       - name: Go to /infra directory
         run: cd infra/
       
+      - name: Debug files infra check path
+        run: |
+          ls
+          pwd
+      
       - name: Set Up Terraform
         run: terraform init
       
