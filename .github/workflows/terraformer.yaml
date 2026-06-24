@@ -25,13 +25,13 @@ jobs:
         working-directory: infra
       
       - name: Create Minikube Cluster
-        run: |
-          terraform apply -target=null_resource.minikube -auto-approve
-          echo "Cluster criado com sucesso !! 🚀 ☸️ ☸️🐋"
+        run: terraform apply -target=null_resource.minikube -auto-approve
         working-directory: infra
+
       
       - name: Create Namespaces and Install dependencies with HELM
-        run: |
-          terraform apply -auto-approve
-          echo "Namespaces, metrics server e ingress configurados! ☸️🐋"
+        run: terraform apply -auto-approve
         working-directory: infra
+      
+      - name: Log Success
+        run: echo "Cluster criado!! Namespaces, metrics server e ingress configurados! ☸️🐋"
