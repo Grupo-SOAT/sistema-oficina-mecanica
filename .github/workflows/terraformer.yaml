@@ -1,4 +1,4 @@
-name: Set up Infra | Terraform
+name: Set up Infra and Deploy | Terraform
 
 on:
   workflow_dispatch:
@@ -24,14 +24,12 @@ jobs:
         run: terraform plan
         working-directory: infra
       
-      - name: Create Minikube Cluster
-        run: terraform apply -target="null_resource.minikube" -auto-approve
-        working-directory: infra
-
-      
-      - name: Create Namespaces and Install dependencies with HELM
+      - name: Create and Set Up Minikube Cluster
         run: terraform apply -auto-approve
         working-directory: infra
+
+      - name: Show State
+        run: ls -lah infra
       
       - name: Log Success
         run: echo "Cluster criado!! Namespaces, metrics server e ingress configurados! ☸️🐋"
