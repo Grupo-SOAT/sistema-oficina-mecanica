@@ -1,29 +1,22 @@
-resource "null_resource" "minikube" {
+resource "minikube_cluster" "cluster" {
 
-  provisioner "local-exec" {
+  driver = "docker"
 
-  command = "minikube start --driver=docker --cpus=2 --memory=6100"
+  cpus = 2
 
-  }
+  memory = 6100
+
+  container_runtime = "docker"
+
+  profile = "minikube"
+
 }
 
-resource "null_resource" "wait_cluster" {
-
-  depends_on = [
-    null_resource.minikube
-  ]
-
-  provisioner "local-exec" {
-
-      command = "kubectl wait --for=condition=Ready nodes --all --timeout=300s"
-
-  }
-}
 
 resource "kubernetes_namespace" "oficina" {
 
   depends_on = [
-    null_resource.wait_cluster
+    minikube_cluster.cluster
   ]
 
   metadata {
@@ -34,7 +27,7 @@ resource "kubernetes_namespace" "oficina" {
 resource "kubernetes_namespace" "argocd" {
 
   depends_on = [
-    null_resource.wait_cluster
+    minikube_cluster.cluster
   ]
 
   metadata {

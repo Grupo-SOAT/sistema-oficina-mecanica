@@ -1,7 +1,13 @@
 terraform {
+
   required_version = ">= 1.11"
 
   required_providers {
+
+    minikube = {
+      source  = "scott-the-programmer/minikube"
+      version = "~> 0.6"
+    }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -13,9 +19,6 @@ terraform {
       version = "~> 3.0"
     }
 
-    null = {
-      source  = "hashicorp/null"
-      version = "~> 3.2"
-    }
   }
+
 }
