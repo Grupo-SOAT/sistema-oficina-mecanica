@@ -93,3 +93,71 @@ resource "helm_release" "argocd" {
 
   namespace = var.namespace_argocd
 }
+
+locals {
+
+    manifests_path = "${path.module}/../k8s"
+
+}
+
+resource "kubectl_manifest" "configmap" {
+
+    depends_on = [ kubernetes_namespace.oficina ]
+
+    yaml_body = file("${local.manifests_path}/configmap.yaml")
+
+}
+
+resource "kubectl_manifest" "secret" {
+
+    depends_on = [ kubernetes_namespace.oficina ]
+
+    yaml_body = file("${local.manifests_path}/secret.yaml")
+
+}
+
+resource "kubectl_manifest" "pvc" {
+
+    depends_on = [ kubernetes_namespace.oficina ]
+
+    yaml_body = file("${local.manifests_path}/pvc.yaml")
+
+}
+
+resource "kubectl_manifest" "deployment" {
+
+    depends_on = [
+
+        kubectl_manifest.configmap,
+
+        kubectl_manifest.secret,
+
+        kubectl_manifest.pvc
+
+    ]
+
+    yaml_body = file("${local.manifests_path}/deployment.yaml")
+
+}
+
+resource "kubectl_manifest" "service" {
+
+    depends_on = [ kubectl_manifest.deployment ]
+
+    yaml_body = file("${local.manifests_path}/service.yaml")
+
+}
+
+resource "kubectl_manifest" "hpa" {
+
+    depends_on = [
+
+        helm_release.metrics_server,
+
+        kubectl_manifest.deployment
+
+    ]
+
+    yaml_body = file("${local.manifests_path}/hpa.yaml")
+
+}
