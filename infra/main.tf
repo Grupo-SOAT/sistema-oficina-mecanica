@@ -75,7 +75,15 @@ resource "helm_release" "ingress_nginx" {
     {
       name  = "controller.service.type"
       value = "NodePort"
-    }
+    },
+		{
+			name  = "controller.service.nodePorts.http"
+			value = "30080"
+		},
+		{
+			name  = "controller.service.nodePorts.https"
+			value = "30443"
+		}
   ]
 }
 
@@ -124,7 +132,7 @@ resource "kubectl_manifest" "pvc" {
 
 }
 
-resource "kubectl_manifest" "deployment" {
+resource "kubectl_manifest" "deployment-postgres" {
 
     depends_on = [
 
@@ -136,15 +144,32 @@ resource "kubectl_manifest" "deployment" {
 
     ]
 
-    yaml_body = file("${local.manifests_path}/deployment.yaml")
+    yaml_body = file("${local.manifests_path}/deployment-postgres.yaml")
 
 }
 
-resource "kubectl_manifest" "service" {
+resource "kubectl_manifest" "deployment-monolito" {
 
-    depends_on = [ kubectl_manifest.deployment ]
+    depends_on = [ kubectl_manifest.deployment-postgres ]
 
-    yaml_body = file("${local.manifests_path}/service.yaml")
+    yaml_body = file("${local.manifests_path}/deployment-monolito.yaml")
+
+}
+
+
+resource "kubectl_manifest" "service-postgres" {
+
+    depends_on = [ kubectl_manifest.deployment-postgres ]
+
+    yaml_body = file("${local.manifests_path}/service-postgres.yaml")
+
+}
+
+resource "kubectl_manifest" "service-monolito" {
+
+    depends_on = [ kubectl_manifest.deployment-monolito ]
+
+    yaml_body = file("${local.manifests_path}/service-monolito.yaml")
 
 }
 
@@ -154,10 +179,22 @@ resource "kubectl_manifest" "hpa" {
 
         helm_release.metrics_server,
 
-        kubectl_manifest.deployment
+        kubectl_manifest.deployment-postgres,
+
+        kubectl_manifest.deployment-monolito
 
     ]
 
     yaml_body = file("${local.manifests_path}/hpa.yaml")
 
+}
+
+resource "kubectl_manifest" "ingress" {
+
+  depends_on = [
+    helm_release.ingress_nginx,
+    kubectl_manifest.service-monolito
+  ]
+
+  yaml_body = file("${local.manifests_path}/ingress.yaml")
 }
