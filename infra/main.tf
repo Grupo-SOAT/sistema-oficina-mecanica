@@ -8,8 +8,6 @@ resource "minikube_cluster" "cluster" {
 
   container_runtime = "docker"
 
-  profile = "minikube"
-
 }
 
 
