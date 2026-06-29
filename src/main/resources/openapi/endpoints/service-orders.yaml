@@ -1,13 +1,18 @@
 get:
   tags: [ Service Orders ]
   summary: Listar Ordens de Serviço (paginado)
+  description: >
+    Quando nenhum filtro de status é informado (listagem padrão), as OS com status COMPLETED e DELIVERED são
+    excluídas do resultado, e a ordenação segue a prioridade: IN_PROGRESS > AWAITING_APPROVAL > IN_INSPECTION >
+    PENDING > demais status ativos. Dentro de um mesmo status, as OS mais antigas aparecem primeiro. Ao informar
+    o filtro status, a busca retorna exatamente as OS daquele status, ordenadas por id ascendente.
   operationId: listServiceOrders
   security:
     - SessionToken: [ ]
   parameters:
     - in: query
       name: status
-      description: Status da OS
+      description: Status da OS. Quando omitido, aplica-se a regra de ordenação/exclusão da listagem padrão.
       schema: { $ref: '../schemas/ServiceOrderStatus.yaml' }
     - in: query
       name: clientId

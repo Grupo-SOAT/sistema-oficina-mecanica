@@ -220,6 +220,16 @@ public class ServiceOrdersStepDefinitions extends BaseStepDefinition {
         assertHasItemWithField("status", expectedStatus, "ordem de serviço");
     }
 
+    @Então("a resposta não deve conter nenhuma ordem de serviço com status {string}")
+    public void verifyOrderStatusAbsent(String unexpectedStatus) {
+        assertNoItemWithField("status", unexpectedStatus, "ordem de serviço");
+    }
+
+    @Então("a ordem das ordens de serviço retornadas deve ser {string}")
+    public void verifyOrdersSequence(String expectedIds) {
+        assertDataIdsInOrder(expectedIds, "ordens de serviço");
+    }
+
     @Então("a resposta deve conter no maximo {int} serviços da ordem de serviço")
     public void verifyMaxServices(int maxSize) throws Exception {
         assertMaxDataSize(maxSize, "serviços da ordem de serviço");

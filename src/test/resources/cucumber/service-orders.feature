@@ -41,6 +41,20 @@ Funcionalidade: Gerenciamento de Ordens de Serviço
     Então devo receber uma resposta com status "200"
     E o primeiro item retornado deve ter id maior que 1
 
+  Cenário: Listagem padrão deve seguir a prioridade de status
+    Dado que eu esteja devidamente logado
+    E que o tamanho da pagina seja 10
+    Quando eu listar as ordens de serviço
+    Então devo receber uma resposta com status "200"
+    E a ordem das ordens de serviço retornadas deve ser "5,3,2,1,7,4"
+
+  Cenário: Listagem padrão deve excluir ordens de serviço concluídas
+    Dado que eu esteja devidamente logado
+    E que o tamanho da pagina seja 10
+    Quando eu listar as ordens de serviço
+    Então devo receber uma resposta com status "200"
+    E a resposta não deve conter nenhuma ordem de serviço com status "COMPLETED"
+
   # === DETALHAMENTO POR ID ===
 
   Cenário: Detalhamento de ordem de serviço por ID existente

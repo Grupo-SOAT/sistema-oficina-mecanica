@@ -17,12 +17,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 public abstract class BaseStepDefinition {
@@ -182,6 +186,36 @@ public abstract class BaseStepDefinition {
         }
 
         assertTrue(found, "Nenhum " + resourceName + " com " + field + " encontrado: " + expectedValue);
+    }
+
+    protected void assertNoItemWithField(String field, String unexpectedValue, String resourceName) {
+        JsonNode root = context.getLastResponseBody();
+        assertTrue(root.has("data"), "Campo data ausente");
+        assertTrue(root.get("data").isArray(), "Campo data nao eh array");
+
+        for (JsonNode item : root.get("data")) {
+            if (item.has(field) && unexpectedValue.equals(item.get(field).asText())) {
+                fail(resourceName + " com " + field + "=" + unexpectedValue + " nao deveria estar presente na listagem");
+            }
+        }
+    }
+
+    protected void assertDataIdsInOrder(String expectedIds, String resourceName) {
+        JsonNode root = context.getLastResponseBody();
+        assertTrue(root.has("data"), "Campo data ausente");
+        assertTrue(root.get("data").isArray(), "Campo data nao eh array");
+
+        List<Long> expected = Arrays.stream(expectedIds.split(","))
+                .map(String::trim)
+                .map(Long::parseLong)
+                .toList();
+
+        List<Long> actual = new ArrayList<>();
+        for (JsonNode item : root.get("data")) {
+            actual.add(item.get("id").asLong());
+        }
+
+        assertEquals(expected, actual, "Ordem de " + resourceName + " divergente da esperada");
     }
 
     protected void assertFirstItemIdGreaterThan(long minId, String resourceName) {
