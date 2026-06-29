@@ -152,6 +152,7 @@ public class ServiceOrderPersistenceAdapter implements ServiceOrderPersistencePo
                 .vehicleId(serviceOrder.getVehicleId())
                 .description(serviceOrder.getDescription())
                 .status(serviceOrder.getStatus())
+                .statusLabel(serviceOrder.getStatusLabel())
                 .estimatedAmount(serviceOrder.getEstimatedAmount())
                 .createdAt(serviceOrder.getCreatedAt())
                 .updatedAt(serviceOrder.getUpdatedAt())

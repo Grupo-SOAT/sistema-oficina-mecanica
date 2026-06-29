@@ -11,6 +11,7 @@ import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderStatus;
 import br.com.fiap.postech.domain.serviceorder.status.ServiceOrderState;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
+import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderStatusLabelPort;
 
 import java.time.LocalDateTime;
 
@@ -21,19 +22,22 @@ public class ChangeServiceOrderStatusUseCase {
     private final ChangeServiceStatusUseCase changeServiceStatusUseCase;
     private final FinalizeInspectionUseCase finalizeInspectionUseCase;
     private final EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase;
+    private final ServiceOrderStatusLabelPort statusLabelPort;
 
     public ChangeServiceOrderStatusUseCase(
             ServiceOrderPersistencePort serviceOrderPersistencePort,
             ServicePersistencePort servicePersistencePort,
             ChangeServiceStatusUseCase changeServiceStatusUseCase,
             FinalizeInspectionUseCase finalizeInspectionUseCase,
-            EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase
+            EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase,
+            ServiceOrderStatusLabelPort statusLabelPort
     ) {
         this.serviceOrderPersistencePort = serviceOrderPersistencePort;
         this.servicePersistencePort = servicePersistencePort;
         this.changeServiceStatusUseCase = changeServiceStatusUseCase;
         this.finalizeInspectionUseCase = finalizeInspectionUseCase;
         this.estimateServiceOrderAmountUseCase = estimateServiceOrderAmountUseCase;
+        this.statusLabelPort = statusLabelPort;
     }
 
     public ServiceOrder registerProgress(Long id, ServiceOrderAction action) {
@@ -57,6 +61,7 @@ public class ChangeServiceOrderStatusUseCase {
         }
 
         var saved = serviceOrderPersistencePort.save(serviceOrder);
+        saved.setStatusLabel(statusLabelPort.resolve(saved.getStatus()));
         afterProgressSave(saved, targetStatus);
         return saved;
     }
@@ -129,7 +134,9 @@ public class ChangeServiceOrderStatusUseCase {
 
         reverberate(serviceOrder, targetStatus);
 
-        return serviceOrderPersistencePort.save(serviceOrder);
+        var saved = serviceOrderPersistencePort.save(serviceOrder);
+        saved.setStatusLabel(statusLabelPort.resolve(saved.getStatus()));
+        return saved;
     }
 
     private void validateTransition(ServiceOrderStatus currentStatus, ServiceOrderStatus targetStatus) {
@@ -158,6 +165,7 @@ public class ChangeServiceOrderStatusUseCase {
     private void applyStatusTransition(ServiceOrder serviceOrder, ServiceOrderStatus targetStatus) {
         final var now = LocalDateTime.now();
         serviceOrder.setStatus(targetStatus.name());
+        serviceOrder.setStatusLabel(statusLabelPort.resolve(targetStatus.name()));
         serviceOrder.setUpdatedAt(now);
 
         switch (targetStatus) {

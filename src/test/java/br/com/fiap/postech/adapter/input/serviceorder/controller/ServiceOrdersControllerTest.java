@@ -62,7 +62,8 @@ public class ServiceOrdersControllerTest {
                 .clientId(1L)
                 .vehicleId(10L)
                 .description("Complete service")
-                .status(ServiceOrderStatus.PENDING);
+                .status(ServiceOrderStatus.PENDING)
+                .statusLabel("Recebida");
 
         try (MockedStatic<ServiceOrderMapper> mapper = mockStatic(ServiceOrderMapper.class)) {
             var command = mock(ServiceOrderCascadeCreationCommand.class);
@@ -77,6 +78,7 @@ public class ServiceOrdersControllerTest {
 
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
             assertThat(response.getBody()).isEqualTo(responseData);
+            assertThat(response.getBody().getStatusLabel()).isEqualTo("Recebida");
         }
     }
 
@@ -200,7 +202,8 @@ public class ServiceOrdersControllerTest {
                 .clientId(5L)
                 .vehicleId(25L)
                 .description("Full service with cascade")
-                .status(ServiceOrderStatus.PENDING);
+                .status(ServiceOrderStatus.PENDING)
+                .statusLabel("Recebida");
 
         try (MockedStatic<ServiceOrderMapper> mapper = mockStatic(ServiceOrderMapper.class)) {
             var command = mock(ServiceOrderCascadeCreationCommand.class);
@@ -216,6 +219,7 @@ public class ServiceOrdersControllerTest {
             assertThat(response.getBody()).isSameAs(expectedResponse);
             assertThat(response.getBody().getId()).isEqualTo(9L);
             assertThat(response.getBody().getClientId()).isEqualTo(5L);
+            assertThat(response.getBody().getStatusLabel()).isEqualTo("Recebida");
         }
     }
     @Test

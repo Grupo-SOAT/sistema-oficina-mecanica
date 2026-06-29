@@ -343,6 +343,8 @@ class ServicePersistenceAdapterTest {
             @Override public void setNeededSupplies(java.util.List<br.com.fiap.postech.domain.service.model.NeededSupply> neededSupplies) { }
             @Override public String getStatus() { return "AWAITING_APPROVAL"; }
             @Override public void setStatus(String status) { }
+            @Override public String getStatusLabel() { return null; }
+            @Override public void setStatusLabel(String statusLabel) { }
             @Override public LocalDateTime getCreatedAt() { return LocalDateTime.now(); }
             @Override public void setCreatedAt(LocalDateTime createdAt) { }
             @Override public LocalDateTime getUpdatedAt() { return LocalDateTime.now(); }

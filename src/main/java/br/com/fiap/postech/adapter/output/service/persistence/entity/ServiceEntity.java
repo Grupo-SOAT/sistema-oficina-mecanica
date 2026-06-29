@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,11 +39,10 @@ import java.util.stream.Collectors;
 @Table(name = "services")
 public class ServiceEntity implements Service {
 
-    @Builder.Default
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "service_id")
-    private Long id = 0L;
+    private Long id;
 
     @Column(name = "service_order_id", nullable = false)
     private Long serviceOrderId;
@@ -60,6 +60,10 @@ public class ServiceEntity implements Service {
 
     @Column(nullable = false)
     private String status;
+
+    @Transient
+    @Builder.Default
+    private String statusLabel = null;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

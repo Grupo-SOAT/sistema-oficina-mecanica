@@ -23,6 +23,9 @@ public interface Service {
     String getStatus();
     void setStatus(String status);
 
+    String getStatusLabel();
+    void setStatusLabel(String statusLabel);
+
     LocalDateTime getCreatedAt();
     void setCreatedAt(LocalDateTime createdAt);
 

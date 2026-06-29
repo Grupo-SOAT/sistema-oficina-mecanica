@@ -11,6 +11,7 @@ import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
 import br.com.fiap.postech.domain.vehicle.model.Vehicle;
 import br.com.fiap.postech.port.persistence.owner.OwnerPersistencePort;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
+import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderStatusLabelPort;
 import br.com.fiap.postech.port.persistence.vehicle.VehiclePersistencePort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +45,9 @@ class ServiceOrderUseCaseTest {
 
     @Mock
     private VehiclePersistencePort vehiclePersistencePort;
+
+    @Mock
+    private ServiceOrderStatusLabelPort statusLabelPort;
 
     @InjectMocks
     private ServiceOrderUseCase useCase;
@@ -108,10 +112,12 @@ class ServiceOrderUseCaseTest {
         when(ownerPersistencePort.findById(1L)).thenReturn(Optional.of(mock(Owner.class)));
         when(vehiclePersistencePort.findById(1L)).thenReturn(Optional.of(mock(Vehicle.class)));
         when(persistencePort.save(any(ServiceOrder.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(statusLabelPort.resolve("PENDING")).thenReturn("Recebida");
 
         ServiceOrder saved = useCase.create(input);
 
         assertThat(saved.getStatus()).isEqualTo("PENDING");
+        assertThat(saved.getStatusLabel()).isEqualTo("Recebida");
     }
 
     @Test

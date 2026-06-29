@@ -8,6 +8,7 @@ import br.com.fiap.postech.domain.serviceorder.exception.PartialBudgetRejectionN
 import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
+import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderStatusLabelPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +37,9 @@ class ChangeServiceOrderStatusUseCaseTest {
 
     @Mock
     private EstimateServiceOrderAmountUseCase estimateServiceOrderAmountUseCase;
+
+    @Mock
+    private ServiceOrderStatusLabelPort statusLabelPort;
 
     @InjectMocks
     private ChangeServiceOrderStatusUseCase useCase;

@@ -112,6 +112,17 @@ public class BudgetDecisionStepDefinitions extends BaseStepDefinition {
         assertTrue(value != null && !value.isBlank(), "Campo " + field + " está vazio");
     }
 
+    @Então("o statusLabel da ordem de serviço de ID {string} deve ser {string}")
+    public void assertServiceOrderStatusLabel(String id, String expectedLabel) {
+        executeRequest("GET", "/service-orders/" + id, null, null);
+        assertTrue(context.getLastStatusCode() == 200,
+                "Status HTTP " + context.getLastStatusCode() + " ao consultar OS " + id);
+        JsonNode body = context.getLastResponseBody();
+        assertTrue(body.has("statusLabel"), "Campo statusLabel ausente na resposta da OS " + id);
+        assertTrue(expectedLabel.equals(body.get("statusLabel").asText()),
+                "StatusLabel esperado " + expectedLabel + " mas era " + body.get("statusLabel").asText());
+    }
+
     @Então("o status da ordem de serviço de ID {string} deve ser {string}")
     public void assertServiceOrderStatus(String id, String expectedStatus) {
         executeRequest("GET", "/service-orders/" + id, null, null);

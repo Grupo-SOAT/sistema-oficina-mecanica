@@ -19,6 +19,9 @@ public interface ServiceOrder {
     String getStatus();
     void setStatus(String status);
 
+    String getStatusLabel();
+    void setStatusLabel(String statusLabel);
+
     BigDecimal getEstimatedAmount();
     void setEstimatedAmount(BigDecimal estimatedAmount);
 

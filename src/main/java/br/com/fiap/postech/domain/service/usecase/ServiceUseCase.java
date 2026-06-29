@@ -10,6 +10,7 @@ import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderNotFoundException;
 import br.com.fiap.postech.port.persistence.catalogService.CatalogServicesPersistencePort;
 import br.com.fiap.postech.port.persistence.service.ServicePersistencePort;
+import br.com.fiap.postech.port.persistence.service.ServiceStatusLabelPort;
 import br.com.fiap.postech.port.persistence.serviceorder.ServiceOrderPersistencePort;
 import br.com.fiap.postech.port.persistence.supply.SupplyPersistencePort;
 
@@ -23,17 +24,20 @@ public class ServiceUseCase {
     private final ServiceOrderPersistencePort serviceOrderPersistencePort;
     private final CatalogServicesPersistencePort catalogServicesPersistencePort;
     private final SupplyPersistencePort supplyPersistencePort;
+    private final ServiceStatusLabelPort statusLabelPort;
 
     public ServiceUseCase(
             ServicePersistencePort persistencePort,
             ServiceOrderPersistencePort serviceOrderPersistencePort,
             CatalogServicesPersistencePort catalogServicesPersistencePort,
-            SupplyPersistencePort supplyPersistencePort
+            SupplyPersistencePort supplyPersistencePort,
+            ServiceStatusLabelPort statusLabelPort
     ) {
         this.persistencePort = persistencePort;
         this.serviceOrderPersistencePort = serviceOrderPersistencePort;
         this.catalogServicesPersistencePort = catalogServicesPersistencePort;
         this.supplyPersistencePort = supplyPersistencePort;
+        this.statusLabelPort = statusLabelPort;
     }
 
     public ScrollPage<Service> scroll(Long serviceOrderId, Long serviceId, String status, Integer pageSize, String cursor) {
@@ -44,13 +48,16 @@ public class ServiceUseCase {
             throw new NoMatchingServicesException(serviceOrderId);
         }
 
+        result.data().forEach(s -> s.setStatusLabel(statusLabelPort.resolve(s.getStatus())));
         return result;
     }
 
     public Service getById(Long serviceOrderId, Long serviceId) {
         ensureServiceOrderExists(serviceOrderId);
-        return persistencePort.findByIdAndServiceOrderId(serviceId, serviceOrderId)
+        var service = persistencePort.findByIdAndServiceOrderId(serviceId, serviceOrderId)
                 .orElseThrow(() -> new ServiceNotFoundException(serviceId));
+        service.setStatusLabel(statusLabelPort.resolve(service.getStatus()));
+        return service;
     }
 
     public Service create(Long serviceOrderId, Service service) {
@@ -58,7 +65,9 @@ public class ServiceUseCase {
         validateService(service);
         service.setServiceOrderId(serviceOrderId);
         service.setStatus("AWAITING_APPROVAL");
-        return persistencePort.save(service);
+        var saved = persistencePort.save(service);
+        saved.setStatusLabel(statusLabelPort.resolve(saved.getStatus()));
+        return saved;
     }
 
     public Service update(Long serviceOrderId, Long serviceId, Service service) {
@@ -71,7 +80,9 @@ public class ServiceUseCase {
         service.setServiceOrderId(serviceOrderId);
         // IMPORTANTE: preservar status existente - mudanças de status SÓ via endpoints de progresso
         service.setStatus(existing.getStatus());
-        return persistencePort.save(service);
+        var saved = persistencePort.save(service);
+        saved.setStatusLabel(statusLabelPort.resolve(saved.getStatus()));
+        return saved;
     }
 
     public void delete(Long serviceOrderId, Long serviceId) {

@@ -117,6 +117,13 @@ public class SuppliesStepDefinitions extends BaseStepDefinition {
         assertFirstItemIdGreaterThan(minId, "insumos");
     }
 
+    @Então("o campo {string} deve ser {string}")
+    public void verifyFieldValue(String field, String expectedValue) {
+        JsonNode root = context.getLastResponseBody();
+        assertTrue(root.has(field), "Campo ausente: " + field + " em " + context.getLastResponseBodyAsString());
+        assertEquals(expectedValue, root.get(field).asText());
+    }
+
     @Então("a resposta deve conter o campo reason com valor {string}")
     public void verifyReason(String reason) {
         JsonNode root = context.getLastResponseBody();

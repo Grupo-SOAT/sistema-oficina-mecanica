@@ -57,6 +57,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     E a resposta deve conter o campo "catalogServiceId"
     E a resposta deve conter o campo "price"
     E a resposta deve conter o campo "status"
+    E a resposta deve conter o campo "statusLabel"
 
   Cenário: Detalhamento de serviço da ordem de serviço por ID inexistente
     Dado que eu esteja devidamente logado
@@ -86,6 +87,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     Então devo receber uma resposta com status "201"
     E a resposta deve conter o campo "id"
     E a resposta deve refletir o payload enviado
+    E o campo "statusLabel" deve ser "Aguardando Aprovação"
 
   Esquema do Cenário: Cadastro de serviço na ordem de serviço com payload inválido
     Dado que eu esteja devidamente logado
@@ -117,6 +119,7 @@ Funcionalidade: Gerenciamento de Serviços da Ordem de Serviço
     Quando eu atualizar o serviço da ordem de serviço
     Então devo receber uma resposta com status "200"
     E a resposta deve refletir o payload enviado
+    E o campo "statusLabel" deve ser "Aguardando Aprovação"
 
   Cenário: Atualização de serviço da ordem de serviço com id inexistente
     Dado que eu esteja devidamente logado
