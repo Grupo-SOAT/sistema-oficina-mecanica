@@ -6,3 +6,4 @@ metadata:
 data:
   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-service:5432/workshop
   POSTGRES_DB: workshop
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-service:29092
