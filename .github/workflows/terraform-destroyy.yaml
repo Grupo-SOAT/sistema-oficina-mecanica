@@ -16,10 +16,3 @@ jobs:
         run: terraform destroy -auto-approve
         working-directory: infra
       
-      - name: Pause Minikube Cluster
-        run: minikube stop
-        working-directory: infra
-
-      - name: Delete Minikube Cluster
-        run: minikube delete --all
-        working-directory: infra
