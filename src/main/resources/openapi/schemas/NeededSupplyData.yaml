@@ -3,6 +3,6 @@ description: Informações de um insumo/material/peça a ser usado em um serviç
 type: object
 required: [ idSupply, quantity ]
 properties:
-  idSupply: { type: integer }
+  idSupply: { type: integer, format: int64 }
   note: { type: string }
   quantity: { type: integer }

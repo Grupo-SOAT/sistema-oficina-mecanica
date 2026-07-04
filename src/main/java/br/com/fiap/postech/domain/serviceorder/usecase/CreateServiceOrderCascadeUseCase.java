@@ -42,9 +42,8 @@ public class CreateServiceOrderCascadeUseCase {
 
         serviceOrder = serviceOrderUseCase.create(serviceOrder);
 
-        for (var service : command.services()) {
-            service.setServiceOrderId(serviceOrder.getId());
-            serviceUseCase.create(serviceOrder.getId(), service);
+        for (var catalogServiceId : command.catalogServiceIds()) {
+            serviceUseCase.createFromCatalog(serviceOrder.getId(), catalogServiceId);
         }
 
         return serviceOrder;

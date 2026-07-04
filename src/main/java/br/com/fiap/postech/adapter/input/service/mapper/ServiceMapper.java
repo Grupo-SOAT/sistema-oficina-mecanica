@@ -38,14 +38,6 @@ public class ServiceMapper {
         return entity;
     }
 
-    public static Service fromCatalogServiceId(@NonNull Long catalogServiceId) {
-        return ServiceEntity.builder()
-                .catalogServiceId(catalogServiceId)
-                .price(BigDecimal.ZERO)
-                .neededSupplyEntities(Collections.emptyList())
-                .build();
-    }
-
     public static Service fromApiData(@NonNull ServiceData data) {
         ServiceEntity entity = ServiceEntity.builder()
                 .id(data.getId())

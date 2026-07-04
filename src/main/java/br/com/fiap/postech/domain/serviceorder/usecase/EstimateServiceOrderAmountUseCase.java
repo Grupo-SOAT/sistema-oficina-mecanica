@@ -52,7 +52,7 @@ public class EstimateServiceOrderAmountUseCase {
                 total = total.add(svc.getPrice());
             }
             for (NeededSupply ns : svc.getNeededSupplies()) {
-                BigDecimal unitPrice = priceById.get(ns.getIdSupply().longValue());
+                BigDecimal unitPrice = priceById.get(ns.getIdSupply());
                 if (unitPrice != null) {
                     total = total.add(unitPrice.multiply(BigDecimal.valueOf(ns.getQuantity())));
                 }
@@ -67,7 +67,6 @@ public class EstimateServiceOrderAmountUseCase {
         return services.stream()
                 .flatMap(s -> s.getNeededSupplies().stream())
                 .map(NeededSupply::getIdSupply)
-                .map(Integer::longValue)
                 .distinct()
                 .toList();
     }

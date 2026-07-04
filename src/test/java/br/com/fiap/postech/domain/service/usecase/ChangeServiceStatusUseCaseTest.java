@@ -47,7 +47,7 @@ class ChangeServiceStatusUseCaseTest {
     @Test
     void should_start_service_and_decrement_reserved_supply() {
         var supply1 = NeededSupplyEntity.builder()
-                .idSupply(100)
+                .idSupply(100L)
                 .quantity(5)
                 .build();
 
@@ -86,7 +86,7 @@ class ChangeServiceStatusUseCaseTest {
     @Test
     void should_throw_when_decrementing_reserved_supply_would_go_negative() {
         var supply1 = NeededSupplyEntity.builder()
-                .idSupply(100)
+                .idSupply(100L)
                 .quantity(15)
                 .build();
 
@@ -142,7 +142,7 @@ class ChangeServiceStatusUseCaseTest {
     @Test
     void should_cancel_service_and_release_reserved_supplies() {
         var supply1 = NeededSupplyEntity.builder()
-                .idSupply(100)
+                .idSupply(100L)
                 .quantity(5)
                 .build();
 

@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CatalogServicesStepDefinitions extends BaseStepDefinition {
-    private static final Map<String, Integer> SUPPLY_IDS_BY_SKU = new HashMap<>();
+    private static final Map<String, Long> SUPPLY_IDS_BY_SKU = new HashMap<>();
 
     static {
-        SUPPLY_IDS_BY_SKU.put("SKU-001", 1);
-        SUPPLY_IDS_BY_SKU.put("SKU-002", 2);
+        SUPPLY_IDS_BY_SKU.put("SKU-001", 1L);
+        SUPPLY_IDS_BY_SKU.put("SKU-002", 2L);
     }
 
     private Long catalogServiceId;
@@ -89,9 +89,9 @@ public class CatalogServicesStepDefinitions extends BaseStepDefinition {
             String[] parts = trimmedItem.split(",", -1);
             String sku = parts.length > 0 ? parts[0].trim() : "";
             ObjectNode neededSupply = objectMapper.createObjectNode();
-            Integer idSupply = SUPPLY_IDS_BY_SKU.get(sku);
+            Long idSupply = SUPPLY_IDS_BY_SKU.get(sku);
             if (idSupply == null) {
-                idSupply = 9999;
+                idSupply = 9999L;
             }
             neededSupply.put("idSupply", idSupply);
             if (parts.length > 1 && !parts[1].trim().isEmpty()) {

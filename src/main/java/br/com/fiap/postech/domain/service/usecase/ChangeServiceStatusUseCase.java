@@ -47,12 +47,12 @@ public class ChangeServiceStatusUseCase {
 
         if (service.getNeededSupplies() != null) {
             for (var needed : service.getNeededSupplies()) {
-                final var supply = supplyPersistencePort.findById(needed.getIdSupply().longValue())
+                final var supply = supplyPersistencePort.findById(needed.getIdSupply())
                         .orElseThrow(() -> new ServiceNotFoundException(serviceId));
 
                 final var newReserved = supply.getReservedQuantity() - needed.getQuantity();
                 if (newReserved < 0) {
-                    throw new NegativeSupplyQuantityException(needed.getIdSupply().longValue());
+                    throw new NegativeSupplyQuantityException(needed.getIdSupply());
                 }
 
                 supply.setReservedQuantity(newReserved);
@@ -102,14 +102,14 @@ public class ChangeServiceStatusUseCase {
 
         if (service.getNeededSupplies() != null) {
             for (var needed : service.getNeededSupplies()) {
-                final var supply = supplyPersistencePort.findById(needed.getIdSupply().longValue())
+                final var supply = supplyPersistencePort.findById(needed.getIdSupply())
                         .orElseThrow(() -> new ServiceNotFoundException(serviceId)); // Shouldn't happen
 
                 final var newReserved = supply.getReservedQuantity() - needed.getQuantity();
                 final var newAvailable = supply.getAvailableQuantity() + needed.getQuantity();
 
                 if (newReserved < 0) {
-                    throw new NegativeSupplyQuantityException(needed.getIdSupply().longValue());
+                    throw new NegativeSupplyQuantityException(needed.getIdSupply());
                 }
 
                 supply.setReservedQuantity(newReserved);
