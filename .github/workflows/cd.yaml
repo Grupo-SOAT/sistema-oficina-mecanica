@@ -34,8 +34,6 @@ jobs:
       
       - name: Define Deployment Variables 🔎
 
-        shell: pwsh
-
         run: |
 
           if ("${{ github.event.inputs.application }}" -eq "Monolito") {
@@ -64,7 +62,6 @@ jobs:
           echo "IMAGE_SHA=${{ github.sha }}" >> $env:GITHUB_ENV
       
       - name: Restore Terraform State 🔁
-        shell: pwsh
         run: |
           ./scripts/restore-terraform-state.ps1
 
@@ -75,8 +72,6 @@ jobs:
         run: mvn clean install
 
       - name: Build Docker Image 🐋
-
-        shell: pwsh
 
         run: |
 
@@ -106,7 +101,6 @@ jobs:
           -auto-approve
       
       - name: Backup Terraform State
-        shell: pwsh
         run: |
           ./scripts/backup-terraform-state.ps1
       
