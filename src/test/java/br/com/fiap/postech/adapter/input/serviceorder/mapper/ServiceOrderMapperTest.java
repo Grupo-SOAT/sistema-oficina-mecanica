@@ -1,11 +1,9 @@
 package br.com.fiap.postech.adapter.input.serviceorder.mapper;
 
 import br.com.fiap.postech.adapter.input.api.model.*;
-import br.com.fiap.postech.adapter.input.service.mapper.ServiceMapper;
 import br.com.fiap.postech.adapter.input.vehicle.mapper.VehicleMapper;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.serviceorder.persistence.entity.ServiceOrderEntity;
-import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderCascadeCreationCommand;
 import br.com.fiap.postech.domain.vehicle.model.VehicleCascadeCreationCommand;
@@ -173,8 +171,6 @@ class ServiceOrderMapperTest {
     void should_build_cascade_creation_command_with_vehicle_and_services() {
         VehicleCascadeRequest vehicleRequest = mock(VehicleCascadeRequest.class);
         VehicleCascadeCreationCommand vehicleCascadeCommand = mock(VehicleCascadeCreationCommand.class);
-        Service service1 = mock(Service.class);
-        Service service2 = mock(Service.class);
 
         ServiceOrderCascadeRequest request = new ServiceOrderCascadeRequest()
                 .ownerId(1L)
@@ -183,18 +179,10 @@ class ServiceOrderMapperTest {
                 .vehicle(vehicleRequest)
                 .catalogServiceIds(List.of(1L, 2L));
 
-        try (
-                MockedStatic<VehicleMapper> vehicleMapperMock = mockStatic(VehicleMapper.class);
-                MockedStatic<ServiceMapper> serviceMapperMock = mockStatic(ServiceMapper.class)
-        ) {
+        try (MockedStatic<VehicleMapper> vehicleMapperMock = mockStatic(VehicleMapper.class)) {
 
             vehicleMapperMock.when(() -> VehicleMapper.buildCascadeCreationCommand(vehicleRequest))
                     .thenReturn(vehicleCascadeCommand);
-
-            serviceMapperMock.when(() -> ServiceMapper.fromCatalogServiceId(1L))
-                    .thenReturn(service1);
-            serviceMapperMock.when(() -> ServiceMapper.fromCatalogServiceId(2L))
-                    .thenReturn(service2);
 
             ServiceOrderCascadeCreationCommand result = ServiceOrderMapper.buildCascadeCreationCommand(request);
 
@@ -204,16 +192,12 @@ class ServiceOrderMapperTest {
             assertThat(result.serviceOrder().getClientId()).isEqualTo(1L);
             assertThat(result.serviceOrder().getVehicleId()).isEqualTo(10L);
             assertThat(result.serviceOrder().getDescription()).isEqualTo("Complete service");
-            assertThat(result.services()).hasSize(2);
-            assertThat(result.services().get(0)).isSameAs(service1);
-            assertThat(result.services().get(1)).isSameAs(service2);
+            assertThat(result.catalogServiceIds()).containsExactly(1L, 2L);
         }
     }
 
     @Test
     void should_build_cascade_creation_command_without_vehicle() {
-        Service service1 = mock(Service.class);
-
         ServiceOrderCascadeRequest request = new ServiceOrderCascadeRequest()
                 .ownerId(2L)
                 .vehicleId(11L)
@@ -221,19 +205,13 @@ class ServiceOrderMapperTest {
                 .vehicle(null)
                 .catalogServiceIds(List.of(3L));
 
-        try (MockedStatic<ServiceMapper> serviceMapperMock = mockStatic(ServiceMapper.class)) {
+        ServiceOrderCascadeCreationCommand result = ServiceOrderMapper.buildCascadeCreationCommand(request);
 
-            serviceMapperMock.when(() -> ServiceMapper.fromCatalogServiceId(3L))
-                    .thenReturn(service1);
-
-            ServiceOrderCascadeCreationCommand result = ServiceOrderMapper.buildCascadeCreationCommand(request);
-
-            assertThat(result).isNotNull();
-            assertThat(result.vehicleCascadeCreationCommand()).isNull();
-            assertThat(result.serviceOrder()).isNotNull();
-            assertThat(result.serviceOrder().getClientId()).isEqualTo(2L);
-            assertThat(result.services()).hasSize(1);
-        }
+        assertThat(result).isNotNull();
+        assertThat(result.vehicleCascadeCreationCommand()).isNull();
+        assertThat(result.serviceOrder()).isNotNull();
+        assertThat(result.serviceOrder().getClientId()).isEqualTo(2L);
+        assertThat(result.catalogServiceIds()).containsExactly(3L);
     }
 
     @Test
@@ -257,7 +235,7 @@ class ServiceOrderMapperTest {
 
             assertThat(result).isNotNull();
             assertThat(result.vehicleCascadeCreationCommand()).isSameAs(vehicleCascadeCommand);
-            assertThat(result.services()).isEmpty();
+            assertThat(result.catalogServiceIds()).isEmpty();
         }
     }
 
@@ -276,7 +254,7 @@ class ServiceOrderMapperTest {
         assertThat(result.vehicleCascadeCreationCommand()).isNull();
         assertThat(result.serviceOrder()).isNotNull();
         assertThat(result.serviceOrder().getClientId()).isEqualTo(4L);
-        assertThat(result.services()).isEmpty();
+        assertThat(result.catalogServiceIds()).isEmpty();
     }
 
     @Test
@@ -291,7 +269,7 @@ class ServiceOrderMapperTest {
         ServiceOrderCascadeCreationCommand result = ServiceOrderMapper.buildCascadeCreationCommand(request);
 
         assertThat(result).isNotNull();
-        assertThat(result.services()).isEmpty();
+        assertThat(result.catalogServiceIds()).isEmpty();
     }
 
     @Test

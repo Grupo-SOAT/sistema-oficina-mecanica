@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NeededSupply {
-    private Integer idSupply;
+    private Long idSupply;
     private String note;
     private Integer quantity;
 }

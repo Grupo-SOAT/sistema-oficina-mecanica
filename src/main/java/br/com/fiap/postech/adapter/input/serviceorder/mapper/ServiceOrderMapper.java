@@ -1,11 +1,9 @@
 package br.com.fiap.postech.adapter.input.serviceorder.mapper;
 
 import br.com.fiap.postech.adapter.input.api.model.*;
-import br.com.fiap.postech.adapter.input.service.mapper.ServiceMapper;
 import br.com.fiap.postech.adapter.input.vehicle.mapper.VehicleMapper;
 import br.com.fiap.postech.adapter.output.persistence.helper.scroll.ScrollPage;
 import br.com.fiap.postech.adapter.output.serviceorder.persistence.entity.ServiceOrderEntity;
-import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrderCascadeCreationCommand;
 import org.jspecify.annotations.NonNull;
@@ -34,14 +32,14 @@ public class ServiceOrderMapper {
         final var vehicleCascadeCreationCommand = (request.getVehicle() != null)
                 ? VehicleMapper.buildCascadeCreationCommand(request.getVehicle())
                 : null;
-        final var services = (request.getCatalogServiceIds() != null)
-                ? request.getCatalogServiceIds().stream().map(ServiceMapper::fromCatalogServiceId).toList()
-                : new ArrayList<Service>();
+        final var catalogServiceIds = (request.getCatalogServiceIds() != null)
+                ? request.getCatalogServiceIds()
+                : new ArrayList<Long>();
 
         return new ServiceOrderCascadeCreationCommand(
                 vehicleCascadeCreationCommand,
                 serviceOrder,
-                services
+                catalogServiceIds
         );
     }
 

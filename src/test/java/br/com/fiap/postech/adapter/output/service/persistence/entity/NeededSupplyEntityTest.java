@@ -9,12 +9,12 @@ class NeededSupplyEntityTest {
     @Test
     void should_build_with_all_fields() {
         NeededSupplyEntity entity = NeededSupplyEntity.builder()
-                .idSupply(1)
+                .idSupply(1L)
                 .note("check stock")
                 .quantity(2)
                 .build();
 
-        assertThat(entity.getIdSupply()).isEqualTo(1);
+        assertThat(entity.getIdSupply()).isEqualTo(1L);
         assertThat(entity.getNote()).isEqualTo("check stock");
         assertThat(entity.getQuantity()).isEqualTo(2);
     }
@@ -22,20 +22,20 @@ class NeededSupplyEntityTest {
     @Test
     void should_support_no_args_constructor_and_setters() {
         NeededSupplyEntity entity = new NeededSupplyEntity();
-        entity.setIdSupply(2);
+        entity.setIdSupply(2L);
         entity.setNote(null);
         entity.setQuantity(5);
 
-        assertThat(entity.getIdSupply()).isEqualTo(2);
+        assertThat(entity.getIdSupply()).isEqualTo(2L);
         assertThat(entity.getNote()).isNull();
         assertThat(entity.getQuantity()).isEqualTo(5);
     }
 
     @Test
     void should_support_all_args_constructor() {
-        NeededSupplyEntity entity = new NeededSupplyEntity(3, "urgent", 10);
+        NeededSupplyEntity entity = new NeededSupplyEntity(3L, "urgent", 10);
 
-        assertThat(entity.getIdSupply()).isEqualTo(3);
+        assertThat(entity.getIdSupply()).isEqualTo(3L);
         assertThat(entity.getNote()).isEqualTo("urgent");
         assertThat(entity.getQuantity()).isEqualTo(10);
     }
@@ -43,7 +43,7 @@ class NeededSupplyEntityTest {
     @Test
     void should_allow_null_note() {
         NeededSupplyEntity entity = NeededSupplyEntity.builder()
-                .idSupply(4)
+                .idSupply(4L)
                 .note(null)
                 .quantity(1)
                 .build();

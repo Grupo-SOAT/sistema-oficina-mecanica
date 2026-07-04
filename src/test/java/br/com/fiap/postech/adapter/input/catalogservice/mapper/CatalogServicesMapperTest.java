@@ -63,10 +63,10 @@ public class CatalogServicesMapperTest {
                 .build();
 
         List<NeededSupplyData> neededSupplyDataOne = new ArrayList<>();
-        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1).quantity(100));
+        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1L).quantity(100));
 
         List<NeededSupplyData> neededSupplyDataTwo = new ArrayList<>();
-        neededSupplyDataTwo.add(new NeededSupplyData().idSupply(2).quantity(100));
+        neededSupplyDataTwo.add(new NeededSupplyData().idSupply(2L).quantity(100));
 
         PaginatedCatalogServiceResponse expected = new PaginatedCatalogServiceResponse()
                 .pageSize(2)
@@ -98,7 +98,7 @@ public class CatalogServicesMapperTest {
     @Test
     void should_map_from_api_request_to_domain_supply() {
         List<NeededSupplyData> neededSupplyDataOne = new ArrayList<>();
-        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1).quantity(100));
+        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1L).quantity(100));
 
         CatalogServiceRequest request = new CatalogServiceRequest()
                 .name("Pintura")
@@ -137,7 +137,7 @@ public class CatalogServicesMapperTest {
     @Test
     void should_map_from_api_data_to_domain_supply() {
         List<NeededSupplyData> neededSupplyDataOne = new ArrayList<>();
-        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1).quantity(100));
+        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1L).quantity(100));
 
         CatalogServiceData data = new CatalogServiceData()
                 .id(1L)
@@ -195,7 +195,7 @@ public class CatalogServicesMapperTest {
                 .build();
 
         List<NeededSupplyData> neededSupplyDataOne = new ArrayList<>();
-        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1).quantity(100));
+        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1L).quantity(100));
 
         CatalogServiceData expected = new CatalogServiceData()
                 .id(1L)

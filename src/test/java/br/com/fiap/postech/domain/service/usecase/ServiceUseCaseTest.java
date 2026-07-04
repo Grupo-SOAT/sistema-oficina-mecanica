@@ -307,4 +307,42 @@ class ServiceUseCaseTest {
 
         verify(persistencePort, never()).save(any(Service.class));
     }
+
+    @Test
+    void should_create_service_from_catalog_with_price_and_supplies() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
+
+        var catalog = mock(br.com.fiap.postech.domain.catalogservices.model.CatalogServices.class);
+        when(catalog.getBasePrice()).thenReturn(new BigDecimal("200.00"));
+
+        var catalogSupply = mock(br.com.fiap.postech.adapter.output.catalogservice.persistence.entity.NeededSupplyEntity.class);
+        var supplyEntity = mock(br.com.fiap.postech.adapter.output.supply.persistence.entity.SupplyEntity.class);
+        when(supplyEntity.getId()).thenReturn(5L);
+        when(catalogSupply.getSupply()).thenReturn(supplyEntity);
+        when(catalogSupply.getSupplyAmount()).thenReturn(3);
+        when(catalog.getSupplies()).thenReturn(List.of(catalogSupply));
+
+        when(catalogServicesPersistencePort.findById(10L)).thenReturn(Optional.of(catalog));
+        when(supplyPersistencePort.findById(5L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.supply.model.Supply.class)));
+        when(persistencePort.save(any(Service.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(statusLabelPort.resolve("AWAITING_APPROVAL")).thenReturn("Aguardando Aprovação");
+
+        Service saved = useCase.createFromCatalog(1L, 10L);
+
+        assertThat(saved.getServiceOrderId()).isEqualTo(1L);
+        assertThat(saved.getStatus()).isEqualTo("AWAITING_APPROVAL");
+        assertThat(saved.getPrice()).isEqualByComparingTo(new BigDecimal("200.00"));
+        assertThat(saved.getNeededSupplies()).hasSize(1);
+        assertThat(saved.getNeededSupplies().get(0).getIdSupply()).isEqualTo(5L);
+        assertThat(saved.getNeededSupplies().get(0).getQuantity()).isEqualTo(3);
+    }
+
+    @Test
+    void should_throw_when_catalog_service_not_found_on_create_from_catalog() {
+        when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(mock(br.com.fiap.postech.domain.serviceorder.model.ServiceOrder.class)));
+        when(catalogServicesPersistencePort.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> useCase.createFromCatalog(1L, 99L))
+                .isInstanceOf(CatalogServiceNotFoundException.class);
+    }
 }

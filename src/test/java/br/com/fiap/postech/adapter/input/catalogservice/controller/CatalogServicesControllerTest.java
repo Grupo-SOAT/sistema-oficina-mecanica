@@ -86,10 +86,10 @@ public class CatalogServicesControllerTest {
                 .build();
 
         List<NeededSupplyData> neededSupplyDataOne = new ArrayList<>();
-        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1).quantity(100));
+        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1L).quantity(100));
 
         List<NeededSupplyData> neededSupplyDataTwo = new ArrayList<>();
-        neededSupplyDataTwo.add(new NeededSupplyData().idSupply(2).quantity(10));
+        neededSupplyDataTwo.add(new NeededSupplyData().idSupply(2L).quantity(10));
 
         ScrollPage<CatalogServices> page = ScrollPage.<CatalogServices>builder()
                 .data(List.of(one, two))
@@ -137,7 +137,7 @@ public class CatalogServicesControllerTest {
                 .build();
 
         List<NeededSupplyData> neededSupplyDataOne = new ArrayList<>();
-        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1).quantity(100));
+        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1L).quantity(100));
 
         CatalogServiceData expectedResponseBody = new CatalogServiceData()
                 .id(1L)
@@ -159,7 +159,7 @@ public class CatalogServicesControllerTest {
     @Test
     void should_create_catalog_services_and_return_created() {
         List<NeededSupplyData> neededSupplyDataOne = new ArrayList<>();
-        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1).quantity(100));
+        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1L).quantity(100));
 
         CatalogServiceRequest request = new CatalogServiceRequest()
                 .name("Pintura")
@@ -206,7 +206,7 @@ public class CatalogServicesControllerTest {
     @Test
     void should_update_catalog_services_and_return_ok() {
         List<NeededSupplyData> neededSupplyDataOne = new ArrayList<>();
-        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1).quantity(100));
+        neededSupplyDataOne.add(new NeededSupplyData().idSupply(1L).quantity(100));
 
         CatalogServiceData request = new CatalogServiceData()
                 .name("Pintura")

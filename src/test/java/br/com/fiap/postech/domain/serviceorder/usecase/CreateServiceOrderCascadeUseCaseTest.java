@@ -2,7 +2,6 @@ package br.com.fiap.postech.domain.serviceorder.usecase;
 
 import br.com.fiap.postech.adapter.output.serviceorder.persistence.entity.ServiceOrderEntity;
 import br.com.fiap.postech.domain.owner.model.Owner;
-import br.com.fiap.postech.domain.service.model.Service;
 import br.com.fiap.postech.domain.service.usecase.ServiceUseCase;
 import br.com.fiap.postech.domain.serviceorder.exception.ServiceOrderVehicleDataAbsentException;
 import br.com.fiap.postech.domain.serviceorder.model.ServiceOrder;
@@ -51,9 +50,7 @@ public class CreateServiceOrderCascadeUseCaseTest {
                 .vehicleId(10L)
                 .description("Service order")
                 .build();
-        var service1 = mock(Service.class);
-        var service2 = mock(Service.class);
-        var command = new ServiceOrderCascadeCreationCommand(null, serviceOrder, List.of(service1, service2));
+        var command = new ServiceOrderCascadeCreationCommand(null, serviceOrder, List.of(10L, 20L));
 
         when(serviceOrderUseCase.create(serviceOrder)).thenReturn(serviceOrder);
 
@@ -61,8 +58,8 @@ public class CreateServiceOrderCascadeUseCaseTest {
 
         assertThat(result).isEqualTo(serviceOrder);
         verify(serviceOrderUseCase).create(serviceOrder);
-        verify(serviceUseCase).create(1L, service1);
-        verify(serviceUseCase).create(1L, service2);
+        verify(serviceUseCase).createFromCatalog(1L, 10L);
+        verify(serviceUseCase).createFromCatalog(1L, 20L);
         verify(createVehicleCascadeUseCase, never()).execute(any());
     }
 
@@ -78,8 +75,7 @@ public class CreateServiceOrderCascadeUseCaseTest {
                 .vehicleId(null)
                 .description("Service order")
                 .build();
-        var service1 = mock(Service.class);
-        var command = new ServiceOrderCascadeCreationCommand(vehicleCascadeCommand, serviceOrder, List.of(service1));
+        var command = new ServiceOrderCascadeCreationCommand(vehicleCascadeCommand, serviceOrder, List.of(10L));
 
         when(newVehicle.getId()).thenReturn(15L);
         when(createVehicleCascadeUseCase.execute(vehicleCascadeCommand)).thenReturn(newVehicle);
@@ -90,7 +86,7 @@ public class CreateServiceOrderCascadeUseCaseTest {
         assertThat(result).isEqualTo(serviceOrder);
         verify(createVehicleCascadeUseCase).execute(vehicleCascadeCommand);
         verify(serviceOrderUseCase).create(serviceOrder);
-        verify(serviceUseCase).create(50L, service1);
+        verify(serviceUseCase).createFromCatalog(50L, 10L);
     }
 
     @Test
@@ -106,7 +102,7 @@ public class CreateServiceOrderCascadeUseCaseTest {
                 .isInstanceOf(ServiceOrderVehicleDataAbsentException.class);
 
         verify(serviceOrderUseCase, never()).create(any());
-        verify(serviceUseCase, never()).create(anyLong(), any());
+        verify(serviceUseCase, never()).createFromCatalog(anyLong(), anyLong());
         verify(createVehicleCascadeUseCase, never()).execute(any());
     }
 
@@ -126,7 +122,7 @@ public class CreateServiceOrderCascadeUseCaseTest {
 
         assertThat(result).isEqualTo(serviceOrder);
         verify(serviceOrderUseCase).create(serviceOrder);
-        verify(serviceUseCase, never()).create(anyLong(), any());
+        verify(serviceUseCase, never()).createFromCatalog(anyLong(), anyLong());
     }
 
     @Test
@@ -175,18 +171,15 @@ public class CreateServiceOrderCascadeUseCaseTest {
                 .vehicleId(30L)
                 .description("Service order")
                 .build();
-        var service1 = mock(Service.class);
-        var service2 = mock(Service.class);
-        var service3 = mock(Service.class);
-        var command = new ServiceOrderCascadeCreationCommand(null, serviceOrder, List.of(service1, service2, service3));
+        var command = new ServiceOrderCascadeCreationCommand(null, serviceOrder, List.of(10L, 20L, 30L));
 
         when(serviceOrderUseCase.create(serviceOrder)).thenReturn(serviceOrder);
 
         useCase.execute(command);
 
-        verify(serviceUseCase).create(100L, service1);
-        verify(serviceUseCase).create(100L, service2);
-        verify(serviceUseCase).create(100L, service3);
+        verify(serviceUseCase).createFromCatalog(100L, 10L);
+        verify(serviceUseCase).createFromCatalog(100L, 20L);
+        verify(serviceUseCase).createFromCatalog(100L, 30L);
     }
 
     @Test

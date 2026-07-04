@@ -73,7 +73,7 @@ public class CatalogServicesMapper {
         for(NeededSupply neededSupply : neededSupplyList){
             needSupplyDataList.add(new NeededSupplyData()
                     .quantity(neededSupply.getSupplyAmount())
-                    .idSupply(Math.toIntExact(neededSupply.getSupply().getId())));
+                    .idSupply(neededSupply.getSupply().getId()));
         }
         return needSupplyDataList;
     }

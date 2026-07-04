@@ -60,7 +60,7 @@ class EstimateServiceOrderAmountUseCaseTest {
                 .price(new BigDecimal("100.00"))
                 .build();
         service1.setNeededSupplies(List.of(
-                NeededSupply.builder().idSupply(10).quantity(2).build()
+                NeededSupply.builder().idSupply(10L).quantity(2).build()
         ));
 
         var service2 = ServiceEntity.builder()
@@ -69,7 +69,7 @@ class EstimateServiceOrderAmountUseCaseTest {
                 .price(new BigDecimal("50.00"))
                 .build();
         service2.setNeededSupplies(List.of(
-                NeededSupply.builder().idSupply(20).quantity(1).build()
+                NeededSupply.builder().idSupply(20L).quantity(1).build()
         ));
 
         when(serviceOrderPersistencePort.findById(1L)).thenReturn(Optional.of(serviceOrder));
