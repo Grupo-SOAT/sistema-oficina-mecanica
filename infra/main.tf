@@ -99,6 +99,8 @@ resource "helm_release" "argocd" {
 
   chart = "argo-cd"
 
+  timeout = 600
+
   namespace = var.namespace_argocd
 }
 
