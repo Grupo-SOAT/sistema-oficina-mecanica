@@ -190,9 +190,25 @@ resource "kubectl_manifest" "deployment-kafka-ui" {
 
 resource "kubectl_manifest" "deployment-monolito" {
 
-    depends_on = [ kubectl_manifest.deployment-postgres ]
+    depends_on = [ kubectl_manifest.deployment-postgres, kubectl_manifest.deployment-kafka ]
 
     yaml_body = file("${local.manifests_path}/deployment-monolito.yaml")
+
+}
+
+resource "kubectl_manifest" "deployment-ms-orcamentos" {
+
+    depends_on = [ kubectl_manifest.deployment-postgres, kubectl_manifest.deployment-kafka, kubectl_manifest.deployment-mailpit ]
+
+    yaml_body = file("${local.manifests_path}/deployment-ms-orcamentos.yaml")
+
+}
+
+resource "kubectl_manifest" "deployment-mailpit" {
+
+    depends_on = [ kubernetes_namespace.oficina ]
+
+    yaml_body = file("${local.manifests_path}/deployment-mailpit.yaml")
 
 }
 
@@ -226,6 +242,22 @@ resource "kubectl_manifest" "service-kafka-ui" {
     depends_on = [ kubectl_manifest.deployment-kafka-ui ]
 
     yaml_body = file("${local.manifests_path}/service-kafka-ui.yaml")
+
+}
+
+resource "kubectl_manifest" "service-mailpit" {
+
+    depends_on = [ kubectl_manifest.deployment-mailpit ]
+
+    yaml_body = file("${local.manifests_path}/service-mailpit.yaml")
+
+}
+
+resource "kubectl_manifest" "service-ms-orcamentos" {
+
+    depends_on = [ kubectl_manifest.deployment-ms-orcamentos ]
+
+    yaml_body = file("${local.manifests_path}/service-ms-orcamentos.yaml")
 
 }
 
