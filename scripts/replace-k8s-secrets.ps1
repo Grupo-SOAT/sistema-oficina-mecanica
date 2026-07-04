@@ -1,5 +1,5 @@
 param (
-    [string]$SecretFile = "..\k8s\secret.yaml"
+    [string]$SecretFile = ".\k8s\secret.yaml"
 )
 
 Write-Host ""
