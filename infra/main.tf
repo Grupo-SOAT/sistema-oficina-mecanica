@@ -132,6 +132,14 @@ resource "kubectl_manifest" "pvc" {
 
 }
 
+resource "kubectl_manifest" "pvc-kafka" {
+
+    depends_on = [ kubernetes_namespace.oficina ]
+
+    yaml_body = file("${local.manifests_path}/pvc-kafka.yaml")
+
+}
+
 resource "kubectl_manifest" "deployment-postgres" {
 
     depends_on = [
@@ -145,6 +153,38 @@ resource "kubectl_manifest" "deployment-postgres" {
     ]
 
     yaml_body = file("${local.manifests_path}/deployment-postgres.yaml")
+
+}
+
+resource "kubectl_manifest" "deployment-kafka" {
+
+    depends_on = [
+
+        kubectl_manifest.configmap,
+
+        kubectl_manifest.secret,
+
+        kubectl_manifest.pvc-kafka
+
+    ]
+
+    yaml_body = file("${local.manifests_path}/deployment-kafka.yaml")
+
+}
+
+resource "kubectl_manifest" "deployment-kafka-ui" {
+
+    depends_on = [
+
+        kubectl_manifest.configmap,
+
+        kubectl_manifest.secret,
+
+        kubectl_manifest.pvc-kafka
+
+    ]
+
+    yaml_body = file("${local.manifests_path}/deployment-kafka-ui.yaml")
 
 }
 
@@ -170,6 +210,22 @@ resource "kubectl_manifest" "service-monolito" {
     depends_on = [ kubectl_manifest.deployment-monolito ]
 
     yaml_body = file("${local.manifests_path}/service-monolito.yaml")
+
+}
+
+resource "kubectl_manifest" "service-kafka" {
+
+    depends_on = [ kubectl_manifest.deployment-kafka ]
+
+    yaml_body = file("${local.manifests_path}/service-kafka.yaml")
+
+}
+
+resource "kubectl_manifest" "service-kafka-ui" {
+
+    depends_on = [ kubectl_manifest.deployment-kafka-ui ]
+
+    yaml_body = file("${local.manifests_path}/service-kafka-ui.yaml")
 
 }
 
