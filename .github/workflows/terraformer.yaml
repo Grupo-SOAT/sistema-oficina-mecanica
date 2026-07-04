@@ -25,33 +25,33 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Replace Kubernetes Secrets
+      - name: Replace Kubernetes Secrets  🔑 ☸️
         shell: pwsh
         run: |
           ./scripts/replace-k8s-secrets.ps1
 
-      - name: Restore Terraform State
+      - name: Restore Terraform State  🔁 
         shell: pwsh
         run: |
           ./scripts/restore-terraform-state.ps1
 
-      - name: Terraform Init
+      - name: Terraform Init  🔨 
         working-directory: infra
         run: terraform init
 
-      - name: Terraform Validate
+      - name: Terraform Validate  📜 
         working-directory: infra
         run: terraform validate
 
-      - name: Terraform Plan
+      - name: Terraform Plan 🤔
         working-directory: infra
         run: terraform plan
 
-      - name: Terraform Apply
+      - name: Terraform Apply 🚀
         working-directory: infra
         run: terraform apply -auto-approve
 
-      - name: Backup Terraform State
+      - name: Backup Terraform State  🔁 
         shell: pwsh
         run: |
           ./scripts/backup-terraform-state.ps1

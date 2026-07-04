@@ -12,7 +12,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Destroy Resources with Terraform
+      - name: Restore tf state  🔁 
+        shell: pwsh
+        run: |
+          ./scripts/restore-terraform-state.ps1
+
+      - name: Destroy Resources with Terraform  ☠️
         run: terraform destroy -auto-approve
         working-directory: infra
       
+      - name: Backup Terraform State  🔁 
+        shell: pwsh
+        run: |
+          ./scripts/backup-terraform-state.ps1
+      
+      - name: Log Success ✅
+        run: echo "Infra desprovisionada! Destroy bem sucedido."
