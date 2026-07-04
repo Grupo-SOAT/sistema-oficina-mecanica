@@ -1,0 +1,95 @@
+name: Deploy Application
+
+on:
+
+  workflow_dispatch:
+
+    inputs:
+
+      application:
+
+        description: "Deseja fazer deploy de qual aplicação?"
+
+        required: true
+
+        type: choice
+
+        options:
+          - Monolito
+          - Ms - Orcamentos
+
+
+jobs:
+
+  deploy-app:
+
+    name: Deploy Application
+
+    runs-on: maquina-leo
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Define Deployment Variables
+
+        shell: pwsh
+
+        run: |
+
+          if ("${{ github.event.inputs.application }}" -eq "Monolito") {
+
+            echo "IMAGE_NAME=sistema-oficina-mecanica-mnl" >> $env:GITHUB_ENV
+
+            echo "TF_TARGET=kubectl_manifest.deployment_monolito" >> $env:GITHUB_ENV
+
+          }
+          else {
+
+            echo "IMAGE_NAME=ms-orcamentos" >> $env:GITHUB_ENV
+
+            echo "TF_TARGET=kubectl_manifest.deployment_ms_orcamentos" >> $env:GITHUB_ENV
+
+          }
+
+          echo "IMAGE_SHA=${{ github.sha }}" >> $env:GITHUB_ENV
+      
+      - name: Restore Terraform State
+        shell: pwsh
+        run: |
+          ./scripts/restore-terraform-state.ps1
+
+      - name: Build and Tests App
+        run: mvn clean install
+
+      - name: Build Docker Image
+        run: |
+          docker build `
+          -t ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:latest `
+          -t ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:$IMAGE_SHA .
+      
+      - name: Push New Version to Registry
+        run: |
+          docker push ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:latest
+          docker push ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:$IMAGE_SHA
+      
+      - name: Destroy Current Version
+        run: |
+          terraform destroy `
+          -target=$env:TF_TARGET `
+          -auto-approve
+      
+      - name: Deploy App With Terraform
+        run: |
+          terraform apply `
+          -target=$env:TF_TARGET `
+          -auto-approve
+      
+      - name: Backup Terraform State
+        shell: pwsh
+        run: |
+          ./scripts/backup-terraform-state.ps1
+      
+      - name: Log Success
+        run: echo "Deploy de $IMAGE_NAME Concluído!"
