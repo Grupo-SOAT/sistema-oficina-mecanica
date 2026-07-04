@@ -55,8 +55,16 @@ jobs:
         shell: pwsh
         run: |
           ./scripts/backup-terraform-state.ps1
+      
+      - name: Wait for Kafka
+        shell: pwsh
+        run: ./scripts/wait-kafka.ps1
 
-      - name: Log Success
+      - name: Create Kafka Topics
+        shell: pwsh
+        run: ./scripts/create-kafka-topics.ps1
+
+      - name: Log Success ✅
         shell: pwsh
         run: |
           Write-Host ""
