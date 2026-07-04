@@ -60,6 +60,12 @@ spec:
                   name: app-secret
                   key: API_KEY_CHATBOT
 
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: SPRING_KAFKA_BOOTSTRAP_SERVERS
+
           resources:
             requests:
               cpu: "200m"
