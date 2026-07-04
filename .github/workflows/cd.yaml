@@ -32,7 +32,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       
-      - name: Define Deployment Variables
+      - name: Define Deployment Variables 🔎
 
         shell: pwsh
 
@@ -55,7 +55,7 @@ jobs:
 
           echo "IMAGE_SHA=${{ github.sha }}" >> $env:GITHUB_ENV
       
-      - name: Restore Terraform State
+      - name: Restore Terraform State 🔁
         shell: pwsh
         run: |
           ./scripts/restore-terraform-state.ps1
@@ -63,13 +63,13 @@ jobs:
       - name: Build and Tests App
         run: mvn clean install
 
-      - name: Build Docker Image
+      - name: Build Docker Image  🐋 
         run: |
           docker build `
           -t ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:latest `
           -t ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:$IMAGE_SHA .
       
-      - name: Push New Version to Registry
+      - name: Push New Version to Registry  🐋 
         run: |
           docker push ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:latest
           docker push ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:$IMAGE_SHA
@@ -91,5 +91,5 @@ jobs:
         run: |
           ./scripts/backup-terraform-state.ps1
       
-      - name: Log Success
+      - name: Log Success ✅
         run: echo "Deploy de $IMAGE_NAME Concluído!"
