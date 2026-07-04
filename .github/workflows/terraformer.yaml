@@ -1,35 +1,72 @@
-name: Set up Infra and Deploy | Terraform
+name: Set up Infra and Initial Deploy | Terraform
 
 on:
   workflow_dispatch:
 
 jobs:
+
   setup-infra:
+
     name: Set up Local Cluster
+
     runs-on: maquina-leo
 
-    steps:
-      - name: Checkout Repo Code
-        uses: actions/checkout@v4
-      
-      - name: Set Up Terraform
-        run: terraform init
-        working-directory: infra
-      
-      - name: Validate Terraform Code
-        run: terraform validate
-        working-directory: infra
-      
-      - name: Plan Terraform Resources
-        run: terraform plan
-        working-directory: infra
-      
-      - name: Create and Set Up Minikube Cluster
-        run: terraform apply -auto-approve
-        working-directory: infra
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      API_KEY_CHATBOT: ${{ secrets.API_KEY_CHATBOT }}
+      SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      DEFAULT_USER_PASSWORD: ${{ secrets.DEFAULT_USER_PASSWORD }}
+      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
 
-      - name: Show State
-        run: ls -lah infra
-      
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Replace Kubernetes Secrets
+        shell: pwsh
+        run: |
+          ./scripts/replace-k8s-secrets.ps1
+
+      - name: Restore Terraform State
+        shell: pwsh
+        run: |
+          ./scripts/restore-terraform-state.ps1
+
+      - name: Terraform Init
+        working-directory: infra
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: infra
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: infra
+        run: terraform plan
+
+      - name: Terraform Apply
+        working-directory: infra
+        run: terraform apply -auto-approve
+
+      - name: Backup Terraform State
+        shell: pwsh
+        run: |
+          ./scripts/backup-terraform-state.ps1
+
       - name: Log Success
-        run: echo "Cluster criado!! Namespaces, metrics server e ingress configurados! ☸️🐋"
+        shell: pwsh
+        run: |
+          Write-Host ""
+          Write-Host "======================================="
+          Write-Host "Infraestrutura criada com sucesso!"
+          Write-Host ""
+          Write-Host "Minikube"
+          Write-Host "Namespaces"
+          Write-Host "Metrics Server"
+          Write-Host "NGINX Ingress"
+          Write-Host "Manifestos Kubernetes"
+          Write-Host "Terraform State salvo"
+          Write-Host "======================================="
