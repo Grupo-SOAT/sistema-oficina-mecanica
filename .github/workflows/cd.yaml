@@ -41,15 +41,23 @@ jobs:
           if ("${{ github.event.inputs.application }}" -eq "Monolito") {
 
             echo "IMAGE_NAME=sistema-oficina-mecanica-mnl" >> $env:GITHUB_ENV
-
             echo "TF_TARGET=kubectl_manifest.deployment_monolito" >> $env:GITHUB_ENV
+
+            echo "DOCKERFILE=./Dockerfile" >> $env:GITHUB_ENV
+            echo "BUILD_CONTEXT=." >> $env:GITHUB_ENV
+
+            echo "MAVEN_WORKDIR=." >> $env:GITHUB_ENV
 
           }
           else {
 
             echo "IMAGE_NAME=ms-orcamentos" >> $env:GITHUB_ENV
-
             echo "TF_TARGET=kubectl_manifest.deployment_ms_orcamentos" >> $env:GITHUB_ENV
+
+            echo "DOCKERFILE=./ms-orcamentos/Dockerfile" >> $env:GITHUB_ENV
+            echo "BUILD_CONTEXT=./ms-orcamentos" >> $env:GITHUB_ENV
+
+            echo "MAVEN_WORKDIR=./ms-orcamentos" >> $env:GITHUB_ENV
 
           }
 
@@ -60,14 +68,23 @@ jobs:
         run: |
           ./scripts/restore-terraform-state.ps1
 
-      - name: Build and Tests App
+      - name: Build and Tests App ☕
+
+        working-directory: ${{ env.MAVEN_WORKDIR }}
+
         run: mvn clean install
 
-      - name: Build Docker Image  🐋 
+      - name: Build Docker Image 🐋
+
+        shell: pwsh
+
         run: |
+
           docker build `
-          -t ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:latest `
-          -t ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:$IMAGE_SHA .
+            -f $env:DOCKERFILE `
+            -t ${{ vars.DOCKER_REGISTRY }}/$env:IMAGE_NAME:latest `
+            -t ${{ vars.DOCKER_REGISTRY }}/$env:IMAGE_NAME:$env:IMAGE_SHA `
+            $env:BUILD_CONTEXT
       
       - name: Push New Version to Registry  🐋 
         run: |
@@ -75,12 +92,14 @@ jobs:
           docker push ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:$IMAGE_SHA
       
       - name: Destroy Current Version
+        working-directory: infra
         run: |
           terraform destroy `
           -target=$env:TF_TARGET `
           -auto-approve
       
       - name: Deploy App With Terraform
+        working-directory: infra
         run: |
           terraform apply `
           -target=$env:TF_TARGET `
@@ -92,4 +111,4 @@ jobs:
           ./scripts/backup-terraform-state.ps1
       
       - name: Log Success ✅
-        run: echo "Deploy de $IMAGE_NAME Concluído!"
+        run: echo "Deploy de $env:IMAGE_NAME Concluído!"
