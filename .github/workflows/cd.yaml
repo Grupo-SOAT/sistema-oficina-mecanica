@@ -98,6 +98,14 @@ jobs:
       - name: Restore Terraform State 🔁
         run: |
           ./scripts/restore-terraform-state.ps1
+      
+      - name: Debug Variables
+        run: |
+          Write-Host "Registry: ${{ vars.DOCKER_REGISTRY }}"
+          Write-Host "Image: ${env:IMAGE_NAME}"
+          Write-Host "SHA: ${env:IMAGE_SHA}"
+          Write-Host "Dockerfile: ${env:DOCKERFILE}"
+          Write-Host "Context: ${env:BUILD_CONTEXT}"
 
       - name: Build Docker Image 🐋
         run: |
@@ -120,14 +128,14 @@ jobs:
         working-directory: infra
         run: |
           terraform destroy `
-          -target=${env:TF_TARGET} `
+          -target="${env:TF_TARGET}" `
           -auto-approve
       
       - name: Deploy App With Terraform
         working-directory: infra
         run: |
           terraform apply `
-          -target=${env:TF_TARGET} `
+          -target="${env:TF_TARGET}" `
           -auto-approve
       
       - name: Backup Terraform State
