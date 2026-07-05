@@ -30,27 +30,26 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
       - name: Define Maven Path Variable 🔎
-
         run: |
-
-          if ("${{ github.event.inputs.application }}" -eq "Monolito") {
-
-            echo "MAVEN_WORKDIR=." >> $env:GITHUB_ENV
-
-          }
-          else {
-
-            echo "MAVEN_WORKDIR=./ms-orcamentos" >> $env:GITHUB_ENV
-
-          }
+          if [ "${{ github.event.inputs.application }}" = "Monolito" ]; then
+            echo "MAVEN_WORKDIR=." >> $GITHUB_ENV
+          else
+            echo "MAVEN_WORKDIR=./ms-orcamentos" >> $GITHUB_ENV
+          fi
 
       - name: Build and Tests App ☕
-
         working-directory: ${{ env.MAVEN_WORKDIR }}
-
         run: mvn clean install
+
         
 
 
