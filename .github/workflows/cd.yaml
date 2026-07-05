@@ -61,6 +61,15 @@ jobs:
 
     runs-on: maquina-leo
 
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      API_KEY_CHATBOT: ${{ secrets.API_KEY_CHATBOT }}
+      SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      DEFAULT_USER_PASSWORD: ${{ secrets.DEFAULT_USER_PASSWORD }}
+      SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+
     steps:
 
       - name: Checkout Repository
@@ -123,6 +132,10 @@ jobs:
       - name: Run terraform init
         working-directory: infra
         run: terraform init
+
+      - name: Replace Kubernetes Secrets  🔑 ☸️
+        run: |
+          ./scripts/replace-k8s-secrets.ps1
       
       - name: Update Deployment Manifest 📝
 
