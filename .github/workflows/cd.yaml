@@ -86,6 +86,10 @@ jobs:
           docker push ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:latest
           docker push ${{ vars.DOCKER_REGISTRY }}/$IMAGE_NAME:$IMAGE_SHA
       
+      - name: Run terraform init
+        working-directory: infra
+        run: terraform init
+      
       - name: Destroy Current Version
         working-directory: infra
         run: |
