@@ -29,13 +29,13 @@ if (!(Test-Path $Manifest)) {
 
 $content = Get-Content $Manifest -Raw
 
-$imagePattern = "image:\s*$Registry/$Image:[^\r\n]+"
+$imagePattern = "image:\s*{0}/{1}:[^`r`n]+" -f $Registry, $Image
 
-$newImage = "image: $Registry/$Image:$Tag"
+$newImage = "image: {0}/{1}:{2}" -f $Registry, $Image, $Tag
 
 if ($content -notmatch $imagePattern) {
 
-    Write-Error "Imagem '$Registry/$Image' não encontrada no manifesto."
+    Write-Error "Imagem '${Registry}/${Image}' não encontrada no manifesto."
 
     exit 1
 
