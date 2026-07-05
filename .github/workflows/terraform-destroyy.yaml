@@ -15,6 +15,10 @@ jobs:
       - name: Restore tf state  🔁 
         run: |
           ./scripts/restore-terraform-state.ps1
+      
+      - name: Run terraform init
+        run: terraform init
+        working-directory: infra
 
       - name: Destroy Resources with Terraform  ☠️
         run: terraform destroy -auto-approve
