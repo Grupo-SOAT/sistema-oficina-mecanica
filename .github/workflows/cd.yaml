@@ -21,9 +21,44 @@ on:
 
 jobs:
 
+  build-app:
+    
+    name: Build Application
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Define Maven Path Variable 🔎
+
+        run: |
+
+          if ("${{ github.event.inputs.application }}" -eq "Monolito") {
+
+            echo "MAVEN_WORKDIR=." >> $env:GITHUB_ENV
+
+          }
+          else {
+
+            echo "MAVEN_WORKDIR=./ms-orcamentos" >> $env:GITHUB_ENV
+
+          }
+
+      - name: Build and Tests App ☕
+
+        working-directory: ${{ env.MAVEN_WORKDIR }}
+
+        run: mvn clean install
+        
+
+
   deploy-app:
 
     name: Deploy Application
+
+    needs: build-app
 
     runs-on: maquina-leo
 
@@ -64,12 +99,6 @@ jobs:
       - name: Restore Terraform State 🔁
         run: |
           ./scripts/restore-terraform-state.ps1
-
-      - name: Build and Tests App ☕
-
-        working-directory: ${{ env.MAVEN_WORKDIR }}
-
-        run: mvn clean install
 
       - name: Build Docker Image 🐋
 
