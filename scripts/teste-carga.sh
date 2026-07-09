@@ -10,71 +10,16 @@ NAMESPACE="oficina-mecanica"
 
 BASE_URL="http://localhost:8080"
 
-POSTGRES_USER="admin"
-POSTGRES_PASSWORD="admin"
-POSTGRES_DB="workshop"
-
-##############################################
-# Descobrir pod do postgres
-##############################################
-
-echo "========================================="
-echo "Localizando pod do PostgreSQL..."
-echo "========================================="
-
-POSTGRES_POD=$(kubectl get pods -n "$NAMESPACE" \
-    --no-headers \
-    | awk '/^postgres-/ {print $1}' \
-    | head -n 1)
-
-if [ -z "$POSTGRES_POD" ]; then
-    echo "ERRO: Pod do postgres não encontrado."
-    exit 1
-fi
-
-echo "Pod encontrado:"
-echo "$POSTGRES_POD"
-
-##############################################
-# Inserir usuário admin
-##############################################
-
-echo
-echo "========================================="
-echo "Inserindo usuário ADMIN..."
-echo "========================================="
-
-kubectl exec -n "$NAMESPACE" "$POSTGRES_POD" -- \
-env PGPASSWORD="$POSTGRES_PASSWORD" \
-psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<EOF
-INSERT INTO users (user_name, password, role)
-VALUES (
-    'admin',
-    '\$2y\$10\$ctCsqKe9zwz1AOIQtY0tWOFGGINVPB8Vr/7Jd.UMYaFndnGAxMfvW',
-    ARRAY['ADMIN']
-)
-ON CONFLICT (user_name) DO NOTHING;
-EOF
-
-echo "Usuário inserido."
-
-##############################################
-# Login
-##############################################
-
 echo
 echo "========================================="
 echo "Realizando login..."
 echo "========================================="
 
-LOGIN_RESPONSE=$(curl -s \
-    -X POST \
-    "$BASE_URL/auth/login" \
-    -H "Content-Type: application/json" \
-    -d '{
-        "username":"admin",
-        "password":"admin"
-    }')
+LOGIN_RESPONSE=$(curl -X 'POST' \
+  "$BASE_URL/auth/chatbot" \
+  -H 'accept: application/json' \
+  -H 'X-API-Key: teste' \
+  -d '')
 
 echo "$LOGIN_RESPONSE"
 
