@@ -10,8 +10,9 @@ NAMESPACE="oficina-mecanica"
 
 BASE_URL="http://localhost:8080"
 
-POSTGRES_USER="postgres"
-POSTGRES_DB="postgres"
+POSTGRES_USER="admin"
+POSTGRES_PASSWORD="admin"
+POSTGRES_DB="workshop"
 
 ##############################################
 # Descobrir pod do postgres
@@ -44,6 +45,7 @@ echo "Inserindo usuário ADMIN..."
 echo "========================================="
 
 kubectl exec -n "$NAMESPACE" "$POSTGRES_POD" -- \
+env PGPASSWORD="$POSTGRES_PASSWORD" \
 psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<EOF
 INSERT INTO users (user_name, password, role)
 VALUES (
@@ -51,7 +53,7 @@ VALUES (
     '\$2y\$10\$ctCsqKe9zwz1AOIQtY0tWOFGGINVPB8Vr/7Jd.UMYaFndnGAxMfvW',
     ARRAY['ADMIN']
 )
-ON CONFLICT DO NOTHING;
+ON CONFLICT (user_name) DO NOTHING;
 EOF
 
 echo "Usuário inserido."
