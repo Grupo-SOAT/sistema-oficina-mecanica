@@ -25,10 +25,10 @@ spec:
 
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: 180
+      stabilizationWindowSeconds: 0
 
     scaleDown:
-      stabilizationWindowSeconds: 180
+      stabilizationWindowSeconds: 60
       policies:
         - type: Pods
           value: 1
