@@ -81,7 +81,7 @@ curl -s \
 -H "Content-Type: application/json" \
 -d '{
     "licensePlate":"KFG6947",
-    "ownerId":2,
+    "ownerId":1,
     "brand":"string",
     "model":"string",
     "year":2000,
@@ -97,10 +97,10 @@ echo "Vehicle criado."
 
 echo
 echo "========================================="
-echo "Criando 5000 Service Orders..."
+echo "Criando 3000 Service Orders..."
 echo "========================================="
 
-for i in $(seq 1 5000)
+for i in $(seq 1 3000)
 do
 (
     curl -s \
@@ -109,8 +109,8 @@ do
     -H "Authorization: Bearer $TOKEN" \
     -H "Content-Type: application/json" \
     -d '{
-        "clientId":2,
-        "vehicleId":2,
+        "clientId":1,
+        "vehicleId":1,
         "description":"Teste de carga"
     }' > /dev/null
 ) &
