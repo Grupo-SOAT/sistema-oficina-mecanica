@@ -32,9 +32,7 @@ Um sistema planejado para facilitar a criação e acompanhamento de Ordens de Se
 
 # Fase 2
 
-## Vídeo
-
-https://youtu.be/LGhzrMXHJs4
+Vídeo: https://youtu.be/LGhzrMXHJs4
 
 ## Contexto
 
