@@ -32,6 +32,10 @@ Um sistema planejado para facilitar a criação e acompanhamento de Ordens de Se
 
 # Fase 2
 
+## Vídeo
+
+https://youtu.be/LGhzrMXHJs4
+
 ## Contexto
 
 Na Fase 2 do projeto do sistema da oficina mecânica, foi solicitada a aplicação e evolução de práticas de engenharia e desenvolvimento para garantir a maior qualidade, resiliência e escalabilidade do sistema. Portanto, esta fase foi focada principalmente em provisionamento de infraestrutura, automação, melhorias técnicas do código e implementação de novas funcionalidades e recursos.
