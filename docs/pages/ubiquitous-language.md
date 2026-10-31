@@ -117,3 +117,10 @@
   - Esse status indica que o insumo esta reservado para uma OS no sistema de Almoxarifado, porém ele ainda não foi utilizado na execução do serviço, ele apenas não sera listado como Disponível no momento de selecionar o insumo no registro da OS.
 - Separado
   - Esse status indica que o insumo foi retirado do almoxarifado para ser utilizado na execução do serviço.
+
+## Termos adicionados
+
+- Filial
+  - Localidade física da oficina mecânica. Uma OS pertence a exatamente uma Filial, e a fila de execução é organizada por Filial.
+- Execução
+  - Etapa em que os serviços aprovados são realizados no veículo. O nome do serviço de software é `ms-expedicao`, mas o termo de domínio permanece Execução.
