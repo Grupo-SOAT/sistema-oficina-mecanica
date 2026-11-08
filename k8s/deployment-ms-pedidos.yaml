@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-pedidos
+  namespace: oficina-mecanica
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: ms-pedidos
+
+  template:
+    metadata:
+      labels:
+        app: ms-pedidos
+
+    spec:
+      containers:
+        - name: ms-pedidos
+          image: leonardooziro/ms-pedidos:latest
+
+          ports:
+            - containerPort: 8082
+
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: SPRING_DATASOURCE_URL
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: SPRING_DATASOURCE_USERNAME
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: SPRING_DATASOURCE_PASSWORD
+
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: SPRING_KAFKA_BOOTSTRAP_SERVERS
+
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: ms-pedidos-group
+
+            - name: APP_MNL_BASE_URL
+              value: http://workshop-backend-service:80

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-pedidos-service
+  namespace: oficina-mecanica
+
+spec:
+  selector:
+    app: ms-pedidos
+
+  ports:
+    - port: 8082
+      targetPort: 8082
+
+  type: ClusterIP
