@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-expedicao
+  namespace: oficina-mecanica
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: ms-expedicao
+
+  template:
+    metadata:
+      labels:
+        app: ms-expedicao
+
+    spec:
+      containers:
+        - name: ms-expedicao
+          image: leonardooziro/ms-expedicao:latest
+
+          ports:
+            - containerPort: 8083
+
+          env:
+            - name: AWS_REGION
+              value: us-east-1
+
+            - name: DYNAMODB_ENDPOINT
+              value: http://dynamodb-service:8000
+
+            - name: DYNAMODB_TABLE
+              value: execution
+
+            - name: DYNAMODB_QUEUE_INDEX
+              value: GSI1
+
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: SPRING_KAFKA_BOOTSTRAP_SERVERS
+
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: ms-expedicao-group

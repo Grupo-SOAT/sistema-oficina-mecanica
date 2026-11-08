@@ -1,0 +1,45 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynamodb
+  namespace: oficina-mecanica
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: dynamodb
+
+  template:
+    metadata:
+      labels:
+        app: dynamodb
+
+    spec:
+      containers:
+        - name: dynamodb
+          image: amazon/dynamodb-local:latest
+
+          workingDir: /home/dynamodblocal
+
+          command:
+            - java
+            - -jar
+            - DynamoDBLocal.jar
+            - -sharedDb
+            - -dbPath
+            - ./data
+
+          ports:
+            - containerPort: 8000
+              name: dynamodb
+
+          volumeMounts:
+            - name: dynamodb-data
+              mountPath: /home/dynamodblocal/data
+
+      volumes:
+        - name: dynamodb-data
+          emptyDir: {}
