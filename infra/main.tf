@@ -190,11 +190,43 @@ resource "kubectl_manifest" "deployment-kafka-ui" {
 
 }
 
+resource "kubectl_manifest" "deployment-dynamodb" {
+
+    depends_on = [
+
+        kubectl_manifest.configmap,
+
+        kubectl_manifest.secret,
+
+        kubectl_manifest.pvc-kafka
+
+    ]
+
+    yaml_body = file("${local.manifests_path}/deployment-dynamodb.yaml")
+
+}
+
 resource "kubectl_manifest" "deployment-monolito" {
 
     depends_on = [ kubectl_manifest.deployment-postgres, kubectl_manifest.deployment-kafka ]
 
     yaml_body = file("${local.manifests_path}/deployment-monolito.yaml")
+
+}
+
+resource "kubectl_manifest" "deployment-ms-expedicao" {
+
+    depends_on = [ kubectl_manifest.deployment-dynamodb ]
+
+    yaml_body = file("${local.manifests_path}/deployment-ms-expedicao.yaml")
+
+}
+
+resource "kubectl_manifest" "deployment-ms-pedidos" {
+
+    depends_on = [ kubectl_manifest.deployment-postgres ]
+
+    yaml_body = file("${local.manifests_path}/deployment-ms-pedidos.yaml")
 
 }
 
@@ -220,6 +252,14 @@ resource "kubectl_manifest" "service-postgres" {
     depends_on = [ kubectl_manifest.deployment-postgres ]
 
     yaml_body = file("${local.manifests_path}/service-postgres.yaml")
+
+}
+
+resource "kubectl_manifest" "service-dynamodb" {
+
+    depends_on = [ kubectl_manifest.deployment-dynamodb ]
+
+    yaml_body = file("${local.manifests_path}/service-dynamodb.yaml")
 
 }
 
@@ -260,6 +300,22 @@ resource "kubectl_manifest" "service-ms-orcamentos" {
     depends_on = [ kubectl_manifest.deployment-ms-orcamentos ]
 
     yaml_body = file("${local.manifests_path}/service-ms-orcamentos.yaml")
+
+}
+
+resource "kubectl_manifest" "service-ms-expedicao" {
+
+    depends_on = [ kubectl_manifest.deployment-ms-expedicao ]
+
+    yaml_body = file("${local.manifests_path}/service-ms-expedicao.yaml")
+
+}
+
+resource "kubectl_manifest" "service-ms-pedidos" {
+
+    depends_on = [ kubectl_manifest.deployment-ms-pedidos ]
+
+    yaml_body = file("${local.manifests_path}/service-ms-pedidos.yaml")
 
 }
 
