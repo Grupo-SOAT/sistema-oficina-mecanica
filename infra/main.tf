@@ -69,7 +69,7 @@ resource "helm_release" "ingress_nginx" {
 
   create_namespace = true
 
-  timeout = 600
+  timeout = 1000
 
   set = [
     {
@@ -99,7 +99,7 @@ resource "helm_release" "argocd" {
 
   chart = "argo-cd"
 
-  timeout = 600
+  timeout = 1000
 
   namespace = var.namespace_argocd
 }
